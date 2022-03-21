@@ -1,6 +1,6 @@
 # Gear and Loading in My Body
 
-This is my Thesis Project For NYU Interactive Media Arts B.F.A.
+This is my thesis project For NYU Interactive Media Arts B.F.A.
 
 ## Live Link
 
