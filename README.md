@@ -2,6 +2,6 @@
 
 This is my Thesis Project For
 
-## Dev Link
+## Live Link
 
-https://galimb.web.app
+galimb.nabla.ooo
