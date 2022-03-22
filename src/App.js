@@ -1,5 +1,4 @@
 import './App.css';
-
 import Webcam from 'react-webcam';
 import styled from 'styled-components'
 import { useRef } from 'react';
