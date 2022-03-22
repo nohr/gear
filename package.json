@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@mediapipe/hands": "^0.4.1646424915",
+    "@mediapipe/holistic": "^0.5.1635989137",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",

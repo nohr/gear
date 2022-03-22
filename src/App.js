@@ -15,12 +15,19 @@ height: 100vh;
 
 function App() {
   const cameraRef = useRef(null);
+
   return (
     <div className="App">
       {/* TODO: Add webcam for debugging */}
-      hello world
-      <Camera ref={cameraRef}>
-        <Webcam />
+      {/* hello world */}
+      <Camera>
+        <Webcam
+          ref={cameraRef}
+          width={100 + '%'}
+          //for development at night
+          height={100 + '%'}
+
+        />
       </Camera>
     </div>
   );
