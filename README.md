@@ -1,6 +1,6 @@
 # Gear and Loading in My Body
 
-This is my thesis project For NYU Interactive Media Arts B.F.A.
+Gear and Loading in My Body is an interactive experience that emphasizes choice and slowness in a menial task.
 
 ## Live Link
 
