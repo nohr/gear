@@ -4,4 +4,4 @@ Gear and Loading (in My Body) is an interactive experience that emphasizes choic
 
 ## Live Link
 
-https://glimb.nabla.ooo
+https://gear.nabla.ooo
