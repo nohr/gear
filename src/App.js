@@ -184,6 +184,7 @@ export default function App() {
             </div>
           </div>) : null}
       </div>
+      <div className='caption'> property of <a href='https://nabla.ooo/'>nabla</a> | follow the development on <a href='https://github.com/nohr/gear-and-loading'>github</a> </div>
     </div>
   );
 }
