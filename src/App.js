@@ -45,9 +45,14 @@ function connect(ctx, connectors) {
   }
 }
 
+function stopLoading() {
+  state.loading = false;
+}
+
 // <---------- MediPipe Holistic onResults Function ---------->
 let activeEffect = 'mask';
 const onResults = (canvasElement, canvasCtx) => (results) => {
+  console.log(results);
   // Remove landmarks we don't want to draw.
   removeLandmarks(results);
   // Update the frame rate. - UNCAUGHT control_utils ERROR
@@ -146,7 +151,6 @@ let activateDraw = (ref) => {
 
   holistic.onResults(onResults(ref, canvasCtx));
 
-  console.log(holistic);
   //Initialize and start MediaPipe camera
   const camera = new Camera(videoElement, {
     onFrame: holisticFrame,
@@ -156,8 +160,6 @@ let activateDraw = (ref) => {
   });
 
   camera.start();
-  console.log(camera);
-
 }
 
 // App: FINAL OUTPUT

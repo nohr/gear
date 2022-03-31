@@ -6,7 +6,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #bebebe;
-  color: azure;
+  color: rgb(53, 53, 53);
   height: 100vh;
   width: 100vw;
   /* margin: 5px; */
@@ -40,6 +40,7 @@ body {
   max-width: 99.5%;
   display: block;
   position: relative;
+  z-index: 30;
   left: 0;
   top: 0;
   height: 100vh;
@@ -49,6 +50,7 @@ body {
 .loading {
   display: flex;
   position: absolute;
+  z-index: 1;
   top: 0;
   right: 0;
   bottom: 0;
@@ -96,7 +98,8 @@ body {
 
 .caption {
   position: absolute;
-  bottom: 0;
+  z-index: 200;
+  top: 0;
   left: 50%;
   transform: translateX(-50%);
 }
