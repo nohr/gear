@@ -5,7 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #0e0e0e;
+  background-color: #bebebe;
   color: azure;
   height: 100vh;
   width: 100vw;
@@ -42,8 +42,8 @@ body {
   position: relative;
   left: 0;
   top: 0;
-  /* height: 100vh; */
-  border: 2px solid #0099ff;
+  height: 100vh;
+  /* border: 2px solid #0099ff; */
 }
 
 .loading {

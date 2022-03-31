@@ -105,8 +105,8 @@ const onResults = (canvasElement, canvasCtx) => (results) => {
   drawConnectors(canvasCtx, results.rightHandLandmarks, mpHolistic.HAND_CONNECTIONS, { color: 'white' });
   drawLandmarks(canvasCtx, results.rightHandLandmarks, {
     color: 'white',
-    fillColor: 'rgb(0,217,231)',
-    lineWidth: 2,
+    fillColor: 'rgb(210,127,231)',
+    lineWidth: 1,
     radius: (data) => {
       return drawingUtils.lerp(data.from.z, -0.15, .1, 10, 1);
     }
@@ -114,8 +114,8 @@ const onResults = (canvasElement, canvasCtx) => (results) => {
   drawConnectors(canvasCtx, results.leftHandLandmarks, mpHolistic.HAND_CONNECTIONS, { color: 'white' });
   drawLandmarks(canvasCtx, results.leftHandLandmarks, {
     color: 'white',
-    fillColor: 'rgb(255,138,0)',
-    lineWidth: 2,
+    fillColor: 'rgb(150,238,130)',
+    lineWidth: 1,
     radius: (data) => {
       return drawingUtils.lerp(data.from.z, -0.15, .1, 10, 1);
     }
@@ -138,9 +138,10 @@ let activateDraw = (ref) => {
   holistic.setOptions({
     selfimode: true,
     upperBodyOnly: true,
-    smoothLandmarks: false,
+    smoothLandmarks: true,
     minDetectionConfidence: 0.5,
-    minTrackingConfidence: 0.5
+    minTrackingConfidence: 0.5,
+
   });
 
   holistic.onResults(onResults(ref, canvasCtx));
