@@ -39,7 +39,7 @@ body {
 .output_canvas {
   max-width: 99.5%;
   display: block;
-  position: relative;
+  position: absolute;
   z-index: 30;
   left: 0;
   top: 0;
