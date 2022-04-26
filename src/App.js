@@ -358,7 +358,7 @@ function CanvasComp() {
       </Suspense>}
       <Environment
         path='/'
-        files={"studio_small_04_2k.hdr"}
+        files={"studio_small_04_1k.hdr"}
         resolution={256}
       />
     </Canvas>
