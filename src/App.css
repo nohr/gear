@@ -1,3 +1,8 @@
+html, body{
+    background: rgb(24, 28, 36);
+  background: linear-gradient(18deg, rgba(24, 28, 36, 1) 0%, rgba(79, 79, 114, 1) 100%);
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -5,11 +10,20 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #bebebe;
-  color: rgb(53, 53, 53);
   height: 100vh;
   width: 100vw;
-  /* margin: 5px; */
+}
+
+p{
+  margin: 0;
+}
+
+.threeCanvas{
+  margin-bottom: -100vh;
+  position: absolute !important;
+  height: 100vh;
+  width: 100vw;
+  z-index: 30;
 }
 
 /* From Mediapipe Holistic demo */
@@ -17,15 +31,13 @@ body {
   display: none;
   /* height: 100%;
   width: 100vw; */
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
 }
+.input_video2{
+  display: none;
 
+}
 .input_video.selfie {
-  transform: scale(-1, 1);
+  transform: scale(-1, 1) !important;
 }
 
 .canvas-container {
@@ -36,15 +48,14 @@ body {
   align-items: center;
 }
 
-.output_canvas {
-  max-width: 99.5%;
-  display: block;
+
+.guides {
   position: absolute;
-  z-index: 30;
+  bottom: 0;
   left: 0;
-  top: 0;
-  height: 100vh;
-  /* border: 2px solid #0099ff; */
+  height: auto;
+  width: 100%;
+  z-index: 1;
 }
 
 .loading {
@@ -82,7 +93,7 @@ body {
   left: 0;
   right: 0;
   bottom: 40px;
-  text-align: center;
+  /* text-align: center; */
   font-size: 24px;
   position: absolute;
 }
@@ -98,12 +109,83 @@ body {
 
 .caption {
   position: absolute;
+  width: 100vw;
   z-index: 200;
   top: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  padding: 5px;
+  text-align: center;
+  /* left: 50%;
+  transform: translateX(-50%); */
+  font-size: 11px;;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+}
+.statusbar{
+  margin: 0 auto;
+  width: fit-content;
+  text-align: center;
+  padding-top: 10px;
 }
 
-a {
-  color: #0099ff;
+a, body {
+  color: #bebebe;
+}
+
+@keyframes gugmu9vdpaw {
+  0% {
+    transform: rotate(0deg)
+  }
+
+  50% {
+    transform: rotate(180deg)
+  }
+
+  100% {
+    transform: rotate(360deg)
+  }
+}
+
+.gugmu9vdpaw div {
+  position: absolute;
+  animation: gugmu9vdpaw 0.25s linear infinite;
+  width: 40px;
+  height: 40px;
+  top: 80px;
+  left: 80px;
+  border-radius: 50%;
+  box-shadow: 0 1.8px 0 0 #bebebe;
+  transform-origin: 20px 20.9px;
+}
+
+.canvasSpinner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 200px;
+  height: 200px;
+  display: inline-block;
+  overflow: hidden;
+  background: none;
+}
+
+.gugmu9vdpaw {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform: translateZ(0) scale(1);
+  backface-visibility: hidden;
+  transform-origin: 0 0;
+  /* see note above */
+}
+
+.gugmu9vdpaw p {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -55%);
+  text-shadow: 10px 10px 20 1 #bebebe;
+  font-size: 12px;
+
 }
