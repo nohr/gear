@@ -25,6 +25,11 @@ a{
   color: inherit;
 }
 
+a, body{
+  color: #056D58;
+  text-shadow: 1px 0px 1.75px #056D5867;
+}
+
 .threeCanvas{
   margin-bottom: -100vh;
   position: absolute !important;

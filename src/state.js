@@ -10,14 +10,18 @@ export const stat = proxy({
     themeChanged: false,
     transition: `3s`,
     light: {
-        gradient: 'linear-gradient(18deg, rgba(254, 238, 236, 1) 0%, rgba(239, 229, 194, 1) 100%) !important',
-        fontColor: '#5f2422',
-        hover: '#ff7d23',
+        gradient: 'linear-gradient(18deg, rgba(234, 258, 236, 1) 0%, rgba(202, 205, 204, 1) 100%) !important',
+        baseColor: '#056D58',
+        baseColorAlpha: `#056D5867`,
+        hover: '#FE3632',
+        subAlpha: '#00000047',
     },
     dark: {
         gradient: 'linear-gradient(18deg, rgba(24, 28, 36, 1) 0%, rgba(79, 79, 114, 1) 100%) !important',
-        fontColor: '#bebebe',
-        hover: '#5f2fff',
+        baseColor: '#bebebe',
+        baseColorAlpha: `#bebebe47`,
+        hover: '#B990F6',
+        subAlpha: '#ffffff67',
 
     },
     //selfie: true is external, false is laptop

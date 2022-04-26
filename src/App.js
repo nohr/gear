@@ -370,15 +370,14 @@ html, body{
   background: ${props => props.theme.gradient};
 }
 
-a, body{
-  transition: ${props => props.theme.transition};
-}
 a:hover{
   color: ${props => props.theme.hover};
+  text-shadow: 1px 0px 1.75px ${props => props.theme.hover} !important;
 }
 a, body{
-  color: ${props => props.theme.fontColor};
-  text-shadow: 1px 0px 1.75px ${props => props.theme.fontColor};
+  color: ${props => props.theme.baseColor};
+  text-shadow: 1px 0px 1.75px ${props => props.theme.baseColor};
+  transition: ${props => props.theme.transition};
 }
 `
 
