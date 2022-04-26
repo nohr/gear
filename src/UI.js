@@ -64,11 +64,11 @@ function UI() {
 
     return (
         <div className='caption'>
-            Gear and Loading c/o <a href='https://nabla.ooo/'>Nabla</a> |
+            <i>Gear and Loading</i> c/o <a href='https://nabla.ooo/'>Nabla</a> |
             This is a work in progress. Follow the development on <a href='https://github.com/nohr/gear-and-loading'>Github</a>. | <a href='mailto:aite@nabla.ooo'>Email</a>
-            <p style={{ paddingTop: '5px' }}>➤ Make point, fist, or open handsigns to test detection.<br />This demo works best in a well-lit area.</p>
+            <p style={{ paddingTop: '5px' }}>☆ Make point, fist, or open handsigns to test detection ☆<br />This demo works best in a well-lit area.</p>
             <div className='statusbar'>
-                <p>Camera feed is in <span style={{ fontWeight: "bolder" }}>{!stat.selfie ? "Laptop" : "External"}</span> mode.</p>
+                <p>Camera stream is in <i>{!stat.selfie ? "Laptop" : "External"}</i> mode.</p>
                 {snap.load === "closed" || "open" || "point" ?
                     <p style={snap.load === "closed" ?
                         { color: "#acddff" } : snap.load === 'open' ?

@@ -341,7 +341,7 @@ function CanvasComp() {
       <PerspectiveCamera
         makeDefault
         fov={60}
-        position={[0.25, 1.5, 1.25]}
+        position={[0.70, 1.5, 1.25]}
       />
       <Suspense fallback={null}>
         <spotLight intensity={0.7} position={[0, 3, 7]} />
@@ -367,6 +367,7 @@ html, body{
 
 a, body{
   color: ${props => props.theme.fontColor};
+  text-shadow: 0px 2px 1.75px ${props => props.theme.fontColor};
 }
 `
 // App: Top Level Function
