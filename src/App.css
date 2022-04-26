@@ -30,6 +30,14 @@ a, body{
   text-shadow: 1px 0px 1.75px #056D5867;
 }
 
+@media (prefers-color-scheme: dark) {
+a,
+body {
+  color: #bebebe;
+  text-shadow: 1px 0px 1.75px #bebebe47;
+}
+}
+
 .threeCanvas{
   margin-bottom: -100vh;
   position: absolute !important;

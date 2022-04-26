@@ -136,8 +136,8 @@ z-index: 1000;
 const Status = styled.p`
 &.open{
   color: #3cf5aa !important;
-text-shadow: 1px 0px 1.75px #3cf5aa !important;
-background-color: #08afff;
+  text-shadow: 1px 0px 1.75px #3cf5aa !important;
+  background-color: #08afff;
 }
 &.point{
   color: #08afff !important;
@@ -169,8 +169,9 @@ function UI() {
             <>
                 <Button onClick={() => { setHide(!hide) }}>{hide ? '★' : '☆'}</Button>
                 <div className='caption' style={hide ? { pointerEvents: "none", opacity: 0, transition: "1s" } : { pointerEvents: "all", opacity: 1, transition: "0.2s" }}>
-                    <i>Gear and Loading</i> c/o <a href='https://nabla.ooo/'>Nabla</a> | <a href='mailto:aite@nabla.ooo'>Email</a> |
-                    This is a work in progress, follow it's development on <a href='https://github.com/nohr/gear-and-loading'>Github</a>
+                    <i>Gear and Loading</i> c/o <a href='https://nabla.ooo/'>Nabla</a><br />
+                    This is a work in progress, follow it's development on <a href='https://github.com/nohr/gear-and-loading'>Github</a><br />
+                    <a href='mailto:aite@nabla.ooo'>Email me</a>
                     <p style={{ paddingTop: '5px' }}>☆ Make point, fist, or open handsigns to test detection ☆<br />Be advised: This demo works best in a well-lit area.</p>
                     <br />
                     <Options />

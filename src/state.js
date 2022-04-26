@@ -20,7 +20,7 @@ export const stat = proxy({
         gradient: 'linear-gradient(18deg, rgba(24, 28, 36, 1) 0%, rgba(79, 79, 114, 1) 100%) !important',
         baseColor: '#bebebe',
         baseColorAlpha: `#bebebe47`,
-        hover: '#B990F6',
+        hover: '#00FFFF',
         subAlpha: '#ffffff67',
 
     },
