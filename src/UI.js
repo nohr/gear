@@ -25,20 +25,23 @@ const Link = styled.div`
   cursor: pointer;
   width: fit-content;
   display: block;
+    transition: ${props => props.theme.transition};
+
+  &:hover{
+  color: ${props => props.theme.hover};
+}
 `
 
-const Options = styled.div`
+const Option = styled.div`
 display: flex;
 justify-content: center;
-
+gap: 40px;
 `
 
-function UI() {
+function Options() {
     const snap = useSnapshot(stat)
-
     var elem = document.documentElement;
 
-    /* View in fullscreen */
     function openFullscreen() {
         stat.fullscreen = true;
         if (elem.requestFullscreen) {
@@ -49,8 +52,6 @@ function UI() {
             elem.msRequestFullscreen();
         }
     }
-
-    /* Close fullscreen */
     function closeFullscreen() {
         stat.fullscreen = false;
         if (document.exitFullscreen) {
@@ -61,34 +62,91 @@ function UI() {
             document.msExitFullscreen();
         }
     }
+    function start() {
+        stat.start = true;
+    }
+    function stop() {
+        stat.start = false;
+        // clear axis
+        for (const axis in snap.location) {
+            if (stat.location[axis]) {
+                stat.location[axis] = null;
+            }
+        }
+    }
+    function externalMode() {
+        if (stat.start) {
+            stop()
+        }
+        stat.selfie = true;
+    }
+    function laptopMode() {
+        if (stat.start) {
+            stop()
+        }
+        stat.selfie = false;
+    }
+    // function themeDark() {
+    //     stat.themeChanged = true;
+    //     stat.theme = 'dark'
+    //     console.log(stat.themeChanged);
+    // }
+    // function themeLite() {
+    //     stat.themeChanged = true;
+    //     stat.theme = 'light'
+    // }
 
     return (
-        <div className='caption'>
-            <i>Gear and Loading</i> c/o <a href='https://nabla.ooo/'>Nabla</a> |
-            This is a work in progress. Follow the development on <a href='https://github.com/nohr/gear-and-loading'>Github</a>. | <a href='mailto:aite@nabla.ooo'>Email</a>
-            <p style={{ paddingTop: '5px' }}>☆ Make point, fist, or open handsigns to test detection ☆<br />This demo works best in a well-lit area.</p>
-            <div className='statusbar'>
-                <p>Camera stream is in <i>{!stat.selfie ? "Laptop" : "External"}</i> mode.</p>
-                {snap.load === "closed" || "open" || "point" ?
-                    <p style={snap.load === "closed" ?
-                        { color: "#acddff" } : snap.load === 'open' ?
-                            { color: "#3cf5aa" } : snap.load === 'point' ?
-                                { color: "#08afff" } : null}>
-                        {snap.load}
-                    </p> : <p>{snap.load}</p>}
-                {snap.location.x && <>
-                    <p>x: {`${snap.location.x}`} </p>
-                    <p>y: {`${snap.location.y}`} </p>
-                    <p>w: {`${snap.location.w}`} </p>
-                    <p>h: {`${snap.location.h}`} </p>
-                </>}
-            </div>
-            <br />
-            <Options>
-                {snap.fullscreen ? <Link onClick={closeFullscreen}>Exit</Link> : <Link onClick={openFullscreen}>Fullscreen</Link>}
-            </Options>
-        </div>
+        <Option>
+            {!snap.selfie ? <Link onClick={externalMode}>External</Link> : <Link onClick={laptopMode}>Laptop</Link>}
+            {snap.fullscreen ? <Link onClick={closeFullscreen}>Exit</Link> : <Link onClick={openFullscreen}>Fullscreen</Link>}
+            {/* Bugged */}
+            {/* {snap.theme === 'light' ? <Link onClick={themeDark}>Dark</Link> : <Link onClick={themeLite}>Lite</Link>} */}
+            {snap.start ? <Link onClick={stop}><b>Stop</b></Link> : <Link onClick={start}><b>Start</b></Link>}
+        </Option>
     )
+}
+function UI() {
+    const snap = useSnapshot(stat)
+
+    var x = window.matchMedia("(max-width: 768px)");
+    if (x.matches) {
+        // mobile
+        return (
+            <div className='mobileCaption' style={{ top: "50% !important", translate: "transform(-50%, -50%) !important" }}>
+                Use a <b>Computer</b> to play <br />
+                <i>Gear and Loading</i>
+            </div>
+        )
+    } else {
+        // not mobile
+        return (
+            <div className='caption'>
+                <i>Gear and Loading</i> c/o <a href='https://nabla.ooo/'>Nabla</a> | <a href='mailto:aite@nabla.ooo'>Email</a> |
+                This is a work in progress, follow it's development on <a href='https://github.com/nohr/gear-and-loading'>Github</a>
+                <p style={{ paddingTop: '5px' }}>☆ Make point, fist, or open handsigns to test detection ☆<br />Be advised: This demo works best in a well-lit area.</p>
+                <br />
+                <Options />
+                <div className='statusbar'>
+                    <p>Camera stream is in <b>{!snap.selfie ? "Laptop" : "External"}</b> mode</p>
+                    <br />
+                    {snap.start ?
+                        <p style={snap.load === "closed" ?
+                            { color: "#acddff" } : snap.load === 'open' ?
+                                { color: "#3cf5aa" } : snap.load === 'point' ?
+                                    { color: "#08afff" } : null}>
+                            {snap.load === 'closed' ? 'fist' : snap.load}
+                        </p> : <p>Press Start</p>}
+                    {snap.location.x && snap.start && <>
+                        <p>x: {`${snap.location.x}`} </p>
+                        <p>y: {`${snap.location.y}`} </p>
+                        <p>w: {`${snap.location.w}`} </p>
+                        <p>h: {`${snap.location.h}`} </p>
+                    </>}
+                </div>
+            </div>
+        )
+    }
 }
 
 export default UI

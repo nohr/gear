@@ -31,6 +31,9 @@ let videoElement2;
 const onResults = (results) => {
   // Animate model if there is video
   if (currentVrm) {
+    if (stat.model && !stat.location.x) {
+      stat.load = 'Ready'
+    }
     animateVRM(currentVrm, results);
   }
 }
@@ -100,7 +103,7 @@ const animateVRM = (vrm, results) => {
   const material1 = new MeshStandardMaterial();
   material1.color.setHSL(0, 0, 1);  // white
   material1.flatShading = true;
-
+  // Animate VRM attributes
   gltf.forEach((child) => {
     // if (child.material) {
     //   if (stat.load === 'closed') {
@@ -110,11 +113,14 @@ const animateVRM = (vrm, results) => {
     //   }
     // }
     if (stat.load === 'closed') {
-      // child.up.y = 3;
+      // Do something when the hand is closed
       return
     } else if (stat.load === 'open') {
-      // child.position.z = 0;
-      console.log(child);
+      // Do something when the hand is open
+      return
+    } else if (stat.load === 'point') {
+      // Do something when the hand is pointed
+      return
     }
   })
 
@@ -208,7 +214,11 @@ const activateDraw = (ref) => {
     locateFile: file => {
       return `https://cdn.jsdelivr.net/npm/@mediapipe/holistic@${VERSION}/${file}`;
     }
-  });
+  })
+
+  if (holistic) {
+    stat.load = 'Holistic loaded'
+  }
 
   holistic.setOptions({
     selfieMode: stat.selfie,
@@ -222,76 +232,69 @@ const activateDraw = (ref) => {
   // Pass holistic a callback function
   holistic.onResults(onResults);
 
-  // Use `Mediapipe` utils to get camera - lower resolution = higher fps
-  const camera = new Camera(videoElement, {
-    onFrame: async () => {
-      await holistic.send({ image: videoElement });
-    },
-    width: 640,
-    height: 480
-  });
-
-  camera.start()
-  // stat.paused ? camera.stop() : camera.start();
-
-
+  // camera.start()
+  if (stat.start) {
+    // Use `Mediapipe` utils to get camera - lower resolution = higher fps
+    const camera = new Camera(videoElement, {
+      onFrame: async () => {
+        await holistic.send({ image: videoElement });
+      },
+      width: 640,
+      height: 480
+    });
+    camera.start();
+  }
   /* SETUP HANDTRACK.JS */
   let model;
-  const defaultParams = {
-    flipHorizontal: false,
-    outputStride: 16,
-    imageScaleFactor: 1,
-    maxNumBoxes: 20,
-    iouThreshold: 0.2,
-    scoreThreshold: 0.6,
-    modelType: "ssd320fpnlite",
-    modelSize: "large",
-    bboxLineWidth: "2",
-    fontSize: 17,
-  };
 
   const modelParams = {
     flipHorizontal: true, // flip e.g for video
     maxNumBoxes: 3, // maximum number of boxes to detect
     iouThreshold: 0.5, // ioU threshold for non-max suppression
     scoreThreshold: 0.7, // confidence threshold for predictions.
+    modelType: "ssd320fpnlite",
+    modelSize: "large",
   };
 
-  handTrack.startVideo(videoElement2).then(function (status) {
-    stat.load = `video started, ${status}`
-    if (status) {
-      stat.load = "Video started, now tracking";
-      // Load the model then send it to detection animation frame
-      handTrack.load(modelParams).then((lmodel) => {
-        stat.load = "Model loaded";
-        model = lmodel;
-        return model;
-      }).then((model) => {
-        function runDetection() {
-          if (videoElement2) {
-            model.detect(videoElement2).then((predictions) => {
-              predictions.forEach((one) => {
-                let xCord = parseInt(one.bbox[0]);
-                if (stat.selfie && xCord <= 320 || !stat.selfie && xCord >= 320) {
-                  if (one.label === 'open' || one.label === 'closed' || one.label === 'point') {
-                    stat.load = `${one.label}`;
-                    stat.location.x = parseInt(one.bbox[0]);
-                    stat.location.y = parseInt(one.bbox[1]);
-                    stat.location.w = parseInt(one.bbox[2]);
-                    stat.location.h = parseInt(one.bbox[3]);
-                  }
-                }
-              });
-              requestAnimationFrame(runDetection);
-            })
-          }
+  if (stat.start) {
+    handTrack.startVideo(videoElement2).then(
+      function (status) {
+        stat.load = `video started, ${status}`
+        if (status) {
+          stat.load = "Video started, loading model";
+          // Load the model then send it to detection animation frame
+          handTrack.load(modelParams).then((lmodel) => {
+            model = lmodel;
+            stat.load = "Model loaded";
+            stat.model = true;
+            return model;
+          }).then((model) => {
+            function runDetection() {
+              if (videoElement2) {
+                model.detect(videoElement2).then((predictions) => {
+                  predictions.forEach((one) => {
+                    let xCord = parseInt(one.bbox[0]);
+                    if ((stat.selfie && xCord <= 320) || (!stat.selfie && xCord >= 320)) {
+                      if (one.label === 'open' || one.label === 'closed' || one.label === 'point') {
+                        stat.load = `${one.label}`;
+                        stat.location.x = parseInt(one.bbox[0]);
+                        stat.location.y = parseInt(one.bbox[1]);
+                        stat.location.w = parseInt(one.bbox[2]);
+                        stat.location.h = parseInt(one.bbox[3]);
+                      }
+                    }
+                  });
+                  requestAnimationFrame(runDetection);
+                })
+              }
+            }
+            runDetection()
+          })
+        } else {
+          stat.load = "Please enable video";
         }
-        runDetection()
-      })
-    } else {
-      stat.load = "Please enable video";
-    }
-  });
+      });
+  }
 }
 
 // Arm
@@ -301,24 +304,27 @@ function Arm() {
   const { current: loader } = useRef(new GLTFLoader());
 
   //Load vrm
-  loader.load('/models/arm.vrm', async gltf => {
-    if (currentVrm) {
-      return;
-    }
-    VRMUtils.removeUnnecessaryJoints(gltf.scene);
-    const vrm = await VRM.from(gltf);
-    scene.add(vrm.scene);
-    vrm.scene.rotation.y = Math.PI;
-    currentVrm = vrm;
-  },
-    progress => {
-      if (stat.load === `100%`) {
-        stat.load = 'Arm loaded'
-      } else {
-        stat.load = `${parseInt(100.0 * (progress.loaded / progress.total))}%`;
+  if (!stat.vrm) {
+    loader.load('/models/arm.vrm', async gltf => {
+      if (currentVrm) {
+        return;
       }
+      VRMUtils.removeUnnecessaryJoints(gltf.scene);
+      const vrm = await VRM.from(gltf);
+      scene.add(vrm.scene);
+      vrm.scene.rotation.y = Math.PI;
+      currentVrm = vrm;
+      stat.vrm = true;
     },
-    error => console.error(error))
+      progress => {
+        if (stat.load === `100%`) {
+          stat.load = 'Arm loaded'
+        } else {
+          stat.load = `${parseInt(100.0 * (progress.loaded / progress.total))}%`;
+        }
+      },
+      error => console.error(error))
+  }
 
   useFrame(({ gl, scene, camera }) => {
     // Update model to render physics
@@ -331,26 +337,25 @@ function Arm() {
 
 // React Three Fiber Canvas
 function CanvasComp() {
-
   return (
     <Canvas
       linear
       className='threeCanvas'
-      frameloop='always'
+      frameloop={stat.start ? 'always' : 'demand'}
     >
       <PerspectiveCamera
         makeDefault
         fov={60}
-        position={[0.70, 1.5, 1.25]}
+        position={[0.50, 1.5, 1.25]}
       />
-      <Suspense fallback={null}>
+      {stat.start && <Suspense fallback={null}>
         <spotLight intensity={0.7} position={[0, 3, 7]} />
         <Arm />
         {stat.effects && <EffectComposer multisampling={2}>
           <Bloom kernelSize={1} luminanceThreshold={0} luminanceSmoothing={0.3} intensity={0.8} />
           <Bloom kernelSize={KernelSize.HUGE} luminanceThreshold={0} luminanceSmoothing={1} intensity={1} />
         </EffectComposer>}
-      </Suspense>
+      </Suspense>}
       <Environment
         path='/'
         files={"studio_small_04_2k.hdr"}
@@ -366,28 +371,44 @@ html, body{
 }
 
 a, body{
+  transition: ${props => props.theme.transition};
+}
+a:hover{
+  color: ${props => props.theme.hover};
+}
+a, body{
   color: ${props => props.theme.fontColor};
-  text-shadow: 0px 2px 1.75px ${props => props.theme.fontColor};
+  text-shadow: 1px 0px 1.75px ${props => props.theme.fontColor};
 }
 `
+
+
+
 // App: Top Level Function
 export default function App() {
   const snap = useSnapshot(stat);
 
+  // Theme to prefrence and listen for changes
   window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && !stat.themeChanged ?
     (stat.theme = 'dark') : (stat.theme = 'light')
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",
+    e => e.matches ? (stat.theme = 'dark') : (stat.theme = 'light') // listener
+  );
+
   return (
     <ThemeProvider theme={snap.theme === 'light' ? snap.light : snap.dark}>
       <GlobalStyle />
       <div className="App">
         <UI />
-        {snap.cam &&
+        {snap.start ?
           <>
+            {/* MediaPipe Camera */}
             <Webcam
               width={640}
               height={480}
               className="input_video selfie"
             />
+            {/* Handtrack js Camera */}
             <Webcam
               width={640}
               height={480}
@@ -398,7 +419,7 @@ export default function App() {
               ref={(e) => activateDraw(e)}
             ></canvas>
           </>
-        }
+          : null}
         <CanvasComp />
       </div>
     </ThemeProvider>

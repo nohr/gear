@@ -21,6 +21,10 @@ p{
   margin: 0;
 }
 
+a{
+  color: inherit;
+}
+
 .threeCanvas{
   margin-bottom: -100vh;
   position: absolute !important;
@@ -31,15 +35,8 @@ p{
   z-index: 30;
 }
 
-/* From Mediapipe Holistic demo */
-.input_video {
+.input_video, .input_video2 {
   display: none;
-  /* height: 100%;
-  width: 100vw; */
-}
-.input_video2{
-  display: none;
-
 }
 .input_video.selfie {
   transform: scale(-1, 1) !important;
@@ -61,37 +58,6 @@ p{
   height: auto;
   width: 100%;
   z-index: 1;
-}
-
-.loading {
-  display: flex;
-  position: absolute;
-  z-index: 1;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  align-items: center;
-  backface-visibility: hidden;
-  justify-content: center;
-  opacity: 1;
-  transition: opacity 1s;
-}
-.loading .message {
-  font-size: x-large;
-}
-.loading .spinner {
-  position: absolute;
-  width: 120px;
-  height: 120px;
-  animation: spin 5s linear infinite;
-  border: 32px solid #bebebe;
-  border-top: 32px solid #0099ff;
-  border-radius: 50%;
-}
-
-.loaded .loading {
-  opacity: 0;
 }
 
 .shoutout {
@@ -121,20 +87,32 @@ p{
   text-align: center;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 11px;;
+  font-size: 11px;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
+}
+.mobileCaption{
+position: absolute;
+width: 50vw;
+z-index: 200;
+top: 0;
+padding: 20px;
+text-align: center;
+top: 50%;
+left: 50%;
+transform: translate(-50%,-50%);
+font-size: 14px;
+user-select: none;
+-webkit-user-select: none;
+-moz-user-select: none;
+
 }
 .statusbar{
   margin: 0 auto;
   width: fit-content;
   text-align: center;
   padding-top: 10px;
-}
-
-a, body {
-  color: #bebebe;
 }
 
 @keyframes gugmu9vdpaw {
