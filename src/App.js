@@ -4,13 +4,14 @@ import Webcam from 'react-webcam';
 import { stat } from './state';
 import { useSnapshot } from 'valtio';
 import UI from './UI';
+import { ThemeProvider, createGlobalStyle } from 'styled-components';
 // R3F & Threejs Imports
 import { Canvas, useThree, useFrame } from '@react-three/fiber';
 import { PerspectiveCamera, Environment } from '@react-three/drei';
 import { KernelSize } from 'postprocessing'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { Quaternion, Euler, Vector3 } from 'three';
+import { Quaternion, Euler, Vector3, MeshStandardMaterial } from 'three';
 // VRM Imports
 import { VRMUtils, VRMSchema, VRM } from '@pixiv/three-vrm';
 import * as Kalidokit from 'kalidokit'
@@ -22,20 +23,12 @@ import {
 import { Camera } from '@mediapipe/camera_utils'
 import * as handTrack from 'handtrackjs';
 
-
-//Import Helper Functions from Kalidokit
-const remap = Kalidokit.Utils.remap;
-const clamp = Kalidokit.Utils.clamp;
-const lerp = Kalidokit.Vector.lerp;
-
 /* THREEJS WORLD SETUP */
 let currentVrm;
 let videoElement;
 let videoElement2;
 
 const onResults = (results) => {
-  // Draw landmark guides
-  // drawResults(results)
   // Animate model if there is video
   if (currentVrm) {
     animateVRM(currentVrm, results);
@@ -99,6 +92,32 @@ const animateVRM = (vrm, results) => {
   const leftHandLandmarks = results.rightHandLandmarks;
   const rightHandLandmarks = results.leftHandLandmarks;
 
+  const gltf = vrm.scene.children;
+
+  const material = new MeshStandardMaterial();
+  material.color.setHSL(0, 1, 0.5);  // red
+  material.flatShading = true;
+  const material1 = new MeshStandardMaterial();
+  material1.color.setHSL(0, 0, 1);  // white
+  material1.flatShading = true;
+
+  gltf.forEach((child) => {
+    // if (child.material) {
+    //   if (stat.load === 'closed') {
+    //     child.material = material;
+    //   } else if (stat.load === 'open') {
+    //     child.material = material1;
+    //   }
+    // }
+    if (stat.load === 'closed') {
+      // child.up.y = 3;
+      return
+    } else if (stat.load === 'open') {
+      // child.position.z = 0;
+      console.log(child);
+    }
+  })
+
   // Animate Pose
   if (pose2DLandmarks && pose3DLandmarks) {
     riggedPose = Kalidokit.Pose.solve(pose3DLandmarks, pose2DLandmarks, {
@@ -130,7 +149,6 @@ const animateVRM = (vrm, results) => {
     rigRotation("RightUpperLeg", riggedPose.RightUpperLeg, 1, .3);
     rigRotation("RightLowerLeg", riggedPose.RightLowerLeg, 1, .3);
   }
-
   // Animate Hands
   if (leftHandLandmarks) {
     riggedLeftHand = Kalidokit.Hand.solve(leftHandLandmarks, "Left");
@@ -195,7 +213,7 @@ const activateDraw = (ref) => {
   holistic.setOptions({
     selfieMode: stat.selfie,
     modelComplexity: 1,
-    smoothLandmarks: true,
+    smoothLandmarks: false,
     minDetectionConfidence: 0.7,
     minTrackingConfidence: 0.7,
     refineFaceLandmarks: true,
@@ -212,7 +230,10 @@ const activateDraw = (ref) => {
     width: 640,
     height: 480
   });
-  camera.start();
+
+  camera.start()
+  // stat.paused ? camera.stop() : camera.start();
+
 
   /* SETUP HANDTRACK.JS */
   let model;
@@ -247,20 +268,23 @@ const activateDraw = (ref) => {
         return model;
       }).then((model) => {
         function runDetection() {
-          model.detect(videoElement2).then((predictions) => {
-            predictions.forEach((one) => {
-              if (parseInt(one.bbox[0]) <= 300) {
-                if (one.label === 'point' || one.label === 'closed') {
-                  stat.load = `${one.label}`;
-                  stat.location.x = parseInt(one.bbox[0]);
-                  stat.location.y = parseInt(one.bbox[1]);
-                  stat.location.w = parseInt(one.bbox[2]);
-                  stat.location.h = parseInt(one.bbox[3]);
+          if (videoElement2) {
+            model.detect(videoElement2).then((predictions) => {
+              predictions.forEach((one) => {
+                let xCord = parseInt(one.bbox[0]);
+                if (stat.selfie && xCord <= 320 || !stat.selfie && xCord >= 320) {
+                  if (one.label === 'open' || one.label === 'closed' || one.label === 'point') {
+                    stat.load = `${one.label}`;
+                    stat.location.x = parseInt(one.bbox[0]);
+                    stat.location.y = parseInt(one.bbox[1]);
+                    stat.location.w = parseInt(one.bbox[2]);
+                    stat.location.h = parseInt(one.bbox[3]);
+                  }
                 }
-              }
-            });
-            requestAnimationFrame(runDetection);
-          });
+              });
+              requestAnimationFrame(runDetection);
+            })
+          }
         }
         runDetection()
       })
@@ -269,7 +293,6 @@ const activateDraw = (ref) => {
     }
   });
 }
-
 
 // Arm
 function Arm() {
@@ -287,7 +310,6 @@ function Arm() {
     scene.add(vrm.scene);
     vrm.scene.rotation.y = Math.PI;
     currentVrm = vrm;
-    console.log(currentVrm.scene.children[2]);
   },
     progress => {
       if (stat.load === `100%`) {
@@ -311,63 +333,73 @@ function Arm() {
 function CanvasComp() {
 
   return (
-    <>
-      <Canvas
-        linear
-        className='threeCanvas'
-        frameloop='always'
-      >
-        <PerspectiveCamera
-          makeDefault
-          fov={60}
-          position={[0.25, 1.5, 1.5]}
-        />
-        <Suspense fallback={null}>
-          <spotLight intensity={0.7} position={[0, 3, 7]} />
-          <Arm />
-          {stat.effects && <EffectComposer multisampling={2}>
-            <Bloom kernelSize={1} luminanceThreshold={0} luminanceSmoothing={0.3} intensity={0.8} />
-            <Bloom kernelSize={KernelSize.HUGE} luminanceThreshold={0} luminanceSmoothing={1} intensity={1} />
-          </EffectComposer>}
-        </Suspense>
-        <Environment
-          path='/'
-          files={"studio_small_04_2k.hdr"}
-
-          resolution={256}
-        />
-      </Canvas>
-    </>
+    <Canvas
+      linear
+      className='threeCanvas'
+      frameloop='always'
+    >
+      <PerspectiveCamera
+        makeDefault
+        fov={60}
+        position={[0.25, 1.5, 1.25]}
+      />
+      <Suspense fallback={null}>
+        <spotLight intensity={0.7} position={[0, 3, 7]} />
+        <Arm />
+        {stat.effects && <EffectComposer multisampling={2}>
+          <Bloom kernelSize={1} luminanceThreshold={0} luminanceSmoothing={0.3} intensity={0.8} />
+          <Bloom kernelSize={KernelSize.HUGE} luminanceThreshold={0} luminanceSmoothing={1} intensity={1} />
+        </EffectComposer>}
+      </Suspense>
+      <Environment
+        path='/'
+        files={"studio_small_04_2k.hdr"}
+        resolution={256}
+      />
+    </Canvas>
   )
 }
 
+const GlobalStyle = createGlobalStyle`
+html, body{
+  background: ${props => props.theme.gradient};
+}
+
+a, body{
+  color: ${props => props.theme.fontColor};
+}
+`
 // App: Top Level Function
 export default function App() {
   const snap = useSnapshot(stat);
 
+  window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && !stat.themeChanged ?
+    (stat.theme = 'dark') : (stat.theme = 'light')
   return (
-    <div className="App">
-      <UI />
-      {snap.cam &&
-        <>
-          <Webcam
-            width={640}
-            height={480}
-            className="input_video selfie"
-          />
-          <Webcam
-            width={640}
-            height={480}
-            className="input_video2 selfie"
-          />
-          <canvas
-            className="guides"
-            ref={(e) => activateDraw(e)}
-          ></canvas>
-        </>
-      }
-      <CanvasComp />
-    </div>
+    <ThemeProvider theme={snap.theme === 'light' ? snap.light : snap.dark}>
+      <GlobalStyle />
+      <div className="App">
+        <UI />
+        {snap.cam &&
+          <>
+            <Webcam
+              width={640}
+              height={480}
+              className="input_video selfie"
+            />
+            <Webcam
+              width={640}
+              height={480}
+              className="input_video2 selfie"
+            />
+            <canvas
+              className="guides"
+              ref={(e) => activateDraw(e)}
+            ></canvas>
+          </>
+        }
+        <CanvasComp />
+      </div>
+    </ThemeProvider>
   );
 }
-

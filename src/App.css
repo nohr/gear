@@ -1,6 +1,6 @@
 html, body{
     background: rgb(24, 28, 36);
-  background: linear-gradient(18deg, rgba(24, 28, 36, 1) 0%, rgba(79, 79, 114, 1) 100%);
+  /* background: linear-gradient(18deg, rgba(24, 28, 36, 1) 0%, rgba(79, 79, 114, 1) 100%); */
 }
 
 body {
@@ -12,6 +12,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
   height: 100vh;
   width: 100vw;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
 }
 
 p{
@@ -21,6 +24,8 @@ p{
 .threeCanvas{
   margin-bottom: -100vh;
   position: absolute !important;
+  top: 0;
+  left: 0;
   height: 100vh;
   width: 100vw;
   z-index: 30;
@@ -109,14 +114,13 @@ p{
 
 .caption {
   position: absolute;
-  width: 100vw;
+  width: 50vw;
   z-index: 200;
   top: 0;
-  left: 0;
-  padding: 5px;
+  padding: 20px;
   text-align: center;
-  /* left: 50%;
-  transform: translateX(-50%); */
+  left: 50%;
+  transform: translateX(-50%);
   font-size: 11px;;
   user-select: none;
   -webkit-user-select: none;
