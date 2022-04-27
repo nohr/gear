@@ -139,7 +139,7 @@ function Options() {
     return (
         <Option>
             {!snap.selfie ? <Link onClick={externalMode}>External</Link> : <Link onClick={laptopMode}>Laptop</Link>}
-            {snap.fullscreen ? <Link onClick={closeFullscreen}>Exit</Link> : <Link onClick={openFullscreen}>Fullscreen</Link>}
+            {snap.fullscreen ? <Link onClick={closeFullscreen}>Windowed</Link> : <Link onClick={openFullscreen}>Fullscreen</Link>}
             {/* {snap.popup ? null : <Link onClick={PopupCamera}>Popup Camera</Link>} */}
             {snap.start ? <Link className='start' onClick={stop}><b>Stop</b></Link> : <Link className='start' onClick={start}><b>Start</b></Link>}
         </Option>
