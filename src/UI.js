@@ -237,15 +237,19 @@ function UI() {
     // Access the status element
     useEffect(() => {
         const statusCurrent = statusRef.current;
-
-        const observer = new MutationObserver(
-            function (mutationsList, observer) {
-                if (mutationsList[0].target.textContent === 'Ready') {
-                    // console.log('readyyyy');
-                    ready();
-                }
-            });
-        observer.observe(statusCurrent, { characterData: true, childList: true, attributes: false, subtree: true })
+        if (statusCurrent) {
+            const observer = new MutationObserver(
+                function (mutationsList, observer) {
+                    if (mutationsList[0].target.textContent === 'Ready') {
+                        // console.log('readyyyy');
+                        ready();
+                    }
+                })
+            console.log(observer);
+            if (observer) {
+                observer.observe(statusCurrent, { characterData: true, childList: true, attributes: false, subtree: true })
+            }
+        }
     }, [statusRef, ready])
 
     async function getContacts() {
