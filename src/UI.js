@@ -1,8 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react'
-// import { Html, useProgress } from '@react-three/drei';
+import React, { useEffect, useRef, useState } from 'react';
 import { stat } from './state';
 import { useSnapshot } from 'valtio';
-import styled from 'styled-components'
+import styled from 'styled-components';
+// Sound Imports
+import useSound from 'use-sound';
+import selectFile from './sounds/select.mp3'
+import readyFile from './sounds/home.mp3'
+// R3F Imports
+// import { Html, useProgress } from '@react-three/drei';
 
 
 // Spinner : depreciated
@@ -50,22 +55,17 @@ gap: 40px;
 `
 
 function Options() {
-    const snap = useSnapshot(stat)
-    const statusRef = useRef(null);
-
+    const snap = useSnapshot(stat);
+    const [select] = useSound(selectFile);
     var elem = document.documentElement;
     const [status, setStatus] = useState('');
     let statusCurrent;
     let option = '';
 
-    // Access the status element
-    // useEffect(() => {
-    //     statusCurrent = statusRef.current;
-    // }, [])
-
 
     function openFullscreen() {
         stat.fullscreen = true;
+        select();
         if (elem.requestFullscreen) {
             elem.requestFullscreen();
         } else if (elem.webkitRequestFullscreen) { /* Safari */
@@ -76,6 +76,7 @@ function Options() {
     }
     function closeFullscreen() {
         stat.fullscreen = false;
+        select();
         if (document.exitFullscreen) {
             document.exitFullscreen();
         } else if (document.webkitExitFullscreen) { /* Safari */
@@ -86,9 +87,11 @@ function Options() {
     }
     function start() {
         stat.start = true;
+        select();
     }
     function stop() {
         stat.start = false;
+        select();
         // clear axis
         for (const axis in snap.location) {
             if (stat.location[axis]) {
@@ -101,16 +104,19 @@ function Options() {
             stop()
         }
         stat.selfie = true;
+        select();
     }
     function laptopMode() {
         if (stat.start) {
             stop()
         }
         stat.selfie = false;
+        select();
     }
     function PopupCamera() {
         // TODO: Render camera feed popup that shows up in fullscreen
         console.log(window);
+        select();
     }
     // TODO: update status bar
     // onMouseOver={() => toolTip(n)} onMouseOut={() => toolTip(0)} to enable
@@ -224,6 +230,33 @@ function UI() {
     const props = ['name', 'email', 'tel', 'address', 'icon'];
     const opts = { multiple: true };
     const supported = ('contacts' in navigator && 'ContactsManager' in window);
+    const [ready] = useSound(readyFile);
+    const statusRef = useRef(null);
+
+    // Access the status element
+    useEffect(() => {
+        const statusCurrent = statusRef.current;
+        if (statusCurrent) {
+            statusCurrent.addEventListener('click', () => notifyReady())
+        }
+
+        // create a new instance of 'MutationObserver' named 'observer', 
+        // passing it a callback function
+        const observer = new MutationObserver(
+            function (mutationsList, observer) {
+
+                console.log(mutationsList);
+            });
+
+        observer.observe(statusCurrent, { characterData: false, childList: true, attributes: false })
+
+        function notifyReady() {
+            if (statusCurrent.innerHTML === 'Ready') {
+                console.log(statusCurrent.innerHTML);
+            }
+        }
+    }, [statusRef])
+
 
     async function getContacts() {
         console.log("checking");
@@ -257,13 +290,14 @@ function UI() {
                     <div className='statusbar'>
                         <p>Camera stream is in <b>{!snap.selfie ? "Laptop" : "External"}</b> mode</p>
                         <br />
+                        {/* Status Bar */}
                         {snap.start ?
                             <Status className={snap.load === "closed" ?
                                 "closed" : snap.load === 'open' ?
                                     "open" : snap.load === 'point' ?
                                         "point" : null}>
                                 {snap.load === 'closed' ? 'fist' : snap.load}
-                            </Status> : <Status >Press Start</Status >}
+                            </Status> : <Status ref={statusRef}>Press Start</Status >}
                         {snap.location.x && snap.start && <>
                             <p>x: {`${snap.location.x}`} </p>
                             <p>y: {`${snap.location.y}`} </p>

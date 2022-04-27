@@ -32,7 +32,9 @@ const onResults = (results) => {
   // Animate model if there is video
   if (currentVrm) {
     if (stat.model && !stat.location.x) {
-      stat.load = 'Ready'
+      if (stat.load !== 'Ready') {
+        stat.load = 'Ready'
+      }
     }
     animateVRM(currentVrm, results);
   }

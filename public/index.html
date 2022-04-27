@@ -13,14 +13,48 @@
   <link rel="apple-touch-icon" href="./images/logo1024.png" />
   <link rel="manifest" href="./manifest.json" />
   <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+        sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-size: 12px;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      overflow: hidden;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
     html {
       background-color: #4F4F75;
+    }
+
+    p {
+      color: #bebebe;
+      text-shadow: 1px 0px 1.75px #bebebe47;
+    }
+
+    p.loader {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
 
     @media (prefers-color-scheme: light) {
       html {
         background-color: #C9CDCC !important;
       }
+
+      p {
+        color: #056D58;
+        text-shadow: 1px 0px 1.75px #056D5867;
+      }
+
     }
   </style>
 </head>
@@ -28,6 +62,7 @@
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root">
+    <p class="loader">Loading...</p>
   </div>
   <script>
     if ('serviceWorker' in navigator) {
