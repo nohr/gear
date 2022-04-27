@@ -13,6 +13,11 @@
   <link rel="apple-touch-icon" href="./images/logo1024.png" />
   <link rel="manifest" href="./manifest.json" />
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -30,12 +35,12 @@
     }
 
     html {
-      background-color: #4F4F75;
+      background: linear-gradient(0deg, rgba(24, 28, 36, 1) 0%, rgba(79, 79, 114, 1) 100%);
     }
 
     p {
       color: #bebebe;
-      text-shadow: 1px 0px 1.75px #bebebe47;
+      text-shadow: 1px 0px 1.75px #bebebe;
     }
 
     p.loader {
@@ -47,12 +52,12 @@
 
     @media (prefers-color-scheme: light) {
       html {
-        background-color: #C9CDCC !important;
+        background: linear-gradient(0deg, rgba(234, 258, 236, 1) 0%, rgba(202, 205, 204, 1) 100%) !important;
       }
 
       p {
         color: #056D58;
-        text-shadow: 1px 0px 1.75px #056D5867;
+        text-shadow: 1px 0px 1.75px #056D58;
       }
 
     }

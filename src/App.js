@@ -368,10 +368,6 @@ function CanvasComp() {
 }
 
 const GlobalStyle = createGlobalStyle`
-html, body{
-  background: ${props => props.theme.gradient};
-}
-
 a:hover{
   color: ${props => props.theme.hover};
   text-shadow: 1px 0px 1.75px ${props => props.theme.hover} !important;
@@ -386,13 +382,6 @@ a, body{
 // App: Top Level Function
 export default function App() {
   const snap = useSnapshot(stat);
-
-  // Theme to prefrence and listen for changes
-  window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && !stat.themeChanged ?
-    (stat.theme = 'dark') : (stat.theme = 'light')
-  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",
-    e => e.matches ? (stat.theme = 'dark') : (stat.theme = 'light') // listener
-  );
 
   return (
     <ThemeProvider theme={snap.theme === 'light' ? snap.light : snap.dark}>

@@ -1,7 +1,3 @@
-html, body{
-    background: rgb(24, 28, 36);
-}
-
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -17,26 +13,9 @@ body {
   justify-content: center;
 }
 
-p{
-  margin: 0;
-}
-
 a{
   color: inherit;
 }
-
-a, body{
-  color: #056D58;
-  text-shadow: 1px 0px 1.75px #056D5867;
-}
-
-/* @media (prefers-color-scheme: dark) {
-a,
-body {
-  color: #bebebe;
-  text-shadow: 1px 0px 1.75px #bebebe47;
-}
-} */
 
 .threeCanvas{
   margin-bottom: -100vh;

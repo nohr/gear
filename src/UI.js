@@ -5,7 +5,7 @@ import styled from 'styled-components';
 // Sound Imports
 import useSound from 'use-sound';
 import selectFile from './sounds/select.mp3'
-import readyFile from './sounds/home.mp3'
+import readyFile from './sounds/open.mp3'
 // R3F Imports
 // import { Html, useProgress } from '@react-three/drei';
 
@@ -153,6 +153,7 @@ function Options() {
 }
 
 const Button = styled.div`
+font-size: 24px;
 cursor: pointer;
 position: absolute;
 transition: 1s;
@@ -236,27 +237,16 @@ function UI() {
     // Access the status element
     useEffect(() => {
         const statusCurrent = statusRef.current;
-        if (statusCurrent) {
-            statusCurrent.addEventListener('click', () => notifyReady())
-        }
 
-        // create a new instance of 'MutationObserver' named 'observer', 
-        // passing it a callback function
         const observer = new MutationObserver(
             function (mutationsList, observer) {
-
-                console.log(mutationsList);
+                if (mutationsList[0].target.textContent === 'Ready') {
+                    // console.log('readyyyy');
+                    ready();
+                }
             });
-
-        observer.observe(statusCurrent, { characterData: false, childList: true, attributes: false })
-
-        function notifyReady() {
-            if (statusCurrent.innerHTML === 'Ready') {
-                console.log(statusCurrent.innerHTML);
-            }
-        }
-    }, [statusRef])
-
+        observer.observe(statusCurrent, { characterData: true, childList: true, attributes: false, subtree: true })
+    }, [statusRef, ready])
 
     async function getContacts() {
         console.log("checking");
@@ -283,7 +273,7 @@ function UI() {
                 <Caption style={hide ? { pointerEvents: "none", opacity: 0, transition: "1s" } : { pointerEvents: "all", opacity: 1, transition: "0.2s" }}>
                     <i>Gear and Loading</i> c/o <a href='https://nabla.ooo/'>Nabla</a><br />
                     This is a work in progress, follow it's development on <a href='https://github.com/nohr/gear'>Github</a><br />
-                    {supported && <><Button onClick={getContacts}>Send this to someone!</Button><p> or </p></>}<a className='start' href='mailto:aite@nabla.ooo'>Email me feedback!</a>
+                    {supported && <><Button onClick={getContacts}>Send this to someone!</Button><p> or </p></>}<a className='start' href='mailto:aite@nabla.ooo'>Send me feedback!</a>
                     <p style={{ paddingTop: '5px' }}>☆ Make point, fist, or open handsigns to test detection ☆<br />Be advised: <i>This demo works best in a well-lit area</i>.</p>
                     <br />
                     <Options />
