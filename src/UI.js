@@ -223,7 +223,7 @@ function UI() {
                     <i>Gear and Loading</i> c/o <a href='https://nabla.ooo/'>Nabla</a><br />
                     This is a work in progress, follow it's development on <a href='https://github.com/nohr/gear'>Github</a><br />
                     {supported && <><Button onClick={getContacts}>Send this to someone!</Button><p> or </p></>}<a className='start' href='mailto:aite@nabla.ooo'>Email me feedback!</a>
-                    <p style={{ paddingTop: '5px' }}>☆ Make point, fist, or open handsigns to test detection ☆<br />Be advised: This demo works best in a well-lit area.</p>
+                    <p style={{ paddingTop: '5px' }}>☆ Make point, fist, or open handsigns to test detection ☆<br />Be advised: <i>This demo works best in a well-lit area</i>.</p>
                     <br />
                     <Options />
                     <div className='statusbar'>
