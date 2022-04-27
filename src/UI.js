@@ -127,9 +127,6 @@ z-index: 1000;
 &:hover{
     color: ${props => props.theme.hover};
     text-shadow: 1px 0px 1.75px ${props => props.theme.hover} !important;
-    /* box-shadow: 0 0 50px 50px  ${props => props.theme.baseColorAlpha};
-  -webkit-box-shadow: 0 0 50px 50px  ${props => props.theme.baseColorAlpha}; 
-  -moz-box-shadow: 0 0 50px 50px  ${props => props.theme.baseColorAlpha};  */
 }
 `
 
@@ -153,6 +150,17 @@ background-color: #acddff77;
 function UI() {
     const snap = useSnapshot(stat)
     const [hide, setHide] = useState(false)
+    const props = ['name', 'email', 'tel', 'address', 'icon'];
+    const opts = { multiple: true };
+    const supported = ('contacts' in navigator && 'ContactsManager' in window);
+
+    async function getContacts() {
+        console.log("checking");
+        if (supported) {
+            const contacts = await navigator.contacts.select(props, opts);
+            console.log(contacts);
+        }
+    }
 
     var x = window.matchMedia("(max-width: 768px)");
     if (x.matches) {
@@ -171,7 +179,7 @@ function UI() {
                 <div className='caption' style={hide ? { pointerEvents: "none", opacity: 0, transition: "1s" } : { pointerEvents: "all", opacity: 1, transition: "0.2s" }}>
                     <i>Gear and Loading</i> c/o <a href='https://nabla.ooo/'>Nabla</a><br />
                     This is a work in progress, follow it's development on <a href='https://github.com/nohr/gear-and-loading'>Github</a><br />
-                    <a href='mailto:aite@nabla.ooo'>Email me</a>
+                    {supported && <><Button onClick={getContacts}>Send this to someone!</Button><p> or </p></>}<a href='mailto:aite@nabla.ooo'>Email me feedback!</a>
                     <p style={{ paddingTop: '5px' }}>☆ Make point, fist, or open handsigns to test detection ☆<br />Be advised: This demo works best in a well-lit area.</p>
                     <br />
                     <Options />
