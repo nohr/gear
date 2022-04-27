@@ -3,17 +3,24 @@
 
 <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/images/favicon.ico" />
+    <link rel="icon" type="image/png" href="./images/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <title>Gear and Loading</title>
+    <meta name="theme-color" content="#C9CDCC" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#4F4F75" media="(prefers-color-scheme: dark)">
+    <title>Gear</title>
     <meta name="description"
         content="Gear and Loading is an interactive art project that emphasizes choice and slowness in a menial task." />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/images/logo192.png" />
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="apple-touch-icon" href="./images/logo1024.png" />
+    <link rel="manifest" href="./manifest.json" />
     <style>
         html {
-            background-color: rgb(24, 28, 36);
+            background-color: #4F4F75;
+        }
+
+        @media (prefers-color-scheme: light) {
+            html {
+                background-color: #C9CDCC !important;
+            }
         }
     </style>
 </head>

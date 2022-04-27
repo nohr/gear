@@ -123,6 +123,9 @@ cursor: pointer;
 position: absolute;
 transition: 1s;
 z-index: 1000;
+top: 5px;
+left: 50%;
+transform: translateX(-50%);
 
 &:hover{
     color: ${props => props.theme.hover};
@@ -147,6 +150,46 @@ text-shadow: 1px 0px 1.75px #009698 !important;
 background-color: #acddff77;
 }
 `
+
+const Caption = styled.div`
+  position: absolute;
+  width: 50vw;
+  z-index: 200;
+  top: 10px;
+  padding: 20px;
+  text-align: center;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+
+    a.start{
+    color:  ${props => props.theme.hover} !important;
+    text-shadow: 1px 0px 1.75px ${props => props.theme.hover} !important;
+    
+    &:hover{
+    color:  ${props => props.theme.baseColor} !important;
+    text-shadow: 1px 0px 1.75px ${props => props.theme.baseColor} !important;
+    }
+  }
+`
+
+const MobileCaption = styled.div`
+    position: absolute;
+    z-index: 200;
+    top: 50%;
+    padding: 20px;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    font-size: 14px;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+`
 function UI() {
     const snap = useSnapshot(stat)
     const [hide, setHide] = useState(false)
@@ -166,20 +209,20 @@ function UI() {
     if (x.matches) {
         // mobile
         return (
-            <div className='mobileCaption' style={{ top: "50% !important", translate: "transform(-50%, -50%) !important" }}>
-                Use a <b>Computer</b> to play <br />
+            <MobileCaption style={{ top: "50% !important", translate: "transform(-50%, -50%) !important" }}>
+                Use a <b>Computer</b> with<br /> a <b>webcam</b> to playtest <br />
                 <i>Gear and Loading</i>
-            </div>
+            </MobileCaption>
         )
     } else {
         // not mobile
         return (
             <>
                 <Button onClick={() => { setHide(!hide) }}>{hide ? '★' : '☆'}</Button>
-                <div className='caption' style={hide ? { pointerEvents: "none", opacity: 0, transition: "1s" } : { pointerEvents: "all", opacity: 1, transition: "0.2s" }}>
+                <Caption style={hide ? { pointerEvents: "none", opacity: 0, transition: "1s" } : { pointerEvents: "all", opacity: 1, transition: "0.2s" }}>
                     <i>Gear and Loading</i> c/o <a href='https://nabla.ooo/'>Nabla</a><br />
                     This is a work in progress, follow it's development on <a href='https://github.com/nohr/gear'>Github</a><br />
-                    {supported && <><Button onClick={getContacts}>Send this to someone!</Button><p> or </p></>}<a href='mailto:aite@nabla.ooo'>Email me feedback!</a>
+                    {supported && <><Button onClick={getContacts}>Send this to someone!</Button><p> or </p></>}<a className='start' href='mailto:aite@nabla.ooo'>Email me feedback!</a>
                     <p style={{ paddingTop: '5px' }}>☆ Make point, fist, or open handsigns to test detection ☆<br />Be advised: This demo works best in a well-lit area.</p>
                     <br />
                     <Options />
@@ -200,8 +243,8 @@ function UI() {
                             <p>h: {`${snap.location.h}`} </p>
                         </>}
                     </div>
-                </div
-                ></>
+                </Caption>
+            </>
         )
     }
 }
