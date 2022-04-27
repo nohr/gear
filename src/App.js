@@ -381,8 +381,6 @@ a, body{
 }
 `
 
-
-
 // App: Top Level Function
 export default function App() {
   const snap = useSnapshot(stat);

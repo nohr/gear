@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 // import { Html, useProgress } from '@react-three/drei';
 import { stat } from './state';
 import { useSnapshot } from 'valtio';
@@ -51,7 +51,18 @@ gap: 40px;
 
 function Options() {
     const snap = useSnapshot(stat)
+    const statusRef = useRef(null);
+
     var elem = document.documentElement;
+    const [status, setStatus] = useState('');
+    let statusCurrent;
+    let option = '';
+
+    // Access the status element
+    // useEffect(() => {
+    //     statusCurrent = statusRef.current;
+    // }, [])
+
 
     function openFullscreen() {
         stat.fullscreen = true;
@@ -97,22 +108,39 @@ function Options() {
         }
         stat.selfie = false;
     }
-    // function themeDark() {
-    //     stat.themeChanged = true;
-    //     stat.theme = 'dark'
-    //     console.log(stat.themeChanged);
-    // }
-    // function themeLite() {
-    //     stat.themeChanged = true;
-    //     stat.theme = 'light'
-    // }
-
+    function PopupCamera() {
+        // TODO: Render camera feed popup that shows up in fullscreen
+        console.log(window);
+    }
+    // TODO: update status bar
+    // onMouseOver={() => toolTip(n)} onMouseOut={() => toolTip(0)} to enable
+    function toolTip(n) {
+        console.log("switch");
+        if (!stat.start) {
+            if (n === 0) {
+                option = 'Press Start';
+                setStatus(status);
+            } else if (n === 1) {
+                option = 'Flips the camera view.';
+                setStatus(status);
+            } else if (n === 2) {
+                option = 'Opens the app in fullscreen.';
+                setStatus(status);
+            } else if (n === 3) {
+                option = 'Pop out the camera feed';
+                setStatus(status);
+            } else if (n === 4) {
+                option = 'Start the game.';
+                setStatus(status);
+            }
+            stat.load = status;
+        }
+    }
     return (
         <Option>
             {!snap.selfie ? <Link onClick={externalMode}>External</Link> : <Link onClick={laptopMode}>Laptop</Link>}
             {snap.fullscreen ? <Link onClick={closeFullscreen}>Exit</Link> : <Link onClick={openFullscreen}>Fullscreen</Link>}
-            {/* Bugged */}
-            {/* {snap.theme === 'light' ? <Link onClick={themeDark}>Dark</Link> : <Link onClick={themeLite}>Lite</Link>} */}
+            {/* {snap.popup ? null : <Link onClick={PopupCamera}>Popup Camera</Link>} */}
             {snap.start ? <Link className='start' onClick={stop}><b>Stop</b></Link> : <Link className='start' onClick={start}><b>Start</b></Link>}
         </Option>
     )
