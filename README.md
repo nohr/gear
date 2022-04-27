@@ -16,7 +16,7 @@ This project is using:
 
 ## Installation
 
-```
+```zsh
 # Clone and open repository
 $ git clone https://github.com/nohr/gear
 $ cd gear
