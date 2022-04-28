@@ -9,7 +9,7 @@ export const stat = proxy({
     //UI
     theme: 'light',
     themeChanged: false,
-    transition: `3s`,
+    transition: `0.3s`,
     light: {
         gradient: 'linear-gradient(0deg, rgba(234, 258, 236, 1) 0%, rgba(202, 205, 204, 1) 100%) !important',
         baseColor: '#056D58',

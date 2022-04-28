@@ -30,7 +30,7 @@ const Link = styled.div`
   cursor: pointer;
   width: fit-content;
   display: block;
-    transition: ${props => props.theme.transition};
+    transition: ${stat.transition};
 
   &:hover{
     color: ${props => props.theme.hover};
@@ -161,7 +161,7 @@ const Shown = styled.svg`
     height: 24px;
     cursor: pointer;
     position: absolute;
-    transition: 1s;
+    transition: ${stat.transition};
     z-index: 1000;
     top: 5px;
     left: 50%;
@@ -185,7 +185,7 @@ const Hidden = styled.svg`
     height: 24px;
     cursor: pointer;
     position: absolute;
-    transition: 1s;
+    transition: ${stat.transition};
     z-index: 1000;
     top: 5px;
     left: 50%;
@@ -196,9 +196,9 @@ const Hidden = styled.svg`
     overflow: visible;
 
     &:hover{
-        fill: ${props => props.theme.hover} !important;
+    fill: transparent;
         filter: drop-shadow(1px 0px 1.75px ${props => props.theme.hover} ) !important;
-        stroke: none !important;
+        stroke: ${props => props.theme.hover} !important;
 }
 `
 
@@ -338,7 +338,7 @@ function UI() {
         return (
             <>
                 <CD />
-                <Caption style={hide ? { pointerEvents: "none", opacity: 0, transition: "1s" } : { pointerEvents: "all", opacity: 1, transition: "0.2s" }}>
+                <Caption style={hide ? { pointerEvents: "none", opacity: 0, transition: `${stat.transition}` } : { pointerEvents: "all", opacity: 1, transition: "0.2s" }}>
                     {/* Caption */}
                     <i>Gear and Loading</i> c/o <a href='https://nabla.ooo/'>Nabla</a><br />
                     This is a work in progress, follow it's development on <a href='https://github.com/nohr/gear'>Github</a>.

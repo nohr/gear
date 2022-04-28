@@ -378,7 +378,7 @@ a:hover{
 a, body{
   color: ${props => props.theme.baseColor};
   text-shadow: 1px 0px 1.75px ${props => props.theme.baseColor};
-  transition: ${props => props.theme.transition};
+  transition: ${stat.transition};
 }
 `
 
