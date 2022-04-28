@@ -2,6 +2,7 @@ import { proxy } from 'valtio'
 
 export const stat = proxy({
     start: false,
+    ready: false,
     paused: false,
     cam: true,
     fullscreen: false,
@@ -14,14 +15,14 @@ export const stat = proxy({
         gradient: 'linear-gradient(0deg, rgba(234, 258, 236, 1) 0%, rgba(202, 205, 204, 1) 100%) !important',
         baseColor: '#056D58',
         baseColorAlpha: `#056D5867`,
-        hover: '#FE3632',
+        sub: '#FE3632',
         subAlpha: '#00000047',
     },
     dark: {
         gradient: 'linear-gradient(0deg, rgba(24, 28, 36, 1) 0%, rgba(79, 79, 114, 1) 100%) !important',
         baseColor: '#bebebe',
         baseColorAlpha: `#bebebe47`,
-        hover: '#00FFFF',
+        sub: '#00FFFF',
         subAlpha: '#ffffff67',
 
     },

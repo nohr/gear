@@ -34,6 +34,7 @@ const onResults = (results) => {
     if (stat.model && !stat.location.x) {
       if (stat.load !== 'Ready') {
         stat.load = 'Ready'
+        stat.ready = true
       }
     }
     animateVRM(currentVrm, results);
@@ -372,8 +373,8 @@ function CanvasComp() {
 
 const GlobalStyle = createGlobalStyle`
 a:hover{
-  color: ${props => props.theme.hover};
-  text-shadow: 1px 0px 1.75px ${props => props.theme.hover} !important;
+  color: ${props => props.theme.sub};
+  text-shadow: 1px 0px 1.75px ${props => props.theme.sub} !important;
 }
 a, body{
   color: ${props => props.theme.baseColor};
