@@ -211,7 +211,7 @@ transition: ${stat.transition};
     z-index: 5000;
     top: 0;
     right: 0;
-    padding: 10px;
+    padding: 20px;
     font-style: bold;
     user-select: none;
     -webkit-user-select: none;

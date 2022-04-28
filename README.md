@@ -36,4 +36,4 @@ $ npm run start
 
 #### Etc.
 
-- Help icon was created by [Gregor Cresnar](https://thenounproject.com/grega.cresnar/) and edited further by me.
+- README icon was created by [Gregor Cresnar](https://thenounproject.com/grega.cresnar/) and edited further by me.
