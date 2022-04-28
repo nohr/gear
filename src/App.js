@@ -374,11 +374,11 @@ function CanvasComp() {
 const GlobalStyle = createGlobalStyle`
 a:hover{
   color: ${props => props.theme.sub};
-  text-shadow: 1px 0px 1.75px ${props => props.theme.sub} !important;
+  text-shadow: 1px 0px 1.75px ${props => props.theme.sub} ;
 }
-a, body{
-  color: ${props => props.theme.baseColor};
-  text-shadow: 1px 0px 1.75px ${props => props.theme.baseColor};
+p:not(.markdown), a, body{
+  color: ${props => props.theme.base};
+  text-shadow: 1px 0px 1.75px ${props => props.theme.base};
   transition: ${stat.transition};
 }
 `
@@ -390,30 +390,28 @@ export default function App() {
   return (
     <ThemeProvider theme={snap.theme === 'light' ? snap.light : snap.dark}>
       <GlobalStyle />
-      <div className="App">
-        <UI />
-        {snap.start ?
-          <>
-            {/* MediaPipe Camera */}
-            <Webcam
-              width={640}
-              height={480}
-              className="input_video selfie"
-            />
-            {/* Handtrack js Camera */}
-            <Webcam
-              width={640}
-              height={480}
-              className="input_video2 selfie"
-            />
-            <canvas
-              className="guides"
-              ref={(e) => activateDraw(e)}
-            ></canvas>
-          </>
-          : null}
-        <CanvasComp />
-      </div>
+      <UI />
+      {snap.start ?
+        <>
+          {/* MediaPipe Camera */}
+          <Webcam
+            width={640}
+            height={480}
+            className="input_video selfie"
+          />
+          {/* Handtrack js Camera */}
+          <Webcam
+            width={640}
+            height={480}
+            className="input_video2 selfie"
+          />
+          <canvas
+            className="guides"
+            ref={(e) => activateDraw(e)}
+          ></canvas>
+        </>
+        : null}
+      <CanvasComp />
     </ThemeProvider>
   );
 }

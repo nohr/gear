@@ -13,18 +13,21 @@ export const stat = proxy({
     transition: `0.3s`,
     light: {
         gradient: 'linear-gradient(0deg, rgba(234, 258, 236, 1) 0%, rgba(202, 205, 204, 1) 100%) !important',
-        baseColor: '#056D58',
-        baseColorAlpha: `#056D5867`,
+        base: '#056D58',
+        baseAlpha: `#056D5867`,
         sub: '#FE3632',
-        subAlpha: '#00000047',
+        subAlpha: '#FE363247',
+        third: '#1A090D',
+        thirdAlpha: '#1A090D67'
     },
     dark: {
         gradient: 'linear-gradient(0deg, rgba(24, 28, 36, 1) 0%, rgba(79, 79, 114, 1) 100%) !important',
-        baseColor: '#bebebe',
-        baseColorAlpha: `#bebebe47`,
-        sub: '#00FFFF',
-        subAlpha: '#ffffff67',
-
+        base: '#bebebe',
+        baseAlpha: `#bebebe47`,
+        sub: '#4ECDC4',
+        subAlpha: '#4ECDC467',
+        third: '#CCFF66',
+        thirdAlpha: '#CCFF6667'
     },
     //selfie: true is external, false is laptop
     selfie: false,
