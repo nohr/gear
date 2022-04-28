@@ -282,7 +282,6 @@ const activateDraw = (ref) => {
                       one.bbox.forEach((num) => {
                         if (!stat.ready && !stat.started && stat.start === true && num) {
                           stat.ready = true;
-                          console.log(stat.ready);
                         }
                       })
                       stat.load = `${one.label}`;

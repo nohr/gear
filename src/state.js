@@ -20,16 +20,16 @@ export const stat = proxy({
         sub: '#FE3632',
         subAlpha: '#FE363247',
         third: '#1A090D',
-        thirdAlpha: '#1A090D67'
+        thirdAlpha: '#1A090D67',
     },
     dark: {
         gradient: 'linear-gradient(0deg, rgba(24, 28, 36, 1) 0%, rgba(79, 79, 114, 1) 100%) !important',
         base: '#bebebe',
         baseAlpha: `#bebebe47`,
-        sub: '#4ECDC4',
-        subAlpha: '#4ECDC467',
-        third: '#CCFF66',
-        thirdAlpha: '#CCFF6667'
+        sub: '#CCFF66',
+        subAlpha: '#CCFF6667',
+        third: '#1E7D94',
+        thirdAlpha: '#1E7D9467',
     },
     // ML Models
     //selfie: true is external, false is laptop
