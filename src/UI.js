@@ -5,10 +5,9 @@ import styled from 'styled-components';
 // Sound Imports
 import useSound from 'use-sound';
 import selectFile from './sounds/select.mp3'
-import readyFile from './sounds/open.mp3'
 import ReactMarkdown from 'react-markdown';
 import ReadMeMD from './README.md'
-
+import { commentBox } from 'commentbox.io';
 
 // R3F Imports
 // import { Html, useProgress } from '@react-three/drei';
@@ -60,104 +59,6 @@ display: flex;
 justify-content: center;
 gap: 40px;
 `
-
-function Options() {
-    const snap = useSnapshot(stat);
-    const [select] = useSound(selectFile);
-    var elem = document.documentElement;
-    // const [status, setStatus] = useState('');
-    // let option = '';
-
-    function openFullscreen() {
-        stat.fullscreen = true;
-        select();
-        if (elem.requestFullscreen) {
-            elem.requestFullscreen();
-        } else if (elem.webkitRequestFullscreen) { /* Safari */
-            elem.webkitRequestFullscreen();
-        } else if (elem.msRequestFullscreen) { /* IE11 */
-            elem.msRequestFullscreen();
-        }
-    }
-    function closeFullscreen() {
-        stat.fullscreen = false;
-        select();
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) { /* Safari */
-            document.webkitExitFullscreen();
-        } else if (document.msExitFullscreen) { /* IE11 */
-            document.msExitFullscreen();
-        }
-    }
-    function start() {
-        stat.start = true;
-        select();
-    }
-    function stop() {
-        stat.start = false;
-        select();
-        // clear axis
-        for (const axis in snap.location) {
-            if (stat.location[axis]) {
-                stat.location[axis] = null;
-            }
-        }
-    }
-    function externalMode() {
-        if (stat.start) {
-            stop()
-        }
-        stat.selfie = true;
-        select();
-    }
-    function laptopMode() {
-        if (stat.start) {
-            stop()
-        }
-        stat.selfie = false;
-        select();
-    }
-
-    // TODO: Render camera feed popup
-    // function PopupCamera() {
-    //     console.log(window);
-    //     select();
-    // }
-
-    // TODO: update status bar on mouseover
-    // ENABLE: onMouseOver={() => toolTip(n)} onMouseOut={() => toolTip(0)}
-    // function toolTip(n) {
-    //     console.log("switch");
-    //     if (!stat.start) {
-    //         if (n === 0) {
-    //             option = 'Press Start';
-    //             setStatus(status);
-    //         } else if (n === 1) {
-    //             option = 'Flips the camera view.';
-    //             setStatus(status);
-    //         } else if (n === 2) {
-    //             option = 'Opens the app in fullscreen.';
-    //             setStatus(status);
-    //         } else if (n === 3) {
-    //             option = 'Pop out the camera feed';
-    //             setStatus(status);
-    //         } else if (n === 4) {
-    //             option = 'Start the game.';
-    //             setStatus(status);
-    //         }
-    //         stat.load = status;
-    //     }
-    // }
-    return (
-        <Option>
-            {!snap.selfie ? <Link onClick={externalMode}>External</Link> : <Link onClick={laptopMode}>Laptop</Link>}
-            {snap.fullscreen ? <Link onClick={closeFullscreen}>Windowed</Link> : <Link onClick={openFullscreen}>Fullscreen</Link>}
-            {/* {snap.popup ? null : <Link onClick={PopupCamera}>Popup Camera</Link>} */}
-            {snap.start ? <Link className='start' onClick={stop}><b>Stop</b></Link> : <Link className='start' onClick={start}><b>Start</b></Link>}
-        </Option>
-    )
-}
 
 const Panel = styled.div`
 background-color: ${props => props.theme.baseAlpha};
@@ -295,15 +196,159 @@ const MobileCaption = styled.div`
     -moz-user-select: none;
 `
 function UI() {
-    const [ready] = useSound(readyFile);
     const statusRef = useRef(null);
     const snap = useSnapshot(stat);
     const [hide, setHide] = useState(false);
     const [readme, setReadMe] = useState(null);
     const [panel, setPanel] = useState(false);
+    const [box, setBox] = useState(false);
+    const [select] = useSound(selectFile);
+    var elem = document.documentElement;
     // const props = ['name', 'email', 'tel', 'address', 'icon'];
     // const opts = { multiple: true };
     // const supported = ('contacts' in navigator && 'ContactsManager' in window);
+
+    useEffect(() => {
+        const a = document.querySelectorAll('#a');
+        a.forEach((link) => {
+            link.addEventListener('click', select);
+            console.log(link);
+        })
+        function Shortcuts(e) {
+            if (e.key === 'f') {
+                select();
+                if (!stat.fullscreen) {
+                    openFullscreen();
+                    stat.fullscreen = true;
+                } else if (stat.fullscreen === true) {
+                    closeFullscreen();
+                    stat.fullscreen = false;
+                }
+            } else if (e.key === 'x') {
+                select();
+                if (!stat.selfie) {
+                    externalMode();
+                    stat.selfie = true;
+                } else if (stat.selfie === true) {
+                    laptopMode();
+                    stat.selfie = false;
+                }
+
+            } else if (e.key === 'h') {
+                hide ? setHide(false) : setHide(true);
+                select();
+            } else if (e.key === 'Enter') {
+                select();
+                if (!stat.start) {
+                    start();
+                } else if (stat.start === true) {
+                    stop();
+                }
+            } else {
+                return;
+            }
+        }
+        document.addEventListener('keyup', (e) => Shortcuts(e))
+    }, [stat])
+
+    function openFullscreen() {
+        stat.fullscreen = true;
+        select();
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.webkitRequestFullscreen) { /* Safari */
+            elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) { /* IE11 */
+            elem.msRequestFullscreen();
+        }
+    }
+    function closeFullscreen() {
+        stat.fullscreen = false;
+        select();
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) { /* Safari */
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) { /* IE11 */
+            document.msExitFullscreen();
+        }
+    }
+
+    function start() {
+        stat.start = true;
+        select();
+    }
+    function stop() {
+        stat.start = false;
+        stat.started = false;
+        stat.ready = false;
+        select();
+        // clear axis
+        for (const axis in snap.location) {
+            if (stat.location[axis]) {
+                stat.location[axis] = null;
+            }
+        }
+    }
+    function externalMode() {
+        if (stat.start) {
+            stop()
+        }
+        stat.selfie = true;
+        select();
+    }
+    function laptopMode() {
+        if (stat.start) {
+            stop()
+        }
+        stat.selfie = false;
+        select();
+    }
+
+    function Options() {
+        // const [status, setStatus] = useState('');
+        // let option = '';
+
+
+        // TODO: Render camera feed popup
+        // function PopupCamera() {
+        //     console.log(window);
+        //     select();
+        // }
+
+        // TODO: update status bar on mouseover
+        // ENABLE: onMouseOver={() => toolTip(n)} onMouseOut={() => toolTip(0)}
+        // function toolTip(n) {
+        //     console.log("switch");
+        //     if (!stat.start) {
+        //         if (n === 0) {
+        //             option = 'Press Start';
+        //             setStatus(status);
+        //         } else if (n === 1) {
+        //             option = 'Flips the camera view.';
+        //             setStatus(status);
+        //         } else if (n === 2) {
+        //             option = 'Opens the app in fullscreen.';
+        //             setStatus(status);
+        //         } else if (n === 3) {
+        //             option = 'Pop out the camera feed';
+        //             setStatus(status);
+        //         } else if (n === 4) {
+        //             option = 'Start the game.';
+        //             setStatus(status);
+        //         }
+        //         stat.load = status;
+        //     }
+        // }
+        return (
+            <Option>
+                {!snap.selfie ? <Link id='a' onClick={externalMode}>External (x)</Link> : <Link id='a' onClick={laptopMode}>Laptop(x)</Link>}
+                {snap.fullscreen ? <Link id='a' onClick={closeFullscreen}>Windowed (f)</Link> : <Link id='a' onClick={openFullscreen}>Fullscreen (f)</Link>}
+                {/* {snap.popup ? null : <Link id='a' onClick={PopupCamera}>Popup Camera</Link>} */}
+                {snap.start ? <Link id='a' className='start' onClick={stop}><b>Stop (enter)</b></Link> : <Link id='a' className='start' onClick={start}><b>Start (enter)</b></Link>}
+            </Option>
+        )
+    }
 
     // Hide button
     function CD() {
@@ -315,6 +360,7 @@ function UI() {
                     version="1.1"
                     viewBox="0 0 300 246.9"
                     xmlSpace="preserve"
+                    id='a'
                 >
                     <path vectorEffect="non-scaling-stroke" d="M150.2 125.2c33.9.1 60.7 26.7 60.8 60.4.1 33.7-27.1 61.2-60.8 61.3-33.7.1-61.2-27.1-61.3-60.8-.5-33.9 26.8-60.9 61.3-60.9zM59.8 121.5C26 121.4-.1 94.8 0 60.6-.2 27.4 26.5.2 59.8 0h1.7c33.3.4 60.5 28.1 60.2 61.2-.3 34.1-27.4 60.5-61.9 60.3zM239.5 121.5c-34.4 0-61.4-26.7-61.5-60.7-.1-33.4 28-61 61.9-60.8 33.4.2 60.3 27.5 60.1 61v.2c-.1 33.9-26.5 60.3-60.5 60.3z"></path>
                 </Hide>
@@ -327,6 +373,7 @@ function UI() {
                     version="1.1"
                     viewBox="0 0 300 246.9"
                     xmlSpace="preserve"
+                    id='a'
                 >
                     <path vectorEffect="non-scaling-stroke" d="M150.2 125.2c33.9.1 60.7 26.7 60.8 60.4.1 33.7-27.1 61.2-60.8 61.3-33.7.1-61.2-27.1-61.3-60.8-.5-33.9 26.8-60.9 61.3-60.9zM59.8 121.5C26 121.4-.1 94.8 0 60.6-.2 27.4 26.5.2 59.8 0h1.7c33.3.4 60.5 28.1 60.2 61.2-.3 34.1-27.4 60.5-61.9 60.3zM239.5 121.5c-34.4 0-61.4-26.7-61.5-60.7-.1-33.4 28-61 61.9-60.8 33.4.2 60.3 27.5 60.1 61v.2c-.1 33.9-26.5 60.3-60.5 60.3z"></path>
                 </StrokeHide>
@@ -337,34 +384,82 @@ function UI() {
     function ReadMeBtn() {
         if (!panel) {
             return (
-                <ReadMeIcon
+                <Icon
                     onClick={() => setPanel(!panel)}
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="553"
-                    height="539.024"
-                    data-name="Layer 1"
-                    viewBox="0 0 553 539.024"
                 >
-                    <path d="M502.821 199.998a17.868 17.868 0 01-17.867 17.867 17.85 17.85 0 01-12.629-5.234c-3.352-3.352-5.234-7.895-5.234-12.633s1.883-9.281 5.234-12.629a17.847 17.847 0 0112.629-5.234 17.926 17.926 0 0117.867 17.863zm45.973 320.1c-.012 5.016-2.012 9.82-5.559 13.367s-8.352 5.547-13.367 5.559H18.758A18.974 18.974 0 015.5 533.407 18.971 18.971 0 010 520.098c0-96.32 121.46-134.73 173.6-146.83h-.004a1.403 1.403 0 001.066-1.398v-20.387a159.12 159.12 0 01-26.547-52.918c-13.719-13.441-19.766-34.555-23.016-46.312-5.32-18.703-10.641-45.863 3.977-65.184l.672-.84c-8.813-42.413 56.059-96.639 83.015-106.145 38.745-13.663 93.235-12.884 129.896 5.658 29.48 14.91 83.539 66.693 76.549 100.372l.617.84c14.617 19.375 9.297 46.48 4.031 65.184-3.246 11.535-9.297 32.93-22.961 46.426a158.496 158.496 0 01-26.543 52.527v20.719c0 .652.434 1.227 1.062 1.402 52.082 12.152 173.38 50.621 173.38 146.89l-.002-.003zm-192.3-113.9a39.2 39.2 0 01-17.922-21.508 129.672 129.672 0 01-27.328 13.723 110.436 110.436 0 01-73.695 0 127.122 127.122 0 01-27.441-13.664 39.192 39.192 0 01-17.863 21.223 100.184 100.184 0 0082.152 41.047 100.191 100.191 0 0082.098-40.82zm16.801-129.811c1.961 0 8.961-3.023 17.527-33.602 6.719-23.742 3.863-32.367 1.625-35.391h-.004a8.676 8.676 0 00-8.117-2.801 3.653 3.653 0 01-3.195-1.344 3.6 3.6 0 01-.559-3.418v-.727c1.68-5.602-12.526-49.966-37.913-69.665 0 0-17.279-15.4-68.04-15.4-49.112 0-66.754 15.4-66.754 15.4-33.596 20.747-39.755 71.344-39.81 71.848a3.583 3.583 0 01-3.809 3.305h-1.625a7.737 7.737 0 00-6.664 2.91c-2.297 3.023-5.098 11.648 1.625 35.391 8.625 30.406 15.625 33.266 17.527 33.602a3.584 3.584 0 013.305 3.023c4.93 31.754 28.953 72.801 70.223 87.078v.004a75.891 75.891 0 0050.852 0c39.594-14.281 65.406-54.543 70.391-87.023a3.581 3.581 0 013.527-3.191h-.112zm132.21-151.539a63.713 63.713 0 0031.965-24.062 63.703 63.703 0 0011.32-38.375 64.459 64.459 0 00-19.449-44 64.472 64.472 0 00-44.5-18.273h-.395a63.62 63.62 0 00-33.848 9.891 63.566 63.566 0 00-23.383 26.398 17.826 17.826 0 00-1.621 14.152 17.81 17.81 0 0033.597 1.304 28.267 28.267 0 0125.422-16.128 29.118 29.118 0 0128.672 27.61 28.337 28.337 0 01-19.32 28 39.195 39.195 0 00-26.934 36.679v15.176a17.81 17.81 0 0026.394 14.586 17.81 17.81 0 009.164-14.586v-15.344c.113-2.02 2.578-2.914 2.914-3.027zm-188.83 152.661h-84.562a8.397 8.397 0 00-8.117 9.914 51.57 51.57 0 0027.75 36.363c14.414 7.133 31.332 7.133 45.746 0s24.676-20.578 27.75-36.363a8.405 8.405 0 00-1.906-7.012 8.411 8.411 0 00-6.66-2.902zm-73.527-58.293c0-4.68-1.859-9.168-5.168-12.477-3.309-3.305-7.797-5.164-12.473-5.164s-9.168 1.859-12.477 5.164a17.649 17.649 0 000 24.95c3.309 3.309 7.797 5.164 12.477 5.164s9.164-1.855 12.473-5.164a17.643 17.643 0 005.168-12.473zm81.645-17.867a17.656 17.656 0 00-12.352 5.273 17.635 17.635 0 00.106 24.839 17.639 17.639 0 0024.839.106 17.654 17.654 0 005.273-12.352 17.648 17.648 0 00-17.867-17.867h.001z"></path>
-                </ReadMeIcon>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="553"
+                        height="539.024"
+                        data-name="Layer 1"
+                        viewBox="0 0 553 539.024"
+                        id='a'
+                    >
+                        <path d="M502.821 199.998a17.868 17.868 0 01-17.867 17.867 17.85 17.85 0 01-12.629-5.234c-3.352-3.352-5.234-7.895-5.234-12.633s1.883-9.281 5.234-12.629a17.847 17.847 0 0112.629-5.234 17.926 17.926 0 0117.867 17.863zm45.973 320.1c-.012 5.016-2.012 9.82-5.559 13.367s-8.352 5.547-13.367 5.559H18.758A18.974 18.974 0 015.5 533.407 18.971 18.971 0 010 520.098c0-96.32 121.46-134.73 173.6-146.83h-.004a1.403 1.403 0 001.066-1.398v-20.387a159.12 159.12 0 01-26.547-52.918c-13.719-13.441-19.766-34.555-23.016-46.312-5.32-18.703-10.641-45.863 3.977-65.184l.672-.84c-8.813-42.413 56.059-96.639 83.015-106.145 38.745-13.663 93.235-12.884 129.896 5.658 29.48 14.91 83.539 66.693 76.549 100.372l.617.84c14.617 19.375 9.297 46.48 4.031 65.184-3.246 11.535-9.297 32.93-22.961 46.426a158.496 158.496 0 01-26.543 52.527v20.719c0 .652.434 1.227 1.062 1.402 52.082 12.152 173.38 50.621 173.38 146.89l-.002-.003zm-192.3-113.9a39.2 39.2 0 01-17.922-21.508 129.672 129.672 0 01-27.328 13.723 110.436 110.436 0 01-73.695 0 127.122 127.122 0 01-27.441-13.664 39.192 39.192 0 01-17.863 21.223 100.184 100.184 0 0082.152 41.047 100.191 100.191 0 0082.098-40.82zm16.801-129.811c1.961 0 8.961-3.023 17.527-33.602 6.719-23.742 3.863-32.367 1.625-35.391h-.004a8.676 8.676 0 00-8.117-2.801 3.653 3.653 0 01-3.195-1.344 3.6 3.6 0 01-.559-3.418v-.727c1.68-5.602-12.526-49.966-37.913-69.665 0 0-17.279-15.4-68.04-15.4-49.112 0-66.754 15.4-66.754 15.4-33.596 20.747-39.755 71.344-39.81 71.848a3.583 3.583 0 01-3.809 3.305h-1.625a7.737 7.737 0 00-6.664 2.91c-2.297 3.023-5.098 11.648 1.625 35.391 8.625 30.406 15.625 33.266 17.527 33.602a3.584 3.584 0 013.305 3.023c4.93 31.754 28.953 72.801 70.223 87.078v.004a75.891 75.891 0 0050.852 0c39.594-14.281 65.406-54.543 70.391-87.023a3.581 3.581 0 013.527-3.191h-.112zm132.21-151.539a63.713 63.713 0 0031.965-24.062 63.703 63.703 0 0011.32-38.375 64.459 64.459 0 00-19.449-44 64.472 64.472 0 00-44.5-18.273h-.395a63.62 63.62 0 00-33.848 9.891 63.566 63.566 0 00-23.383 26.398 17.826 17.826 0 00-1.621 14.152 17.81 17.81 0 0033.597 1.304 28.267 28.267 0 0125.422-16.128 29.118 29.118 0 0128.672 27.61 28.337 28.337 0 01-19.32 28 39.195 39.195 0 00-26.934 36.679v15.176a17.81 17.81 0 0026.394 14.586 17.81 17.81 0 009.164-14.586v-15.344c.113-2.02 2.578-2.914 2.914-3.027zm-188.83 152.661h-84.562a8.397 8.397 0 00-8.117 9.914 51.57 51.57 0 0027.75 36.363c14.414 7.133 31.332 7.133 45.746 0s24.676-20.578 27.75-36.363a8.405 8.405 0 00-1.906-7.012 8.411 8.411 0 00-6.66-2.902zm-73.527-58.293c0-4.68-1.859-9.168-5.168-12.477-3.309-3.305-7.797-5.164-12.473-5.164s-9.168 1.859-12.477 5.164a17.649 17.649 0 000 24.95c3.309 3.309 7.797 5.164 12.477 5.164s9.164-1.855 12.473-5.164a17.643 17.643 0 005.168-12.473zm81.645-17.867a17.656 17.656 0 00-12.352 5.273 17.635 17.635 0 00.106 24.839 17.639 17.639 0 0024.839.106 17.654 17.654 0 005.273-12.352 17.648 17.648 0 00-17.867-17.867h.001z"></path>
+                    </svg>
+                    <p>README.md</p>
+                </Icon>
             )
         } else if (panel === true) {
             return (
-                <ActiveReadMeIcon
+                <ActiveIcon
                     onClick={() => setPanel(!panel)}
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="553"
-                    height="539.024"
-                    data-name="Layer 1"
-                    viewBox="0 0 553 539.024"
                 >
-                    <path d="M502.821 199.998a17.868 17.868 0 01-17.867 17.867 17.85 17.85 0 01-12.629-5.234c-3.352-3.352-5.234-7.895-5.234-12.633s1.883-9.281 5.234-12.629a17.847 17.847 0 0112.629-5.234 17.926 17.926 0 0117.867 17.863zm45.973 320.1c-.012 5.016-2.012 9.82-5.559 13.367s-8.352 5.547-13.367 5.559H18.758A18.974 18.974 0 015.5 533.407 18.971 18.971 0 010 520.098c0-96.32 121.46-134.73 173.6-146.83h-.004a1.403 1.403 0 001.066-1.398v-20.387a159.12 159.12 0 01-26.547-52.918c-13.719-13.441-19.766-34.555-23.016-46.312-5.32-18.703-10.641-45.863 3.977-65.184l.672-.84c-8.813-42.413 56.059-96.639 83.015-106.145 38.745-13.663 93.235-12.884 129.896 5.658 29.48 14.91 83.539 66.693 76.549 100.372l.617.84c14.617 19.375 9.297 46.48 4.031 65.184-3.246 11.535-9.297 32.93-22.961 46.426a158.496 158.496 0 01-26.543 52.527v20.719c0 .652.434 1.227 1.062 1.402 52.082 12.152 173.38 50.621 173.38 146.89l-.002-.003zm-192.3-113.9a39.2 39.2 0 01-17.922-21.508 129.672 129.672 0 01-27.328 13.723 110.436 110.436 0 01-73.695 0 127.122 127.122 0 01-27.441-13.664 39.192 39.192 0 01-17.863 21.223 100.184 100.184 0 0082.152 41.047 100.191 100.191 0 0082.098-40.82zm16.801-129.811c1.961 0 8.961-3.023 17.527-33.602 6.719-23.742 3.863-32.367 1.625-35.391h-.004a8.676 8.676 0 00-8.117-2.801 3.653 3.653 0 01-3.195-1.344 3.6 3.6 0 01-.559-3.418v-.727c1.68-5.602-12.526-49.966-37.913-69.665 0 0-17.279-15.4-68.04-15.4-49.112 0-66.754 15.4-66.754 15.4-33.596 20.747-39.755 71.344-39.81 71.848a3.583 3.583 0 01-3.809 3.305h-1.625a7.737 7.737 0 00-6.664 2.91c-2.297 3.023-5.098 11.648 1.625 35.391 8.625 30.406 15.625 33.266 17.527 33.602a3.584 3.584 0 013.305 3.023c4.93 31.754 28.953 72.801 70.223 87.078v.004a75.891 75.891 0 0050.852 0c39.594-14.281 65.406-54.543 70.391-87.023a3.581 3.581 0 013.527-3.191h-.112zm132.21-151.539a63.713 63.713 0 0031.965-24.062 63.703 63.703 0 0011.32-38.375 64.459 64.459 0 00-19.449-44 64.472 64.472 0 00-44.5-18.273h-.395a63.62 63.62 0 00-33.848 9.891 63.566 63.566 0 00-23.383 26.398 17.826 17.826 0 00-1.621 14.152 17.81 17.81 0 0033.597 1.304 28.267 28.267 0 0125.422-16.128 29.118 29.118 0 0128.672 27.61 28.337 28.337 0 01-19.32 28 39.195 39.195 0 00-26.934 36.679v15.176a17.81 17.81 0 0026.394 14.586 17.81 17.81 0 009.164-14.586v-15.344c.113-2.02 2.578-2.914 2.914-3.027zm-188.83 152.661h-84.562a8.397 8.397 0 00-8.117 9.914 51.57 51.57 0 0027.75 36.363c14.414 7.133 31.332 7.133 45.746 0s24.676-20.578 27.75-36.363a8.405 8.405 0 00-1.906-7.012 8.411 8.411 0 00-6.66-2.902zm-73.527-58.293c0-4.68-1.859-9.168-5.168-12.477-3.309-3.305-7.797-5.164-12.473-5.164s-9.168 1.859-12.477 5.164a17.649 17.649 0 000 24.95c3.309 3.309 7.797 5.164 12.477 5.164s9.164-1.855 12.473-5.164a17.643 17.643 0 005.168-12.473zm81.645-17.867a17.656 17.656 0 00-12.352 5.273 17.635 17.635 0 00.106 24.839 17.639 17.639 0 0024.839.106 17.654 17.654 0 005.273-12.352 17.648 17.648 0 00-17.867-17.867h.001z"></path>
-                </ActiveReadMeIcon>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="553"
+                        height="539.024"
+                        data-name="Layer 1"
+                        viewBox="0 0 553 539.024"
+                    >
+                        <path d="M502.821 199.998a17.868 17.868 0 01-17.867 17.867 17.85 17.85 0 01-12.629-5.234c-3.352-3.352-5.234-7.895-5.234-12.633s1.883-9.281 5.234-12.629a17.847 17.847 0 0112.629-5.234 17.926 17.926 0 0117.867 17.863zm45.973 320.1c-.012 5.016-2.012 9.82-5.559 13.367s-8.352 5.547-13.367 5.559H18.758A18.974 18.974 0 015.5 533.407 18.971 18.971 0 010 520.098c0-96.32 121.46-134.73 173.6-146.83h-.004a1.403 1.403 0 001.066-1.398v-20.387a159.12 159.12 0 01-26.547-52.918c-13.719-13.441-19.766-34.555-23.016-46.312-5.32-18.703-10.641-45.863 3.977-65.184l.672-.84c-8.813-42.413 56.059-96.639 83.015-106.145 38.745-13.663 93.235-12.884 129.896 5.658 29.48 14.91 83.539 66.693 76.549 100.372l.617.84c14.617 19.375 9.297 46.48 4.031 65.184-3.246 11.535-9.297 32.93-22.961 46.426a158.496 158.496 0 01-26.543 52.527v20.719c0 .652.434 1.227 1.062 1.402 52.082 12.152 173.38 50.621 173.38 146.89l-.002-.003zm-192.3-113.9a39.2 39.2 0 01-17.922-21.508 129.672 129.672 0 01-27.328 13.723 110.436 110.436 0 01-73.695 0 127.122 127.122 0 01-27.441-13.664 39.192 39.192 0 01-17.863 21.223 100.184 100.184 0 0082.152 41.047 100.191 100.191 0 0082.098-40.82zm16.801-129.811c1.961 0 8.961-3.023 17.527-33.602 6.719-23.742 3.863-32.367 1.625-35.391h-.004a8.676 8.676 0 00-8.117-2.801 3.653 3.653 0 01-3.195-1.344 3.6 3.6 0 01-.559-3.418v-.727c1.68-5.602-12.526-49.966-37.913-69.665 0 0-17.279-15.4-68.04-15.4-49.112 0-66.754 15.4-66.754 15.4-33.596 20.747-39.755 71.344-39.81 71.848a3.583 3.583 0 01-3.809 3.305h-1.625a7.737 7.737 0 00-6.664 2.91c-2.297 3.023-5.098 11.648 1.625 35.391 8.625 30.406 15.625 33.266 17.527 33.602a3.584 3.584 0 013.305 3.023c4.93 31.754 28.953 72.801 70.223 87.078v.004a75.891 75.891 0 0050.852 0c39.594-14.281 65.406-54.543 70.391-87.023a3.581 3.581 0 013.527-3.191h-.112zm132.21-151.539a63.713 63.713 0 0031.965-24.062 63.703 63.703 0 0011.32-38.375 64.459 64.459 0 00-19.449-44 64.472 64.472 0 00-44.5-18.273h-.395a63.62 63.62 0 00-33.848 9.891 63.566 63.566 0 00-23.383 26.398 17.826 17.826 0 00-1.621 14.152 17.81 17.81 0 0033.597 1.304 28.267 28.267 0 0125.422-16.128 29.118 29.118 0 0128.672 27.61 28.337 28.337 0 01-19.32 28 39.195 39.195 0 00-26.934 36.679v15.176a17.81 17.81 0 0026.394 14.586 17.81 17.81 0 009.164-14.586v-15.344c.113-2.02 2.578-2.914 2.914-3.027zm-188.83 152.661h-84.562a8.397 8.397 0 00-8.117 9.914 51.57 51.57 0 0027.75 36.363c14.414 7.133 31.332 7.133 45.746 0s24.676-20.578 27.75-36.363a8.405 8.405 0 00-1.906-7.012 8.411 8.411 0 00-6.66-2.902zm-73.527-58.293c0-4.68-1.859-9.168-5.168-12.477-3.309-3.305-7.797-5.164-12.473-5.164s-9.168 1.859-12.477 5.164a17.649 17.649 0 000 24.95c3.309 3.309 7.797 5.164 12.477 5.164s9.164-1.855 12.473-5.164a17.643 17.643 0 005.168-12.473zm81.645-17.867a17.656 17.656 0 00-12.352 5.273 17.635 17.635 0 00.106 24.839 17.639 17.639 0 0024.839.106 17.654 17.654 0 005.273-12.352 17.648 17.648 0 00-17.867-17.867h.001z"></path>
+                    </svg>
+                    <p>README.md</p>
+                </ActiveIcon>
             )
         }
     }
 
-    const ReadMe = () => {
+    function FeedbackBtn() {
+        if (!box) {
+            return (
+                <Icon
+                    onClick={() => setBox(!box)}
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="514.322"
+                        height="539"
+                        data-name="Layer 1"
+                        viewBox="0 0 514.322 539"
+                    >
+                        <path d="M371.258 113.211a6.954 6.954 0 00-.544-9.458 7.059 7.059 0 00-9.526-.223L235.02 210.023l-66.407-25.576a16.145 16.145 0 01-8.82-8.096 15.98 15.98 0 01-.768-11.909 16.098 16.098 0 017.708-9.151L442.696 1.721a13.686 13.686 0 0114.081.476c4.238 2.747 6.597 7.608 6.114 12.616l-24.403 250.762c-.471 5.18-3.37 9.834-7.824 12.562s-9.943 3.211-14.807 1.301l-80.906-31.079-45.32 42.243c-3.161 2.812-7.284 4.316-11.526 4.201s-8.28-1.838-11.279-4.819a16.451 16.451 0 01-4.864-11.207v-29.869l109.295-135.696zM502.07 303.252a36.23 36.23 0 00-26.04-8.878 36.151 36.151 0 00-24.758 11.96l-87.545 99.45c-7.755 8.671-18.872 13.636-30.544 13.64h-81.57c-6.029-.418-10.712-5.402-10.712-11.414s4.682-10.996 10.712-11.414h71.939a34.857 34.857 0 0025.465-9.607c6.821-6.511 10.673-15.504 10.673-24.904s-3.852-18.397-10.673-24.908a34.856 34.856 0 00-25.465-9.607h-92.524a145.704 145.704 0 00-82.592-7.574c-27.684 5.533-53.14 18.984-73.235 38.706L0 432.35 130.98 539l29.714-29.535h170.665c24.797.015 48.385-10.636 64.686-29.205l109.35-126.51a35.669 35.669 0 008.851-25.929 35.72 35.72 0 00-12.17-24.567h-.005z"></path>
+                    </svg>
+                    <p>Send feedback</p>
+                </Icon>
+            );
+        } else if (box) {
+            return (<ActiveIcon
+                onClick={() => setBox(!box)}
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="514.322"
+                    height="539"
+                    data-name="Layer 1"
+                    viewBox="0 0 514.322 539"
+                >
+                    <path d="M371.258 113.211a6.954 6.954 0 00-.544-9.458 7.059 7.059 0 00-9.526-.223L235.02 210.023l-66.407-25.576a16.145 16.145 0 01-8.82-8.096 15.98 15.98 0 01-.768-11.909 16.098 16.098 0 017.708-9.151L442.696 1.721a13.686 13.686 0 0114.081.476c4.238 2.747 6.597 7.608 6.114 12.616l-24.403 250.762c-.471 5.18-3.37 9.834-7.824 12.562s-9.943 3.211-14.807 1.301l-80.906-31.079-45.32 42.243c-3.161 2.812-7.284 4.316-11.526 4.201s-8.28-1.838-11.279-4.819a16.451 16.451 0 01-4.864-11.207v-29.869l109.295-135.696zM502.07 303.252a36.23 36.23 0 00-26.04-8.878 36.151 36.151 0 00-24.758 11.96l-87.545 99.45c-7.755 8.671-18.872 13.636-30.544 13.64h-81.57c-6.029-.418-10.712-5.402-10.712-11.414s4.682-10.996 10.712-11.414h71.939a34.857 34.857 0 0025.465-9.607c6.821-6.511 10.673-15.504 10.673-24.904s-3.852-18.397-10.673-24.908a34.856 34.856 0 00-25.465-9.607h-92.524a145.704 145.704 0 00-82.592-7.574c-27.684 5.533-53.14 18.984-73.235 38.706L0 432.35 130.98 539l29.714-29.535h170.665c24.797.015 48.385-10.636 64.686-29.205l109.35-126.51a35.669 35.669 0 008.851-25.929 35.72 35.72 0 00-12.17-24.567h-.005z"></path>
+                </svg>
+                <p>Send feedback</p>
+            </ActiveIcon>);
+        }
+
+    }
+
+    function ReadMe() {
+        setBox(false);
+        setPanel(true);
         fetch(ReadMeMD).then(res => res.text()).then(text => setReadMe(text));
         return (
             <Panel>
@@ -379,28 +474,45 @@ function UI() {
                 </div>
                 <Gear />
             </Panel>
+        );
+    }
+    function Feedback() {
+        setPanel(false);
+        setBox(true);
+        // commentBox('5724094653792256-proj');
+        return (
+            <Panel>
+                <div className='close'
+                    onClick={() => setBox(!box)}
+                >
+                    close Feedback
+                </div>
+                <div className='commentbox'>
+                    comment section coming soon, email aite@nabla.ooo till then.
+                </div>
+                <Gear />
+            </Panel>
         )
-    };
-
-    if (stat.ready) {
-        ready();
     }
 
     // Access the status element
-    useEffect(() => {
-        const statusCurrent = statusRef.current;
-        if (statusCurrent) {
-            const observer = new MutationObserver(
-                function (mutationsList, observer) {
-                    if (mutationsList[0].target.textContent === 'Ready' || stat.ready) {
-                        ready();
-                    }
-                })
-            if (observer) {
-                observer.observe(statusCurrent, { characterData: true, childList: true, attributes: false, subtree: true })
-            }
-        }
-    }, [statusRef, ready])
+    // useEffect(() => {
+    // const statusCurrent = statusRef.current;
+    // if (statusCurrent) {
+    //     const observer = new MutationObserver(
+    //         function (mutationsList, observer) {
+    //             if (mutationsList[0].target.textContent === 'Ready' || stat.ready) {
+    //                 ready();
+    //             }
+    //         })
+    //     if (observer) {
+    //         observer.observe(statusCurrent, { characterData: true, childList: true, attributes: false, subtree: true })
+    //     }
+    // }
+    //     if (stat.load === 'Ready' && stat.ready && !stat.started) {
+    //         ready();
+    //     }
+    // }, [stat.load])
 
     // Access users' contacts
     // async function getContacts() {
@@ -426,6 +538,7 @@ function UI() {
             <>
                 <CD />
                 {panel ? <ReadMe /> : null}
+                {box ? <Feedback /> : null}
                 <Caption
                     className='caption'
                     style={hide ? { pointerEvents: "none", opacity: 0, transition: `${stat.transition}` }
@@ -433,18 +546,18 @@ function UI() {
                 >
                     {/* Caption */}
                     <p>
-                        <i>Gear and Loading</i> c/o <a href='https://nabla.ooo/'>Nabla</a><br />
-                        This is a work in progress, follow it's development on <a href='https://github.com/nohr/gear'>Github</a>.
+                        <i>Gear and Loading</i> c/o <a id='a' href='https://nabla.ooo/'>Nabla</a><br />
+                        This is a work in progress, follow it's development on <a id='a' href='https://github.com/nohr/gear'>Github</a>.
                     </p>
                     {/* Instructions */}
-                    <p style={{ paddingTop: '10px' }}>☆ Instructions ☆
+                    <p style={{ paddingTop: '10px' }}>★ Instructions ★
                         <br />Go to a well-lit area then take a few steps from your computer.
                         <br />Point, fist, or open your right hand to test detection.
                     </p>
                     {/* ReadMeBtn and Feedback */}
                     <br /><div className='aboutfeedback'>
                         {/* {supported && <><Button onClick={getContacts}>Send this to someone!</Button><p> or </p></>} */}
-                        <ReadMeBtn /><a href='mailto:aite@nabla.ooo'>Send feedback</a></div>
+                        <ReadMeBtn /><FeedbackBtn /></div>
                     <br />
                     {/* Options */}
                     <Options />
@@ -502,7 +615,6 @@ function Gear() {
         </Overlay>
     );
 }
-
 const Hide = styled.svg`
     fill: ${props => props.theme.base} !important;
     stroke: none !important;
@@ -534,28 +646,55 @@ const StrokeHide = styled(Hide)`
         stroke: ${props => props.theme.sub} !important;
     }
 `
-
-const ReadMeIcon = styled.svg`
+const Icon = styled.div`
+    background: transparent;
     cursor: pointer;
+
+    & svg{
     fill: ${props => props.theme.base} !important;
     filter: drop-shadow(1px 0px 1.75px ${props => props.theme.base} ) !important;
     height: 18px !important;
     width: auto;
     transition: ${stat.transition};
+    }
 
-    &:hover{
+    & p{
+        color: ${props => props.theme.base} !important;
+        text-shadow: 1px 0px 1.75px ${props => props.theme.base} !important;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+
+    }
+
+     &:hover > svg{
         fill: ${props => props.theme.sub} !important;
-        filter: drop-shadow(1px 0px 1.75px ${props => props.theme.sub} ) !important;
+        filter: drop-shadow(1px 0px 1.75px ${props => props.theme.sub}) !important;
         }
+    &:hover > p{
+        color: ${props => props.theme.sub} !important;
+        text-shadow: 1px 0px 1.75px ${props => props.theme.sub} !important;
+    }
 `
-
-const ActiveReadMeIcon = styled(ReadMeIcon)`
+const ActiveIcon = styled(Icon)`
+    background: transparent;
+    
+  & svg{
     fill: ${props => props.theme.sub} !important;
     filter: drop-shadow(1px 0px 1.75px ${props => props.theme.sub} ) !important;
+}
+  & p{
+    color: ${props => props.theme.sub} !important;
+    text-shadow: 1px 0px 1.75px ${props => props.theme.sub} !important;
+}
 
-    &:hover{
+    &:hover > svg{
         fill: ${props => props.theme.base} !important;
-        filter: drop-shadow(1px 0px 1.75px ${props => props.theme.base} ) !important;
-        }
+        filter: drop-shadow(1px 0px 1.75px ${props => props.theme.base}) !important;
+    }
 
+     &:hover > p{
+    color: ${props => props.theme.base} !important;
+    text-shadow: 1px 0px 1.75px ${props => props.theme.base} !important;
+    }
 `

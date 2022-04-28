@@ -31,27 +31,23 @@ let videoElement2;
 const onResults = (results) => {
   // Animate model if there is video
   if (currentVrm) {
-    if (stat.model && !stat.location.x) {
-      if (stat.load !== 'Ready') {
-        stat.load = 'Ready'
-        stat.ready = true
-      }
-    }
+    if (stat.model && !stat.location.x && !stat.location.y && stat.load !== 'Ready') {
+      stat.load = 'Ready';
+      stat.ready = true;
+    };
     animateVRM(currentVrm, results);
-  }
-}
+  };
+};
 
 // Animate Rotation Helper function
-const rigRotation = (
-  name,
+function rigRotation(name,
   rotation = { x: 0, y: 0, z: 0 },
   dampener = 1,
-  lerpAmount = 0.3
-) => {
-  if (!currentVrm) { return }
+  lerpAmount = 0.3) {
+  if (!currentVrm) { return; }
   const Part = currentVrm.humanoid.getBoneNode(VRMSchema.HumanoidBoneName[name]);
 
-  if (!Part) { return }
+  if (!Part) { return; }
 
   let euler = new Euler(
     rotation.x * dampener,
@@ -60,33 +56,32 @@ const rigRotation = (
   );
   let quaternion = new Quaternion().setFromEuler(euler);
   Part.quaternion.slerp(quaternion, lerpAmount); // interpolate
-};
+}
 
 // Animate Position Helper Function
-const rigPosition = (
-  name,
+function rigPosition(name,
   position = { x: 0, y: 0, z: 0 },
   dampener = 1,
-  lerpAmount = 0.3
-) => {
-  if (!currentVrm) { return }
+  lerpAmount = 0.3) {
+  if (!currentVrm) { return; }
   const Part = currentVrm.humanoid.getBoneNode(
     VRMSchema.HumanoidBoneName[name]
   );
-  if (!Part) { return }
+  if (!Part) { return; }
   let vector = new Vector3(
     position.x * dampener,
     position.y * dampener,
     position.z * dampener
   );
   Part.position.lerp(vector, lerpAmount); // interpolate
-};
+}
 
 /* VRM Character Animator */
 const animateVRM = (vrm, results) => {
   if (!vrm) {
     return;
   }
+  // console.log(results);
   // Take the results from `Holistic` and animate character based on its Face, Pose, and Hand Keypoints.
   let riggedPose, riggedLeftHand, riggedRightHand;
 
@@ -230,6 +225,8 @@ const activateDraw = (ref) => {
     minDetectionConfidence: 0.7,
     minTrackingConfidence: 0.7,
     refineFaceLandmarks: true,
+    enableSegmentation: true,
+    smoothSegmentation: true
   });
 
   // Pass holistic a callback function
@@ -274,17 +271,26 @@ const activateDraw = (ref) => {
           }).then((model) => {
             function runDetection() {
               if (videoElement2) {
+                // videoElement2.addEventListener("loadeddata", () => { })
                 model.detect(videoElement2).then((predictions) => {
                   predictions.forEach((one) => {
                     // Only Detect right half of screen
                     // let xCord = parseInt(one.bbox[0]);
                     // if ((stat.selfie && xCord <= 320) || (!stat.selfie && xCord >= 320)) {
                     if (one.label === 'open' || one.label === 'closed' || one.label === 'point') {
+                      //Start game if hand sign is detected
+                      one.bbox.forEach((num) => {
+                        if (!stat.ready && !stat.started && stat.start === true && num) {
+                          stat.ready = true;
+                          console.log(stat.ready);
+                        }
+                      })
                       stat.load = `${one.label}`;
                       stat.location.x = parseInt(one.bbox[0]);
                       stat.location.y = parseInt(one.bbox[1]);
                       stat.location.w = parseInt(one.bbox[2]);
                       stat.location.h = parseInt(one.bbox[3]);
+                      stat.started = true;
                     }
                     // }
                   });
@@ -292,7 +298,13 @@ const activateDraw = (ref) => {
                 })
               }
             }
-            runDetection()
+            if (stat.start === false) {
+              handTrack.stopVideo(videoElement2);
+              model.dispose();
+              stat.load = 'Model disposed, press Start to reload it'
+            } else if (stat.start === true) {
+              runDetection()
+            }
           })
         } else {
           stat.load = "Please enable video";
@@ -321,10 +333,10 @@ function Arm() {
       stat.vrm = true;
     },
       progress => {
-        if (stat.load === ((progress.loaded / progress.total) === 1.0)) {
-          stat.load = 'Arm loaded';
+        if (stat.load === ((100.0 * (progress.loaded / progress.total)) === 100.0)) {
+          stat.load = '100% armed';
         } else if ((progress.loaded / progress.total) <= 1.0) {
-          stat.load = `${parseInt(100.0 * (progress.loaded / progress.total))}%`;
+          stat.load = `${parseInt(100.0 * (progress.loaded / progress.total))}% armed...`;
         } else {
           stat.load = 'Overloaded!';
         }
@@ -343,21 +355,22 @@ function Arm() {
 
 // React Three Fiber Canvas
 function CanvasComp() {
+  const snap = useSnapshot(stat)
   return (
     <Canvas
       linear
       className='threeCanvas'
-      frameloop={stat.start ? 'always' : 'demand'}
+      frameloop={snap.start ? 'always' : 'demand'}
     >
       <PerspectiveCamera
         makeDefault
         fov={60}
         position={[0.50, 1.5, 1.25]}
       />
-      {stat.start && <Suspense fallback={null}>
+      {snap.start && <Suspense fallback={null}>
         <spotLight intensity={0.7} position={[0, 3, 7]} />
         <Arm />
-        {stat.effects && <EffectComposer multisampling={2}>
+        {snap.effects && <EffectComposer multisampling={2}>
           <Bloom kernelSize={1} luminanceThreshold={0} luminanceSmoothing={0.3} intensity={0.8} />
           <Bloom kernelSize={KernelSize.HUGE} luminanceThreshold={0} luminanceSmoothing={1} intensity={1} />
         </EffectComposer>}

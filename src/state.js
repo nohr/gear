@@ -1,13 +1,15 @@
 import { proxy } from 'valtio'
 
 export const stat = proxy({
+    // Game Logic
     start: false,
+    started: false,
     ready: false,
     paused: false,
     cam: true,
+    //UI
     fullscreen: false,
     popup: false,
-    //UI
     theme: 'light',
     themeChanged: false,
     transition: `0.3s`,
@@ -29,9 +31,9 @@ export const stat = proxy({
         third: '#CCFF66',
         thirdAlpha: '#CCFF6667'
     },
+    // ML Models
     //selfie: true is external, false is laptop
     selfie: false,
-    effects: true,
     location: {
         x: null,
         y: null,
@@ -42,5 +44,6 @@ export const stat = proxy({
     model: null,
     // R3F
     mat: null,
+    effects: true,
     vrm: false,
 })
