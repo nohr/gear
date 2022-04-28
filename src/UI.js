@@ -161,6 +161,9 @@ z-index: 1000;
 top: 5px;
 left: 50%;
 transform: translateX(-50%);
+user-select: none;
+-webkit-user-select: none;
+-moz-user-select: none;
 
 &:hover{
     color: ${props => props.theme.hover};

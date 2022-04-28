@@ -263,11 +263,11 @@ const activateDraw = (ref) => {
       function (status) {
         stat.load = `video started, ${status}`
         if (status) {
-          stat.load = "Video started, loading model";
+          stat.load = "Video started, loading model...";
           // Load the model then send it to detection animation frame
           handTrack.load(modelParams).then((lmodel) => {
             model = lmodel;
-            stat.load = "Model loaded";
+            stat.load = "Model loaded, running detection...";
             stat.model = true;
             return model;
           }).then((model) => {
