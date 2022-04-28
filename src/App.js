@@ -275,16 +275,17 @@ const activateDraw = (ref) => {
               if (videoElement2) {
                 model.detect(videoElement2).then((predictions) => {
                   predictions.forEach((one) => {
-                    let xCord = parseInt(one.bbox[0]);
-                    if ((stat.selfie && xCord <= 320) || (!stat.selfie && xCord >= 320)) {
-                      if (one.label === 'open' || one.label === 'closed' || one.label === 'point') {
-                        stat.load = `${one.label}`;
-                        stat.location.x = parseInt(one.bbox[0]);
-                        stat.location.y = parseInt(one.bbox[1]);
-                        stat.location.w = parseInt(one.bbox[2]);
-                        stat.location.h = parseInt(one.bbox[3]);
-                      }
+                    // Only Detect right half of screen
+                    // let xCord = parseInt(one.bbox[0]);
+                    // if ((stat.selfie && xCord <= 320) || (!stat.selfie && xCord >= 320)) {
+                    if (one.label === 'open' || one.label === 'closed' || one.label === 'point') {
+                      stat.load = `${one.label}`;
+                      stat.location.x = parseInt(one.bbox[0]);
+                      stat.location.y = parseInt(one.bbox[1]);
+                      stat.location.w = parseInt(one.bbox[2]);
+                      stat.location.h = parseInt(one.bbox[3]);
                     }
+                    // }
                   });
                   requestAnimationFrame(runDetection);
                 })
@@ -319,10 +320,12 @@ function Arm() {
       stat.vrm = true;
     },
       progress => {
-        if (stat.load === `100%`) {
-          stat.load = 'Arm loaded'
-        } else {
+        if (stat.load === ((progress.loaded / progress.total) === 1.0)) {
+          stat.load = 'Arm loaded';
+        } else if ((progress.loaded / progress.total) <= 1.0) {
           stat.load = `${parseInt(100.0 * (progress.loaded / progress.total))}%`;
+        } else {
+          stat.load = 'Overloaded!';
         }
       },
       error => console.error(error))
