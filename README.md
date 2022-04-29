@@ -1,4 +1,4 @@
-# Gear and Loading
+# 🦾 Gear and Loading
 
 It's an interactive minigame that aims to make you weigh convenience against security.
 
