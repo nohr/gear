@@ -2,18 +2,6 @@
 
 It's an interactive minigame that aims to make you weigh convenience against security.
 
-## Installation
-
-```zsh
-# Clone and open repository
-$ git clone https://github.com/nohr/gear
-$ cd gear
-
-# Install dependencies and run locally
-$ npm i
-$ npm run start
-```
-
 ## How does it work?
 
 ### Computer Vision
@@ -37,3 +25,15 @@ $ npm run start
 #### Etc.
 
 - README and feedback icons were created by [Gregor Cresnar](https://thenounproject.com/grega.cresnar/) and edited further by me.
+
+## Installation
+
+```zsh
+# Clone and open repository
+$ git clone https://github.com/nohr/gear
+$ cd gear
+
+# Install dependencies and run locally
+$ npm i
+$ npm run start
+```

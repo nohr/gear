@@ -2,25 +2,13 @@
 
 It's an interactive minigame that aims to make you weigh convenience against security.
 
-## Installation
-
-```zsh
-# Clone and open repository
-$ git clone https://github.com/nohr/gear
-$ cd gear
-
-# Install dependencies and run locally
-$ npm i
-$ npm run start
-```
-
 ## How does it work?
 
 ### Computer Vision
 
-- [Kalidokit](https://github.com/yeemachine/kalidokit) solves kinematics which lets us virtually embody the prosthetic.
-
 - [MediaPipe Holistic](https://google.github.io/mediapipe/solutions/holistic.html) tracks the body and hands and returns coordinates to be solved by Kalidokit.
+
+- [Kalidokit](https://github.com/yeemachine/kalidokit) solves kinematics which lets us virtually embody the prosthetic.
 
 - [Handtrack.js](https://github.com/victordibia/handtrack.js) also tracks hands but guesses hand signs to trigger prosthetic animations as well.
 
@@ -37,3 +25,15 @@ $ npm run start
 #### Etc.
 
 - README and feedback icons were created by [Gregor Cresnar](https://thenounproject.com/grega.cresnar/) and edited further by me.
+
+## Installation
+
+```zsh
+# Clone and open repository
+$ git clone https://github.com/nohr/gear
+$ cd gear
+
+# Install dependencies and run locally
+$ npm i
+$ npm run start
+```
