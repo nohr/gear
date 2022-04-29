@@ -18,9 +18,9 @@ $ npm run start
 
 ### Computer Vision
 
-- [Kalidokit](https://github.com/yeemachine/kalidokit) solves kinematics which lets us virtually embody the prosthetic.
-
 - [MediaPipe Holistic](https://google.github.io/mediapipe/solutions/holistic.html) tracks the body and hands and returns coordinates to be solved by Kalidokit.
+
+- [Kalidokit](https://github.com/yeemachine/kalidokit) solves kinematics which lets us virtually embody the prosthetic.
 
 - [Handtrack.js](https://github.com/victordibia/handtrack.js) also tracks hands but guesses hand signs to trigger prosthetic animations as well.
 
