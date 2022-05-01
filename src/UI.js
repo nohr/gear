@@ -569,7 +569,8 @@ function UI() {
         // mobile
         return (
             <MobileCaption style={{ top: "50% !important", translate: "transform(-50%, -50%) !important" }}>
-                Use a <b>Computer</b> with<br /> a <b>webcam</b> to playtest <br />
+                Use a <b>computer</b> with
+                <br /> a <b>webcam</b> to playtest <br />
                 <i>Gear and Loading</i>
             </MobileCaption>
         )
