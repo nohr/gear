@@ -11,7 +11,7 @@ import { PerspectiveCamera, Environment } from '@react-three/drei';
 import { KernelSize } from 'postprocessing'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { Quaternion, Euler, Vector3 } from 'three';
+import { Quaternion, Euler, Vector3, Color } from 'three';
 import { LayerMaterial, Depth, Fresnel, Noise } from 'lamina';
 // VRM Imports
 import { VRMUtils, VRMSchema, VRM } from '@pixiv/three-vrm';
@@ -308,46 +308,46 @@ const activateDraw = (ref) => {
 }
 
 // vrm shader
-const laminaMaterial = new LayerMaterial({
-  color: "#000000",
-  lighting: "physical",
-  layers: [
-    new Fresnel({
-      color: new THREE.Color("#f0f0f0"),
-      alpha: 0.7,
-      power: 1.65,
-      intensity: 1.4,
-      bias: 0.15,
-      mode: "normal",
-      visible: true,
-    }),
-    new Depth({
-      colorA: new THREE.Color("#100f0f"),
-      colorB: new THREE.Color("#d3a7a7"),
-      alpha: 1,
-      near: 0,
-      far: 2,
-      origin: [0, 0, 0],
-      mapping: "vector",
-      mode: "reflect",
-      visible: true,
-    }),
-    new Noise({
-      colorA: new THREE.Color("#5d5d5d"),
-      colorB: new THREE.Color("#5d5d5d"),
-      colorC: new THREE.Color("#fefefe"),
-      colorD: new THREE.Color("#fefefe"),
-      alpha: 0.25,
-      scale: 1,
-      type: "white",
-      offset: [0, 0, 0],
-      mapping: "local",
-      mode: "divide",
-      visible: true,
-    }),
+// const laminaMaterial = new LayerMaterial({
+//   color: "#000000",
+//   lighting: "physical",
+//   layers: [
+//     new Fresnel({
+//       color: new Color("#f0f0f0"),
+//       alpha: 0.7,
+//       power: 1.65,
+//       intensity: 1.4,
+//       bias: 0.15,
+//       mode: "normal",
+//       visible: true,
+//     }),
+//     new Depth({
+//       colorA: new Color("#100f0f"),
+//       colorB: new Color("#d3a7a7"),
+//       alpha: 1,
+//       near: 0,
+//       far: 2,
+//       origin: [0, 0, 0],
+//       mapping: "vector",
+//       mode: "reflect",
+//       visible: true,
+//     }),
+//     new Noise({
+//       colorA: new Color("#5d5d5d"),
+//       colorB: new Color("#5d5d5d"),
+//       colorC: new Color("#fefefe"),
+//       colorD: new Color("#fefefe"),
+//       alpha: 0.25,
+//       scale: 1,
+//       type: "white",
+//       offset: [0, 0, 0],
+//       mapping: "local",
+//       mode: "divide",
+//       visible: true,
+//     }),
 
-  ]
-});
+//   ]
+// });
 
 // VRM
 function Arm() {
