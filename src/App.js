@@ -216,7 +216,8 @@ const activateDraw = (ref) => {
   holistic.setOptions({
     selfieMode: stat.selfie,
     modelComplexity: 1,
-    smoothLandmarks: false,
+    upperBodyOnly: true,
+    smoothLandmarks: true,
     minDetectionConfidence: 0.7,
     minTrackingConfidence: 0.7,
     refineFaceLandmarks: true,
@@ -401,7 +402,7 @@ function CanvasComp() {
       <PerspectiveCamera
         makeDefault
         fov={60}
-        position={[0, 1.5, 1.25]}
+        position={[0, 1.3, 1.25]}
       />
       {snap.start && <Suspense fallback={null}>
         <spotLight intensity={0.7} position={[0, 3, 7]} />
