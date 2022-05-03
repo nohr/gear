@@ -5,9 +5,10 @@ import { stat } from './state';
 import { useSnapshot } from 'valtio';
 import UI from './UI';
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
+import Game from './Game';
 // R3F & Threejs Imports
 import { Canvas, useThree, useFrame } from '@react-three/fiber';
-import { PerspectiveCamera, Environment } from '@react-three/drei';
+import { PerspectiveCamera, Environment, OrbitControls } from '@react-three/drei';
 import { KernelSize } from 'postprocessing'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
@@ -15,7 +16,7 @@ import { Quaternion, Euler, Vector3, Color } from 'three';
 import { LayerMaterial, Depth, Fresnel, Noise } from 'lamina';
 // VRM Imports
 import { VRMUtils, VRMSchema, VRM } from '@pixiv/three-vrm';
-import * as Kalidokit from 'kalidokit'
+import { Pose, Hand } from 'kalidokit';
 // Computer Vision Imports
 import {
   Holistic,
@@ -119,21 +120,21 @@ const animateVRM = (vrm, results) => {
 
   // Animate Pose
   if (pose2DLandmarks && pose3DLandmarks) {
-    riggedPose = Kalidokit.Pose.solve(pose3DLandmarks, pose2DLandmarks, {
+    riggedPose = Pose.solve(pose3DLandmarks, pose2DLandmarks, {
       runtime: "mediapipe",
       video: videoElement,
     });
-    rigRotation("Hips", riggedPose.Hips.rotation, 0.7);
-    rigPosition(
-      "Hips",
-      {
-        x: -riggedPose.Hips.position.x, // Reverse direction
-        y: riggedPose.Hips.position.y + 1, // Add a bit of height
-        z: -riggedPose.Hips.position.z // Reverse direction
-      },
-      1,
-      0.07
-    );
+    // rigRotation("Hips", riggedPose.Hips.rotation, 0.7);
+    // rigPosition(
+    //   "Hips",
+    //   {
+    //     x: -riggedPose.Hips.position.x, // Reverse direction
+    //     y: riggedPose.Hips.position.y + 1, // Add a bit of height
+    //     z: -riggedPose.Hips.position.z // Reverse direction
+    //   },
+    //   1,
+    //   0.07
+    // );
 
     rigRotation("Chest", riggedPose.Spine, 0.25, .3);
     rigRotation("Spine", riggedPose.Spine, 0.45, .3);
@@ -143,14 +144,14 @@ const animateVRM = (vrm, results) => {
     rigRotation("LeftUpperArm", riggedPose.LeftUpperArm, 1, .3);
     rigRotation("LeftLowerArm", riggedPose.LeftLowerArm, 1, .3);
 
-    rigRotation("LeftUpperLeg", riggedPose.LeftUpperLeg, 1, .3);
-    rigRotation("LeftLowerLeg", riggedPose.LeftLowerLeg, 1, .3);
-    rigRotation("RightUpperLeg", riggedPose.RightUpperLeg, 1, .3);
-    rigRotation("RightLowerLeg", riggedPose.RightLowerLeg, 1, .3);
+    // rigRotation("LeftUpperLeg", riggedPose.LeftUpperLeg, 1, .3);
+    // rigRotation("LeftLowerLeg", riggedPose.LeftLowerLeg, 1, .3);
+    // rigRotation("RightUpperLeg", riggedPose.RightUpperLeg, 1, .3);
+    // rigRotation("RightLowerLeg", riggedPose.RightLowerLeg, 1, .3);
   }
   // Animate Hands
   if (leftHandLandmarks) {
-    riggedLeftHand = Kalidokit.Hand.solve(leftHandLandmarks, "Left");
+    riggedLeftHand = Hand.solve(leftHandLandmarks, "Left");
     rigRotation("LeftHand", {
       // Combine pose rotation Z and hand rotation X Y
       z: riggedPose.LeftHand.z,
@@ -174,7 +175,7 @@ const animateVRM = (vrm, results) => {
     rigRotation("LeftLittleDistal", riggedLeftHand.LeftLittleDistal);
   }
   if (rightHandLandmarks) {
-    riggedRightHand = Kalidokit.Hand.solve(rightHandLandmarks, "Right");
+    riggedRightHand = Hand.solve(rightHandLandmarks, "Right");
     rigRotation("RightHand", {
       // Combine Z axis from pose hand and X/Y axis from hand wrist rotation
       z: riggedPose.RightHand.z,
@@ -229,7 +230,7 @@ const activateDraw = (ref) => {
   holistic.onResults(onResults);
 
   // camera.start()
-  if (stat.start) {
+  if (stat.start && stat.stage === 0) {
     // Use `Mediapipe` utils to get camera - lower resolution = higher fps
     const camera = new Camera(videoElement, {
       onFrame: async () => {
@@ -242,6 +243,18 @@ const activateDraw = (ref) => {
   }
   /* SETUP HANDTRACK.JS */
   let model;
+  let startBtn = document.querySelector('.start');
+  console.log(startBtn);
+
+  // Stop model
+  startBtn.addEventListener('click', () => {
+    console.log("stop");
+    if (stat.started === true) {
+      handTrack.stopVideo(videoElement2);
+      model.dispose();
+      stat.load = 'Model disposed, press Start to reload it'
+    }
+  })
 
   const modelParams = {
     flipHorizontal: true, // flip e.g for video
@@ -267,7 +280,9 @@ const activateDraw = (ref) => {
           }).then((model) => {
             function runDetection() {
               if (videoElement2) {
-                // videoElement2.addEventListener("loadeddata", () => { })
+                console.log("detecting");
+                // videoElement2.addEventListener("loadeddata", () => {
+                // console.log('videodata loaded!');
                 model.detect(videoElement2).then((predictions) => {
                   predictions.forEach((one) => {
                     // Only Detect right half of screen
@@ -291,14 +306,11 @@ const activateDraw = (ref) => {
                   });
                   requestAnimationFrame(runDetection);
                 })
+                // })
               }
             }
-            if (stat.start === false) {
-              handTrack.stopVideo(videoElement2);
-              model.dispose();
-              stat.load = 'Model disposed, press Start to reload it'
-            } else if (stat.start === true) {
-              runDetection()
+            if (stat.start === true) {
+              runDetection();
             }
           })
         } else {
@@ -366,6 +378,7 @@ function Arm() {
       const vrm = await VRM.from(gltf);
       scene.add(vrm.scene);
       vrm.scene.rotation.y = Math.PI;
+      vrm.scene.position.y = -1.35;
       currentVrm = vrm;
       stat.vrm = true;
     },
@@ -375,14 +388,14 @@ function Arm() {
         } else if ((progress.loaded / progress.total) <= 1.0) {
           stat.load = `${parseInt(100.0 * (progress.loaded / progress.total))}% armed...`;
         } else {
-          stat.load = 'Overloaded!';
+          stat.load = 'Overloaded! Now resolving...';
         }
       },
       error => console.error(error))
   }
 
+  // Update model to render physics using the frame loop hook
   useFrame(({ gl, scene, camera }) => {
-    // Update model to render physics
     if (currentVrm) {
       currentVrm.update(clock.getDelta());
     }
@@ -397,21 +410,28 @@ function CanvasComp() {
     <Canvas
       linear
       className='threeCanvas'
-      frameloop={snap.start ? 'always' : 'demand'}
+      frameloop={snap.started ? snap.start ? 'always' : 'demand' : 'always'}
     >
       <PerspectiveCamera
         makeDefault
         fov={60}
-        position={[0, 1.3, 1.25]}
+        position={[0, 0, 1.25]}
       />
-      {snap.start && <Suspense fallback={null}>
-        <spotLight intensity={0.7} position={[0, 3, 7]} />
-        <Arm />
-        {snap.effects && <EffectComposer multisampling={2}>
-          <Bloom kernelSize={1} luminanceThreshold={0} luminanceSmoothing={0.3} intensity={0.8} />
-          <Bloom kernelSize={KernelSize.HUGE} luminanceThreshold={0} luminanceSmoothing={1} intensity={1} />
-        </EffectComposer>}
-      </Suspense>}
+      <Suspense fallback={null}>
+        <Game />
+        {snap.start &&
+          <>
+            <spotLight intensity={0.7} position={[0, 2.8, 7]} />
+            <Arm />
+            {snap.effects && <EffectComposer multisampling={2}>
+              <Bloom kernelSize={1} luminanceThreshold={0} luminanceSmoothing={0.3} intensity={0.8} />
+              <Bloom kernelSize={KernelSize.HUGE} luminanceThreshold={0} luminanceSmoothing={1} intensity={1} />
+            </EffectComposer>}
+          </>
+        }
+      </Suspense>
+      <OrbitControls
+        target={[0, 0, 0]} />
       <Environment
         path='/'
         files={"images/studio_small_04_1k.hdr"}
@@ -447,13 +467,14 @@ export default function App() {
           <Webcam
             width={640}
             height={480}
-            className="input_video selfie"
+            className="input_video "
           />
           {/* Handtrack js Camera */}
           <Webcam
             width={640}
             height={480}
-            className="input_video2 selfie"
+            className="input_video2 "
+            onLoadedData={() => { stat.loadedCamera = true; }}
           />
           <canvas
             className="guides"

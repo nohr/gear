@@ -7,7 +7,7 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {
-  apiKey: "${FIREBASE_SERVICE_ACCOUNT_GLIMB_NABLA}",
+  apiKey: "AIzaSyCGt_oynUHVpdfZ1-P71eUBtwY-4urMnuI",
   authDomain: "glimb-nabla.firebaseapp.com",
   projectId: "glimb-nabla",
   storageBucket: "glimb-nabla.appspot.com",
@@ -15,8 +15,6 @@ const firebaseConfig = {
   appId: "1:878451516642:web:638ac2dee2b8c73c836abb",
   measurementId: "G-27BFCYK0NM"
 };
-
-console.log(firebaseConfig[0]);
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
