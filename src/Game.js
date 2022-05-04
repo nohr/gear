@@ -28,6 +28,7 @@ function Instructions() {
             <Html
                 as='div'
             >
+
                 <Panel> Use these different handsigns to expose flaws in your prosthetic arm.</Panel>
             </Html>
         </>
@@ -48,7 +49,12 @@ function Game() {
                     <StartScreen />
                 </>
                 :
-                null
+                snap.stage === 1 ?
+                    <Panel>
+                        <Instructions />
+                    </Panel>
+                    :
+                    null
             }
         </>
     )
