@@ -1,12 +1,12 @@
 import React from 'react'
-import { stat } from './state'
+import { state } from './state'
 import { useSnapshot } from 'valtio'
 import { Box, Html } from '@react-three/drei';
 import { Panel } from './UI';
 import styled from 'styled-components';
 
 const Start = styled(Html)`
-    width: fit-content;
+    width: max-content;
 `
 
 function StartScreen() {
@@ -16,7 +16,7 @@ function StartScreen() {
             <Start
                 gameUIWrapper
                 center
-            >Press space to begin.
+            >Press space!
             </Start>
         </>
     )
@@ -25,12 +25,12 @@ function StartScreen() {
 function Instructions() {
     return (
         <>
-            <Html
-                as='div'
+            <Start
+                gameUIWrapper
+                center
             >
-
-                <Panel> Use these different handsigns to expose flaws in your prosthetic arm.</Panel>
-            </Html>
+                ***This displays the instructions picture that fades out
+            </Start>
         </>
     )
 }
@@ -40,7 +40,7 @@ function Instructions() {
 // Bugged
 
 function Game() {
-    const snap = useSnapshot(stat);
+    const snap = useSnapshot(state);
 
     return (
         <>
@@ -50,9 +50,7 @@ function Game() {
                 </>
                 :
                 snap.stage === 1 ?
-                    <Panel>
-                        <Instructions />
-                    </Panel>
+                    <Instructions />
                     :
                     null
             }

@@ -1,6 +1,6 @@
 import { proxy } from 'valtio'
 
-export const stat = proxy({
+export const state = proxy({
     // Game
     triggered: 0,
     start: false,

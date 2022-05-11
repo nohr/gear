@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { stat } from './state';
+import { state } from './state';
 import { useSnapshot } from 'valtio';
 import styled from 'styled-components';
 // Sound Imports
@@ -33,7 +33,7 @@ const Link = styled.div`
   width: 100%;
   display: block;
   height: min-content;
-    transition: ${stat.transition};
+    transition: ${state.transition};
     color: ${props => props.theme.base};
     text-shadow: 1px 0px 1.75px ${props => props.theme.base};
     background-color: ${props => props.theme.baseAlpha};
@@ -79,7 +79,8 @@ border-radius: 15px;
 border: solid 1px ${props => props.theme.sub};
 box-shadow: none;
 /* box-shadow: 0 0 10px 10px ${props => props.theme.third}; */
-transition: ${stat.transition};
+transition: ${state.transition};
+backdrop-filter: blur(40px);
 
     & *{
         color: ${props => props.theme.base};
@@ -156,21 +157,21 @@ const Status = styled.p`
 &.point{
   color: #08afff !important;
 text-shadow: 1px 0px 1.75px #08afff !important;
-background-color: #3cf5aa67;
+background-color: #3cf5aa;
 }
 &.closed{
 color: #009698 !important;
 text-shadow: 1px 0px 1.75px #009698 !important;
-background-color: #acddff77;
+background-color: #acddff;
 }
 `
 
 const Caption = styled.div`
   position: absolute;
   width: fit-content;
+  height: 200px !important;
   z-index: 600;
   top: 15px;
-  padding: 20px;
   text-align: center;
   left: 50%;
   transform: translateX(-50%);
@@ -178,6 +179,12 @@ const Caption = styled.div`
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
+  // Round
+   border: 1px solid ${props => props.theme.sub};
+   border-radius: 500px;
+   top: -235px;
+   backdrop-filter: blur(40px);
+   padding: 280px 80px 50px 80px;
 
   a{
     color:  ${props => props.theme.base} !important;
@@ -247,7 +254,7 @@ const ButtonGroup = styled.div`
     `
 function UI() {
     const statusRef = useRef(null);
-    const snap = useSnapshot(stat);
+    const snap = useSnapshot(state);
     const [caption, setCaption] = useState(false);
     const [readMeText, setReadMeText] = useState(null);
     const [readme, setReadMe] = useState(false);
@@ -265,18 +272,16 @@ function UI() {
         // })
 
         function Shortcuts(e) {
-            stat.triggered++
-            console.log(stat.triggered);
             if (e.key === 'f') {
-                if (!stat.fullscreen) {
+                if (!state.fullscreen) {
                     openFullscreen();
-                } else if (stat.fullscreen === true) {
+                } else if (state.fullscreen === true) {
                     closeFullscreen();
                 }
             } else if (e.key === 'l') {
-                if (!stat.selfie) {
+                if (!state.selfie) {
                     externalMode();
-                } else if (stat.selfie === true) {
+                } else if (state.selfie === true) {
                     laptopMode();
                 }
             } else if (e.key === 'Enter') {
@@ -292,13 +297,13 @@ function UI() {
                     return;
                 }
             } else if (e.key === ' ') {
-                if (stat.start === false) {
+                if (state.start === false) {
                     start();
-                } else if (stat.start === true) {
+                } else if (state.start === true) {
                     stop();
                 }
             } else if (e.key === 'Escape') {
-                stat.fullscreen = false;
+                state.fullscreen = false;
             } else {
                 return;
             }
@@ -308,7 +313,7 @@ function UI() {
     }, [])
 
     function openFullscreen() {
-        stat.fullscreen = true;
+        state.fullscreen = true;
         select();
         if (elem.requestFullscreen) {
             elem.requestFullscreen();
@@ -320,7 +325,7 @@ function UI() {
     }
     function closeFullscreen() {
         console.log(document);
-        stat.fullscreen = false;
+        state.fullscreen = false;
         select();
         if (document.exitFullscreen) {
             document.exitFullscreen();
@@ -331,49 +336,49 @@ function UI() {
         }
     }
     function start() {
-        stat.start = true;
-        stat.stage = 1;
+        state.start = true;
+        state.stage = 1;
         setFeedback(false)
         setReadMe(false)
         select();
     }
     function stop() {
-        stat.start = false;
-        stat.load = 'Press space to resume.';
-        // stat.started = false;
-        stat.ready = false;
+        state.start = false;
+        state.load = 'Press space to resume.';
+        // state.started = false;
+        state.ready = false;
         select();
         // clear axis
         for (const axis in snap.location) {
-            if (stat.location[axis]) {
-                stat.location[axis] = null;
+            if (state.location[axis]) {
+                state.location[axis] = null;
             }
         }
     }
     function externalMode() {
-        stat.selfie = true;
-        if (stat.start) {
+        state.selfie = true;
+        if (state.start) {
             stop()
         }
-        stat.selfie = true;
+        state.selfie = true;
         select();
     }
     function laptopMode() {
-        stat.selfie = false;
-        if (stat.start) {
+        state.selfie = false;
+        if (state.start) {
             stop()
         }
-        stat.selfie = false;
+        state.selfie = false;
         select();
     }
     function hide() {
         setCaption(false);
-        stat.caption = false;
+        state.caption = false;
         select();
     }
     function show() {
         setCaption(true);
-        stat.caption = true;
+        state.caption = true;
         select();
     }
     function Options() {
@@ -391,7 +396,7 @@ function UI() {
         // ENABLE: onMouseOver={() => toolTip(n)} onMouseOut={() => toolTip(0)}
         // function toolTip(n) {
         //     console.log("switch");
-        //     if (!stat.start) {
+        //     if (!state.start) {
         //         if (n === 0) {
         //             option = 'Press Start';
         //             setStatus(status);
@@ -408,7 +413,7 @@ function UI() {
         //             option = 'Start the game.';
         //             setStatus(status);
         //         }
-        //         stat.load = status;
+        //         state.load = status;
         //     }
         // }
         return (
@@ -431,7 +436,6 @@ function UI() {
                 <StrokeHide
                     onClick={() => {
                         hide();
-                        console.log("gg");
                     }}
                     xmlns="http://www.w3.org/2000/svg"
                     version="1.1"
@@ -447,7 +451,6 @@ function UI() {
                 <Hide
                     onClick={() => {
                         show();
-                        console.log("hhh");
                     }}
                     xmlns="http://www.w3.org/2000/svg"
                     version="1.1"
@@ -594,7 +597,7 @@ function UI() {
     // if (statusCurrent) {
     //     const observer = new MutationObserver(
     //         function (mutationsList, observer) {
-    //             if (mutationsList[0].target.textContent === 'Ready' || stat.ready) {
+    //             if (mutationsList[0].target.textContent === 'Ready' || state.ready) {
     //                 ready();
     //             }
     //         })
@@ -602,10 +605,10 @@ function UI() {
     //         observer.observe(statusCurrent, { characterData: true, childList: true, attributes: false, subtree: true })
     //     }
     // }
-    //     if (stat.load === 'Ready' && stat.ready && !stat.started) {
+    //     if (state.load === 'Ready' && state.ready && !state.started) {
     //         ready();
     //     }
-    // }, [stat.load])
+    // }, [state.load])
 
     // Access users' contacts
     // async function getContacts() {
@@ -619,11 +622,11 @@ function UI() {
     var x = window.matchMedia("(max-width: 768px)");
     if (x.matches) {
         // mobile
-        stat.mobile = true;
+        state.mobile = true;
         return (
             <MobileCaption style={{ top: "50% !important", translate: "transform(-50%, -50%) !important" }}>
                 Use a <b>computer</b> with
-                <br /> a <b>webcam</b> to playtest <br />
+                <br /> a <b>webcam</b> to play <br />
                 <i>Gear and Loading</i>
             </MobileCaption>
         )
@@ -636,7 +639,7 @@ function UI() {
                 {feedback ? <Feedback /> : null}
                 <Caption
                     className='caption'
-                    style={!stat.caption ? { pointerEvents: "none", opacity: 0, transition: `${stat.transition}` }
+                    style={!state.caption ? { pointerEvents: "none", opacity: 0, transition: `${state.transition}` }
                         : { pointerEvents: "all", opacity: 1, transition: "0.2s" }}
                 >
                     {/* Caption */}
@@ -645,10 +648,10 @@ function UI() {
                         This is a work in progress, follow it's development on <a id='a' href='https://github.com/nohr/gear'>Github</a>.
                     </p>
                     {/* Instructions */}
-                    <p style={{ paddingTop: '10px' }}>&#9733; Instructions &#9733;
+                    {/* <p style={{ paddingTop: '10px' }}>&#9733; Instructions &#9733;
                         <br />Go to a well-lit area then take a few steps from your computer.
                         <br />Point, close, and open your right hand to test detection.
-                    </p>
+                    </p> */}
                     {/* ReadMeBtn and Feedback */}
                     <br /><div className='aboutfeedback'>
                         {/* {supported && <><Button onClick={getContacts}>Send this to someone!</Button><p> or </p></>} */}
@@ -718,7 +721,7 @@ const Hide = styled.svg`
     height: 24px;
     cursor: pointer;
     position: absolute;
-    transition: ${stat.transition};
+    transition: ${state.transition};
     z-index: 1000;
     top: 5px;
     left: 50%;
@@ -753,15 +756,15 @@ const Icon = styled.div`
     filter: drop-shadow(1px 0px 1.75px ${props => props.theme.base} ) !important;
     height: 18px !important;
     width: auto;
-    transition: ${stat.transition};
+    transition: ${state.transition};
     }
 
     & p{
         color: ${props => props.theme.base} !important;
         text-shadow: 1px 0px 1.75px ${props => props.theme.base} !important;
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
 
     }
 
