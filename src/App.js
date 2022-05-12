@@ -1,18 +1,19 @@
 import './App.css';
 import React, { Suspense, useRef } from 'react';
 import Webcam from 'react-webcam';
-import { stat } from './state';
+import { state } from './state';
 import { useSnapshot } from 'valtio';
 import UI from './UI';
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
+import Game from './Game';
 // R3F & Threejs Imports
 import { Canvas, useThree, useFrame } from '@react-three/fiber';
-import { PerspectiveCamera, Environment } from '@react-three/drei';
+import { PerspectiveCamera, Environment, OrbitControls } from '@react-three/drei';
 import { KernelSize } from 'postprocessing'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { Quaternion, Euler, Vector3, Color } from 'three';
-import { LayerMaterial, Depth, Fresnel, Noise } from 'lamina';
+import { Quaternion, Euler, MeshStandardMaterial, Color } from 'three';
+// import { LayerMaterial, Depth, Fresnel, Noise } from 'lamina';
 // VRM Imports
 import { VRMUtils, VRMSchema, VRM } from '@pixiv/three-vrm';
 import * as Kalidokit from 'kalidokit'
@@ -32,9 +33,9 @@ let videoElement2;
 const onResults = (results) => {
   // Animate model if there is video
   if (currentVrm) {
-    if (stat.model && !stat.location.x && !stat.location.y && stat.load !== 'Ready') {
-      stat.load = 'Ready';
-      stat.ready = true;
+    if (state.model && !state.location.x && !state.location.y && state.load !== 'Ready') {
+      state.load = 'Ready';
+      state.ready = true;
     };
     animateVRM(currentVrm, results);
   };
@@ -60,22 +61,22 @@ function rigRotation(name,
 }
 
 // Animate Position Helper Function
-function rigPosition(name,
-  position = { x: 0, y: 0, z: 0 },
-  dampener = 1,
-  lerpAmount = 0.3) {
-  if (!currentVrm) { return; }
-  const Part = currentVrm.humanoid.getBoneNode(
-    VRMSchema.HumanoidBoneName[name]
-  );
-  if (!Part) { return; }
-  let vector = new Vector3(
-    position.x * dampener,
-    position.y * dampener,
-    position.z * dampener
-  );
-  Part.position.lerp(vector, lerpAmount); // interpolate
-}
+// function rigPosition(name,
+//   position = { x: 0, y: 0, z: 0 },
+//   dampener = 1,
+//   lerpAmount = 0.3) {
+//   if (!currentVrm) { return; }
+//   const Part = currentVrm.humanoid.getBoneNode(
+//     VRMSchema.HumanoidBoneName[name]
+//   );
+//   if (!Part) { return; }
+//   let vector = new Vector3(
+//     position.x * dampener,
+//     position.y * dampener,
+//     position.z * dampener
+//   );
+//   Part.position.lerp(vector, lerpAmount); // interpolate
+// }
 
 /* VRM Character Animator */
 const animateVRM = (vrm, results) => {
@@ -96,24 +97,34 @@ const animateVRM = (vrm, results) => {
 
   const gltf = vrm.scene.children;
 
-  // Animate VRM attributes on handsign
+  const material = new MeshStandardMaterial();
+  material.color.setHSL(0.50, 1, 0.5);  // red
+  material.flatShading = true;
+  const material1 = new MeshStandardMaterial();
+  material1.color.setHSL(0, 0, 1);  // white
+  material1.flatShading = true;
+  const material2 = new MeshStandardMaterial();
+  material2.color.setHSL(1.92, 0.66, 0.35);  // white
+  material2.flatShading = true;
+
   gltf.forEach((child) => {
-    // if (child.material) {
-    //   if (stat.load === 'closed') {
-    //     child.material = material;
-    //   } else if (stat.load === 'open') {
-    //     child.material = material1;
-    //   }
-    // }
-    if (stat.load === 'closed') {
-      // Do something when the hand is closed
-      return
-    } else if (stat.load === 'open') {
-      // Do something when the hand is open
-      return
-    } else if (stat.load === 'point') {
-      // Do something when the hand is pointed
-      return
+    if (child.material) {
+
+
+      if (state.load === 'closed') {
+        // Do something when the hand is closed
+        child.material = material;
+        return
+      } else if (state.load === 'open') {
+        // Do something when the hand is open
+        child.material = material1;
+        return
+      } else if (state.load === 'point') {
+        // Do something when the hand is pointed
+        child.material = material2;
+        return
+      }
+
     }
   })
 
@@ -123,17 +134,17 @@ const animateVRM = (vrm, results) => {
       runtime: "mediapipe",
       video: videoElement,
     });
-    rigRotation("Hips", riggedPose.Hips.rotation, 0.7);
-    rigPosition(
-      "Hips",
-      {
-        x: -riggedPose.Hips.position.x, // Reverse direction
-        y: riggedPose.Hips.position.y + 1, // Add a bit of height
-        z: -riggedPose.Hips.position.z // Reverse direction
-      },
-      1,
-      0.07
-    );
+    // rigRotation("Hips", riggedPose.Hips.rotation, 0.7);
+    // rigPosition(
+    //   "Hips",
+    //   {
+    //     x: -riggedPose.Hips.position.x, // Reverse direction
+    //     y: riggedPose.Hips.position.y + 1, // Add a bit of height
+    //     z: -riggedPose.Hips.position.z // Reverse direction
+    //   },
+    //   1,
+    //   0.07
+    // );
 
     rigRotation("Chest", riggedPose.Spine, 0.25, .3);
     rigRotation("Spine", riggedPose.Spine, 0.45, .3);
@@ -143,10 +154,10 @@ const animateVRM = (vrm, results) => {
     rigRotation("LeftUpperArm", riggedPose.LeftUpperArm, 1, .3);
     rigRotation("LeftLowerArm", riggedPose.LeftLowerArm, 1, .3);
 
-    rigRotation("LeftUpperLeg", riggedPose.LeftUpperLeg, 1, .3);
-    rigRotation("LeftLowerLeg", riggedPose.LeftLowerLeg, 1, .3);
-    rigRotation("RightUpperLeg", riggedPose.RightUpperLeg, 1, .3);
-    rigRotation("RightLowerLeg", riggedPose.RightLowerLeg, 1, .3);
+    // rigRotation("LeftUpperLeg", riggedPose.LeftUpperLeg, 1, .3);
+    // rigRotation("LeftLowerLeg", riggedPose.LeftLowerLeg, 1, .3);
+    // rigRotation("RightUpperLeg", riggedPose.RightUpperLeg, 1, .3);
+    // rigRotation("RightLowerLeg", riggedPose.RightLowerLeg, 1, .3);
   }
   // Animate Hands
   if (leftHandLandmarks) {
@@ -210,13 +221,13 @@ const activateDraw = (ref) => {
   })
 
   if (holistic) {
-    stat.load = 'Holistic loaded'
+    state.load = 'Holistic loaded'
   }
 
   holistic.setOptions({
-    selfieMode: stat.selfie,
+    selfieMode: state.selfie,
     modelComplexity: 1,
-    upperBodyOnly: true,
+    upperBodyOnly: false,
     smoothLandmarks: true,
     minDetectionConfidence: 0.7,
     minTrackingConfidence: 0.7,
@@ -229,7 +240,7 @@ const activateDraw = (ref) => {
   holistic.onResults(onResults);
 
   // camera.start()
-  if (stat.start) {
+  if (state.start) {
     // Use `Mediapipe` utils to get camera - lower resolution = higher fps
     const camera = new Camera(videoElement, {
       onFrame: async () => {
@@ -242,6 +253,20 @@ const activateDraw = (ref) => {
   }
   /* SETUP HANDTRACK.JS */
   let model;
+  let startBtn = document.querySelector('.start');
+
+  // Stop model
+  if (startBtn) {
+    startBtn.addEventListener('click', () => {
+      console.log("stop");
+      if (state.started === true) {
+        handTrack.stopVideo(videoElement2);
+        model.dispose();
+        state.load = 'Model disposed, press Start to reload it'
+      }
+    })
+  }
+
 
   const modelParams = {
     flipHorizontal: true, // flip e.g for video
@@ -252,57 +277,55 @@ const activateDraw = (ref) => {
     modelSize: "large",
   };
 
-  if (stat.start) {
+  if (state.start) {
     handTrack.startVideo(videoElement2).then(
       function (status) {
-        stat.load = `video started, ${status}`
+        state.load = `video started, ${status}`
         if (status) {
-          stat.load = "Video started, loading model...";
+          state.load = "Video started, loading model...";
           // Load the model then send it to detection animation frame
           handTrack.load(modelParams).then((lmodel) => {
             model = lmodel;
-            stat.load = "Model loaded, running detection...";
-            stat.model = true;
+            state.load = "Model loaded, running detection...";
+            state.model = true;
             return model;
           }).then((model) => {
             function runDetection() {
               if (videoElement2) {
-                // videoElement2.addEventListener("loadeddata", () => { })
+                // videoElement2.addEventListener("loadeddata", () => {
+                // console.log('videodata loaded!');
                 model.detect(videoElement2).then((predictions) => {
                   predictions.forEach((one) => {
                     // Only Detect right half of screen
                     // let xCord = parseInt(one.bbox[0]);
-                    // if ((stat.selfie && xCord <= 320) || (!stat.selfie && xCord >= 320)) {
+                    // if ((state.selfie && xCord <= 320) || (!state.selfie && xCord >= 320)) {
                     if (one.label === 'open' || one.label === 'closed' || one.label === 'point') {
                       //Start game if hand sign is detected
                       one.bbox.forEach((num) => {
-                        if (!stat.ready && !stat.started && stat.start === true && num) {
-                          stat.ready = true;
+                        if (!state.ready && !state.started && state.start === true && num) {
+                          state.ready = true;
                         }
                       })
-                      stat.load = `${one.label}`;
-                      stat.location.x = parseInt(one.bbox[0]);
-                      stat.location.y = parseInt(one.bbox[1]);
-                      stat.location.w = parseInt(one.bbox[2]);
-                      stat.location.h = parseInt(one.bbox[3]);
-                      stat.started = true;
+                      state.load = `${one.label}`;
+                      state.location.x = parseInt(one.bbox[0]);
+                      state.location.y = parseInt(one.bbox[1]);
+                      state.location.w = parseInt(one.bbox[2]);
+                      state.location.h = parseInt(one.bbox[3]);
+                      state.started = true;
                     }
                     // }
                   });
                   requestAnimationFrame(runDetection);
                 })
+                // })
               }
             }
-            if (stat.start === false) {
-              handTrack.stopVideo(videoElement2);
-              model.dispose();
-              stat.load = 'Model disposed, press Start to reload it'
-            } else if (stat.start === true) {
-              runDetection()
+            if (state.start === true) {
+              runDetection();
             }
           })
         } else {
-          stat.load = "Please enable video";
+          state.load = "Please enable video";
         }
       });
   }
@@ -357,7 +380,7 @@ function Arm() {
   const { current: loader } = useRef(new GLTFLoader());
 
   //Load vrm
-  if (!stat.vrm) {
+  if (!state.vrm) {
     loader.load('/models/fullbody.vrm', async gltf => {
       if (currentVrm) {
         return;
@@ -366,23 +389,24 @@ function Arm() {
       const vrm = await VRM.from(gltf);
       scene.add(vrm.scene);
       vrm.scene.rotation.y = Math.PI;
+      vrm.scene.position.y = -1.35;
       currentVrm = vrm;
-      stat.vrm = true;
+      state.vrm = true;
     },
       progress => {
-        if (stat.load === ((100.0 * (progress.loaded / progress.total)) === 100.0)) {
-          stat.load = '100% armed';
+        if (state.load === ((100.0 * (progress.loaded / progress.total)) === 100.0)) {
+          state.load = '100% armed';
         } else if ((progress.loaded / progress.total) <= 1.0) {
-          stat.load = `${parseInt(100.0 * (progress.loaded / progress.total))}% armed...`;
+          state.load = `${parseInt(100.0 * (progress.loaded / progress.total))}% armed...`;
         } else {
-          stat.load = 'Overloaded!';
+          state.load = 'Overloaded! Now resolving...';
         }
       },
       error => console.error(error))
   }
 
+  // Update model to render physics using the frame loop hook
   useFrame(({ gl, scene, camera }) => {
-    // Update model to render physics
     if (currentVrm) {
       currentVrm.update(clock.getDelta());
     }
@@ -392,26 +416,33 @@ function Arm() {
 
 // React Three Fiber Canvas
 function CanvasComp() {
-  const snap = useSnapshot(stat)
+  const snap = useSnapshot(state)
   return (
     <Canvas
       linear
       className='threeCanvas'
-      frameloop={snap.start ? 'always' : 'demand'}
+      frameloop={snap.started ? snap.start ? 'always' : 'demand' : 'always'}
     >
       <PerspectiveCamera
         makeDefault
         fov={60}
-        position={[0, 1.3, 1.25]}
+        position={[0, 0, 1.25]}
       />
-      {snap.start && <Suspense fallback={null}>
-        <spotLight intensity={0.7} position={[0, 3, 7]} />
-        <Arm />
-        {snap.effects && <EffectComposer multisampling={2}>
-          <Bloom kernelSize={1} luminanceThreshold={0} luminanceSmoothing={0.3} intensity={0.8} />
-          <Bloom kernelSize={KernelSize.HUGE} luminanceThreshold={0} luminanceSmoothing={1} intensity={1} />
-        </EffectComposer>}
-      </Suspense>}
+      <Suspense fallback={null}>
+        <Game />
+        {snap.start &&
+          <>
+            <spotLight intensity={0.7} position={[0, 2.8, 7]} />
+            <Arm />
+            {snap.effects && <EffectComposer multisampling={2}>
+              <Bloom kernelSize={1} luminanceThreshold={0} luminanceSmoothing={0.3} intensity={0.8} />
+              <Bloom kernelSize={KernelSize.HUGE} luminanceThreshold={0} luminanceSmoothing={1} intensity={1} />
+            </EffectComposer>}
+          </>
+        }
+      </Suspense>
+      <OrbitControls
+        target={[0, 0, 0]} />
       <Environment
         path='/'
         files={"images/studio_small_04_1k.hdr"}
@@ -429,13 +460,13 @@ a:hover{
 p:not(.markdown), a, body{
   color: ${props => props.theme.base};
   text-shadow: 1px 0px 1.75px ${props => props.theme.base};
-  transition: ${stat.transition};
+  transition: ${state.transition};
 }
 `
 
 // App: Top Level Function
 export default function App() {
-  const snap = useSnapshot(stat);
+  const snap = useSnapshot(state);
 
   return (
     <ThemeProvider theme={snap.theme === 'light' ? snap.light : snap.dark}>
@@ -447,13 +478,14 @@ export default function App() {
           <Webcam
             width={640}
             height={480}
-            className="input_video selfie"
+            className="input_video "
           />
           {/* Handtrack js Camera */}
           <Webcam
             width={640}
             height={480}
-            className="input_video2 selfie"
+            className="input_video2 "
+            onLoadedData={() => { state.loadedCamera = true; }}
           />
           <canvas
             className="guides"

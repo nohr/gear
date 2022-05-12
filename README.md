@@ -14,8 +14,6 @@ It's an interactive minigame that aims to make you weigh convenience against sec
 
 ### Virtual Reality
 
-- [ithappy](https://www.cgtrader.com/ithappy) created the mechanical prosthetic model that we attach to a human rig in Blender.
-
 - [VRM Add-on for Blender](https://github.com/saturday06/VRM_Addon_for_Blender) exports a VRM file.
 
 - [three-vrm](https://github.com/pixiv/three-vrm) lets us load the VRM file into the three.js canvas.
@@ -23,6 +21,8 @@ It's an interactive minigame that aims to make you weigh convenience against sec
 - Poimandres' [react-three-fiber](https://github.com/pmndrs/react-three-fiber) renders [three.js](https://threejs.org/) to enable 3D in the app. It's ecosystem, including [drei](https://github.com/pmndrs/drei), [postprocessing](https://github.com/pmndrs/react-postprocessing), and [cannon](https://github.com/pmndrs/use-cannon), provides useful three.js helpers, works as a post processing wrapper, and works as a physics renderer respectively.
 
 #### Etc.
+
+- [ithappy](https://www.cgtrader.com/ithappy) created the mechanical prosthetic model that we attach to a human rig in Blender.
 
 - README and feedback icons were created by [Gregor Cresnar](https://thenounproject.com/grega.cresnar/) and edited further by me.
 
