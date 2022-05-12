@@ -1,6 +1,6 @@
-# 🦾 Gear and Loading
+# 🦾 Gear & Loading
 
-It's an interactive minigame that aims to make you weigh convenience against security.
+it's a satirical, motion-based, role-playing game that can be played on any computer with a webcam.
 
 ## How does it work?
 
