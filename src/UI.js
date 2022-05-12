@@ -185,6 +185,7 @@ const Caption = styled.div`
    top: -235px;
    backdrop-filter: blur(40px);
    padding: 280px 80px 50px 80px;
+   background: none;
 
   a{
     color:  ${props => props.theme.base} !important;

@@ -42,7 +42,7 @@ export const state = proxy({
         thirdAlpha: '#1A090D67',
     },
     dark: {
-        gradient: 'linear-gradient(0deg, rgba(24, 28, 36, 1) 0%, rgba(79, 79, 114, 1) 100%) !important',
+        gradient: 'linear-gradient(0deg, #171C25 0%, #4F4F75 100%) !important',
         base: '#bebebe',
         baseAlpha: `#bebebe47`,
         sub: '#CCFF66',
