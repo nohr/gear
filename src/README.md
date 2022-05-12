@@ -1,6 +1,6 @@
 # 🦾 Gear & Loading
 
-it's a satirical, motion-based, role-playing game that can be played on any computer with a webcam.
+It's a motoion-based, role-playing game that emphasizes slowness in completing a menial task.
 
 ## How does it work?
 
