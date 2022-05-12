@@ -12,7 +12,7 @@ import { PerspectiveCamera, Environment, OrbitControls } from '@react-three/drei
 import { KernelSize } from 'postprocessing'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { Quaternion, Euler, Vector3, Color } from 'three';
+import { Quaternion, Euler, MeshStandardMaterial, Color } from 'three';
 // import { LayerMaterial, Depth, Fresnel, Noise } from 'lamina';
 // VRM Imports
 import { VRMUtils, VRMSchema, VRM } from '@pixiv/three-vrm';
@@ -97,24 +97,34 @@ const animateVRM = (vrm, results) => {
 
   const gltf = vrm.scene.children;
 
-  // Animate VRM attributes on handsign
+  const material = new MeshStandardMaterial();
+  material.color.setHSL(0.50, 1, 0.5);  // red
+  material.flatShading = true;
+  const material1 = new MeshStandardMaterial();
+  material1.color.setHSL(0, 0, 1);  // white
+  material1.flatShading = true;
+  const material2 = new MeshStandardMaterial();
+  material2.color.setHSL(1.92, 0.66, 0.35);  // white
+  material2.flatShading = true;
+
   gltf.forEach((child) => {
-    // if (child.material) {
-    //   if (state.load === 'closed') {
-    //     child.material = material;
-    //   } else if (state.load === 'open') {
-    //     child.material = material1;
-    //   }
-    // }
-    if (state.load === 'closed') {
-      // Do something when the hand is closed
-      return
-    } else if (state.load === 'open') {
-      // Do something when the hand is open
-      return
-    } else if (state.load === 'point') {
-      // Do something when the hand is pointed
-      return
+    if (child.material) {
+
+
+      if (state.load === 'closed') {
+        // Do something when the hand is closed
+        child.material = material;
+        return
+      } else if (state.load === 'open') {
+        // Do something when the hand is open
+        child.material = material1;
+        return
+      } else if (state.load === 'point') {
+        // Do something when the hand is pointed
+        child.material = material2;
+        return
+      }
+
     }
   })
 

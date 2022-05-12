@@ -29,7 +29,7 @@ function Instructions() {
                 gameUIWrapper
                 center
             >
-                ***This displays the instructions picture that fades out
+                {/* ***This displays the instructions picture that fades out */}
             </Start>
         </>
     )

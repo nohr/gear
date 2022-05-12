@@ -7,7 +7,7 @@ import useSound from 'use-sound';
 import selectFile from './sounds/select.mp3'
 import ReactMarkdown from 'react-markdown';
 import ReadMeMD from './README.md'
-import { commentBox } from 'commentbox.io';
+// import { commentBox } from 'commentbox.io';
 
 // R3F Imports
 // import { Html, useProgress } from '@react-three/drei';
