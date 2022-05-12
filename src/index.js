@@ -7,7 +7,6 @@ import { state } from './state'
 // import { getAnalytics } from "firebase/analytics";
 
 // const firebaseConfig = {
-//   apiKey: "AIzaSyCGt_oynUHVpdfZ1-P71eUBtwY-4urMnuI",
 //   authDomain: "glimb-nabla.firebaseapp.com",
 //   projectId: "glimb-nabla",
 //   storageBucket: "glimb-nabla.appspot.com",
