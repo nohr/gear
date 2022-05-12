@@ -325,7 +325,6 @@ function UI() {
         }
     }
     function closeFullscreen() {
-        console.log(document);
         state.fullscreen = false;
         select();
         if (document.exitFullscreen) {
