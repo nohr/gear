@@ -71,11 +71,12 @@ z-index: 1000;
 top: 50%;
 left: 50%;
 transform: translate(-50%,-50%);
-width: 600px;
-height: 370px;
+width: 500px;
+height: 500px;
 text-align: left;
-padding: 3px 3px;
-border-radius: 15px;
+padding: 40px;
+border-radius: 50%;
+overflow-y: scroll;
 border: solid 1px ${props => props.theme.sub};
 box-shadow: none;
 /* box-shadow: 0 0 10px 10px ${props => props.theme.third}; */
@@ -94,9 +95,8 @@ backdrop-filter: blur(40px);
 & .markdown{
     position: absolute;
     z-index: 100;
-    height: 370px;
     overflow-y: scroll;
-    padding: 0 17px;
+    padding: 70px 17px 140px 17px;
 
     p{
         padding: 5px 0 ;
@@ -145,6 +145,14 @@ backdrop-filter: blur(40px);
         color: ${props => props.theme.base};
         text-shadow: 1px 0px 1.75px ${props => props.theme.base} !important;
     }
+}
+
+& .commentbox{
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%,-50%);
+font-size: 48px;
 }
 `
 
@@ -582,7 +590,7 @@ function UI() {
             <>
                 <Panel>
                     <div className='commentbox'>
-                        email aite@nabla.ooo
+                        <span style={{ userSelect: 'none' }}> email </span> aite@nabla.ooo
                     </div>
                     <Gear />
                 </Panel>
