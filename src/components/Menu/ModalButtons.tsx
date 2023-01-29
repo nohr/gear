@@ -1,10 +1,10 @@
 import { useContext } from "react";
-import { MenuContext } from "../common/context";
+import { MenuContext } from "context";
 import { FeedbackPath, ReadMePath } from "./ModalButtonPaths";
 
 export default function ModalButtons() {
   return (
-    <div className="flex flex-row w-36 gap-x-8 justify-between">
+    <div className="flex w-36 flex-row justify-between gap-x-8">
       <ReadMeButton />
       <FeedbackButton />
     </div>

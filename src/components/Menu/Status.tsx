@@ -1,5 +1,5 @@
 import { useSnapshot } from "valtio";
-import { model, state } from "../common/state";
+import { model, state } from "state";
 
 export default function Status() {
   const { selfie, status, cameraStarted } = useSnapshot(state);

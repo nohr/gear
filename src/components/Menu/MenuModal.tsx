@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { MenuContext } from "../common/context";
+import { MenuContext } from "context";
 import ModalButtons from "./ModalButtons";
 import Options from "./Options";
 import Status from "./Status";

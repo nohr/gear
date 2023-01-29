@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { MenuContext } from "../common/context";
+import { MenuContext } from "context";
 import { LogoPath } from "./ModalButtonPaths";
 
 export function MenuToggle() {

@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import { toggleCamera, toggleFullscreen, toggleStart } from "../common/utils";
-import { state } from "../common/state";
+import { toggleCamera, toggleFullscreen, toggleStart } from "utils";
+import { state } from "state";
 import { useSnapshot } from "valtio";
 
 export default function Options() {

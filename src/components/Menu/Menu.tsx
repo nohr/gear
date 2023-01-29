@@ -1,4 +1,4 @@
-import MenuProvider from "../common/context";
+import MenuProvider from "context";
 import MenuModal from "./MenuModal";
 import { MenuToggle } from "./MenuToggle";
 
