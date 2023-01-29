@@ -12,11 +12,13 @@ export default function ModalButtons() {
 }
 
 function ReadMeButton() {
-  const { readme, setReadMe } = useContext(MenuContext);
+  const { readme, feedback, setReadMe } = useContext(MenuContext);
   return (
     <div
-      onClick={() => setReadMe((prev: boolean) => !prev)}
-      className={`modalButton ${readme ? "active" : ""}`}
+      onClick={() => (!feedback ? setReadMe((prev: boolean) => !prev) : null)}
+      className={`modalButton ${readme ? "active" : ""} ${
+        feedback ? "pointer-events-none opacity-25" : ""
+      }`}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -34,11 +36,13 @@ function ReadMeButton() {
 }
 
 function FeedbackButton() {
-  const { feedback, setFeedback } = useContext(MenuContext);
+  const { feedback, readme, setFeedback } = useContext(MenuContext);
   return (
     <div
-      onClick={() => setFeedback((prev: boolean) => !prev)}
-      className={`modalButton ${feedback ? "active" : ""}`}
+      onClick={() => (!readme ? setFeedback((prev: boolean) => !prev) : null)}
+      className={`modalButton ${feedback ? "active" : ""} ${
+        readme ? "pointer-events-none opacity-25" : ""
+      }`}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

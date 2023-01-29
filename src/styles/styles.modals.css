@@ -1,0 +1,35 @@
+.panel {
+  @apply absolute top-1/2 left-1/2 z-[100] h-[250px] w-[500px] -translate-x-1/2 -translate-y-1/2 transform overflow-y-scroll rounded-lg border-[1px] border-red-500 bg-transparent p-8 backdrop-blur-lg dark:border-lime-500;
+}
+
+.markdown {
+  position: absolute;
+  z-index: 100;
+  overflow-y: scroll;
+  padding: 7px 30px 14px 10px;
+}
+
+.markdown p {
+  padding: 5px 0;
+}
+
+.markdown:first-of-type(p) {
+  color: lavenderblush !important;
+}
+
+.markdown h2 {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.markdown h1,
+.markdown h2 {
+  text-align: left;
+}
+.markdown ul {
+  list-style: none;
+}
+
+.markdown li {
+  padding: 5px 0;
+}

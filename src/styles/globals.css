@@ -1,0 +1,24 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Urbanist", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  background: linear-gradient(0deg, #171c25 0%, #4f4f75 100%);
+  color: #bebebe;
+  text-shadow: 1px 0px 1.75px #bebebe;
+}
+
+@media (prefers-color-scheme: light) {
+  html {
+    background: linear-gradient(0deg, #ebebeb 0%, #d8e3ee 100%) !important;
+    color: #006ebc;
+    text-shadow: 1px 0px 1.75px #006ebc;
+  }
+}

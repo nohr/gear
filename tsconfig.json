@@ -29,6 +29,7 @@
       "state":[ "common/state.ts"],
       "ui": ["ui/index.tsx"],
       "utils": ["common/utils.ts"],
+      "styles":[ "styles/*"]
     }
   }
 }

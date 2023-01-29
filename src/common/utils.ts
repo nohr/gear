@@ -26,35 +26,34 @@ export function toggleCamera() {
     // select();
 }
 
-function openFullscreen() {
-    const elem = document.documentElement;
-    state.fullscreen = true;
-    // select();
-    if (elem.requestFullscreen) {
-        elem.requestFullscreen();
-    }
-    // else if (elem.webkitRequestFullscreen) { /* Safari */
-    //     elem.webkitRequestFullscreen();
-    // } else if (elem.msRequestFullscreen) { /* IE11 */
-    //     elem.msRequestFullscreen();
-    // }
-}
-function closeFullscreen() {
-    state.fullscreen = false;
-    // select();
-    if (document.exitFullscreen) {
-        document.exitFullscreen();
-    }
-    // else if (document.webkitExitFullscreen) { /* Safari */
-    //     document.webkitExitFullscreen();
-    // } else if (document.msExitFullscreen) { /* IE11 */
-    //     document.msExitFullscreen();
-    // }
-}
-
 export function toggleFullscreen() {
     console.log(state.fullscreen);
 
+    function openFullscreen() {
+        const elem = document.documentElement;
+        state.fullscreen = true;
+        // select();
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        }
+        // else if (elem.webkitRequestFullscreen) { /* Safari */
+        //     elem.webkitRequestFullscreen();
+        // } else if (elem.msRequestFullscreen) { /* IE11 */
+        //     elem.msRequestFullscreen();
+        // }
+    }
+    function closeFullscreen() {
+        state.fullscreen = false;
+        // select();
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
+        // else if (document.webkitExitFullscreen) { /* Safari */
+        //     document.webkitExitFullscreen();
+        // } else if (document.msExitFullscreen) { /* IE11 */
+        //     document.msExitFullscreen();
+        // }
+    }
     state.fullscreen ? closeFullscreen() : openFullscreen();
     // select();
 }
