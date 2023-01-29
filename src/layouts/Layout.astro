@@ -1,0 +1,48 @@
+---
+import "@fontsource/urbanist";
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/png" href="./images/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta
+      name="theme-color"
+      content="#D8E3EE"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#4F4F75"
+      media="(prefers-color-scheme: dark)"
+    />
+    <title>Gear</title>
+    <meta
+      name="description"
+      content="It's a motion-based, role-playing game that emphasizes slowness in completing a menial task."
+    />
+    <link rel="apple-touch-icon" href="./images/logo1024.png" />
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="stylesheet" href="./globals.css" />
+  </head>
+
+  <body
+    class="m-0 text-sm h-screen w-full flex overflow-hidden items-start justify-center"
+  >
+    <slot />
+  </body>
+</html>
+
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker
+        .register("./serviceworker.js")
+        .then((reg) => console.log("Success: ", reg.scope))
+        .catch((err) => console.log("Failure: ", err));
+    });
+  }
+</script>
