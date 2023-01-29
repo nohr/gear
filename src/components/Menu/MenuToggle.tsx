@@ -12,7 +12,6 @@ export function MenuToggle() {
       version="1.1"
       viewBox="0 0 300 246.9"
       xmlSpace="preserve"
-      id="a"
       className={`${
         !menu
           ? " fill-blue-500 stroke-transparent hover:fill-red-500 dark:fill-gray-500 dark:hover:fill-lime-500"

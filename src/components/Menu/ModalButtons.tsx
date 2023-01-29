@@ -26,7 +26,6 @@ function ReadMeButton() {
         height="539.024"
         data-name="Layer 1"
         viewBox="0 0 553 539.024"
-        id="a"
       >
         {ReadMePath}
       </svg>
