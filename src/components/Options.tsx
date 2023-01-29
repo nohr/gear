@@ -21,25 +21,25 @@ function OptionsButton({ num }: { num: number }) {
       label2: <>Laptop</>,
       func: () => toggleCamera(),
       toggle: selfie,
-      caption: "L",
+      key: "L",
     },
     {
       label: <>Fullscreen</>,
       label2: <>Windowed</>,
       func: () => toggleFullscreen(),
       toggle: fullscreen,
-      caption: "F",
+      key: "F",
     },
     {
       label: <>Start</>,
       label2: <>Stop</>,
       func: () => toggleStart(),
       toggle: cameraStarted,
-      caption: "Space",
+      key: "Space",
     },
   ];
 
-  const { label, label2, func, toggle, caption } = optionsArray[num];
+  const { label, label2, func, toggle, key } = optionsArray[num];
 
   return (
     <div className="flex flex-col items-center">
@@ -51,7 +51,7 @@ function OptionsButton({ num }: { num: number }) {
       >
         {!toggle ? label : label2}
       </motion.div>
-      <p className="text-xs">{caption}</p>
+      <p className="text-xs">{`( ${key} )`}</p>
     </div>
   );
 }
