@@ -27,7 +27,7 @@
     "paths": {
       "context": ["common/context/index.tsx"],
       "state":[ "common/state.ts"],
-      "components": ["components/index.tsx"],
+      "ui": ["ui/index.tsx"],
       "utils": ["common/utils.ts"],
     }
   }
