@@ -1,5 +1,5 @@
 import MenuProvider from "context";
-import { Feedback, ReadMe } from "ui/Modals";
+import { Feedback, ReadMe } from "components/Modals";
 import MenuModal from "./MenuModal";
 import { MenuToggle } from "./MenuToggle";
 
