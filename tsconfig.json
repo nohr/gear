@@ -29,8 +29,7 @@
       "state":[ "common/state.ts"],
       "components/*": ["components/*"],
       "utils": ["common/utils.ts"],
-      "styles":[ "styles/*"],
-      "readme": ["README.md"]
+      "styles":[ "styles/*"]
     }
   }
 }

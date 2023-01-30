@@ -1,12 +1,12 @@
 ---
 import Menu from "components/UI";
-// import Cameras from "components/ML/Cameras";
+import Cameras from "components/ML/Cameras";
 import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout>
-  <Menu client:load />
-  <!-- <Cameras client:only /> -->
+  <Menu client:only="react" />
+  <Cameras client:only="react" />
   <p
     class="absolute top-1/2 left-1/2 z-0"
     style="transform:translate(-50%,-50%)"
@@ -15,8 +15,8 @@ import Layout from "../layouts/Layout.astro";
   </p>
 </Layout>
 <script>
-  import { state } from "state";
-  console.log(state.gameStarted);
+  // import { state } from "state";
+  // console.log(state.gameStarted);
 
   // const;
 </script>
