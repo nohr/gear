@@ -1,7 +1,7 @@
 import MenuProvider from "context";
-import { Feedback, ReadMe } from "components/Modals";
 import MenuModal from "./MenuModal";
-import { MenuToggle } from "./MenuToggle";
+import MenuToggle from "./MenuToggle";
+import { Feedback, ReadMe } from "./Modals";
 
 export default function Menu() {
   return (

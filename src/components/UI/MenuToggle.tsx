@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { MenuContext } from "context";
 import { LogoPath } from "./ModalButtonPaths";
 
-export function MenuToggle() {
+export default function MenuToggle() {
   const { menu, setMenu } = useContext(MenuContext);
 
   return (

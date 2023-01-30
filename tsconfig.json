@@ -27,9 +27,10 @@
     "paths": {
       "context": ["common/context/index.tsx"],
       "state":[ "common/state.ts"],
-      "components": ["components/index.tsx"],
+      "components/*": ["components/*"],
       "utils": ["common/utils.ts"],
-      "styles":[ "styles/*"]
+      "styles":[ "styles/*"],
+      "readme": ["README.md"]
     }
   }
 }

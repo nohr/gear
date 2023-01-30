@@ -1,10 +1,12 @@
 ---
-import Menu from "components/Menu";
+import Menu from "components/UI";
+// import Cameras from "components/ML/Cameras";
 import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout>
-  <Menu client:only="react" />
+  <Menu client:load />
+  <!-- <Cameras client:only /> -->
   <p
     class="absolute top-1/2 left-1/2 z-0"
     style="transform:translate(-50%,-50%)"
@@ -12,3 +14,9 @@ import Layout from "../layouts/Layout.astro";
     Press Space
   </p>
 </Layout>
+<script>
+  import { state } from "state";
+  console.log(state.gameStarted);
+
+  // const;
+</script>

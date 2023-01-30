@@ -11,9 +11,20 @@ export function ReadMe() {
     readme ? setFeedback(false) : null;
   }, [feedback]);
 
-  fetch("../../README.md")
-    .then((res) => res.text())
-    .then((text) => setReadMeText(text));
+  async function getReadMe() {
+    const URL = "https://raw.githubusercontent.com/nohr/gear/main/README.md";
+    const res = await fetch(URL, {
+      method: "GET",
+      mode: "cors",
+      headers: {
+        "Content-Type": "text/plain",
+      },
+    });
+    const text = await res.text();
+    return text;
+  }
+
+  getReadMe().then((text) => setReadMeText(text));
 
   return (
     <>

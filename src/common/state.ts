@@ -4,9 +4,12 @@ export const state = proxy({
     // mobile: window.matchMedia("(max-width: 768px)"),
     selfie: false,
     cameraStarted: false,
+    cameraLoaded: false,
     status: "Press space to start",
     fullscreen: false,
     // game
+    gameStarted: false,
+    gameReady: false,
     stage: 0,
 });
 
