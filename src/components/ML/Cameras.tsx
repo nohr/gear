@@ -1,7 +1,7 @@
 import Webcam from "react-webcam";
 import { state } from "state";
 import { useSnapshot } from "valtio";
-import { activateDraw } from "./utils";
+// import { activateDraw } from "./utils";
 
 export default function Cameras() {
   const { cameraStarted } = useSnapshot(state);
@@ -20,7 +20,7 @@ export default function Cameras() {
               state.cameraLoaded = true;
             }}
           />
-          <canvas className="guides" ref={(e: any) => activateDraw(e)}></canvas>
+          {/* <canvas className="guides" ref={(e: any) => activateDraw(e)}></canvas> */}
         </>
       ) : null}
     </>
