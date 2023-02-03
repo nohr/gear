@@ -1,0 +1,31 @@
+[debug] [2023-02-03T16:06:49.215Z] ----------------------------------------------------------------------
+[debug] [2023-02-03T16:06:49.217Z] Command:       /usr/local/bin/firebase /Users/aitenoria/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/bin/firebase deploy
+[debug] [2023-02-03T16:06:49.217Z] CLI Version:   11.18.0
+[debug] [2023-02-03T16:06:49.217Z] Platform:      darwin
+[debug] [2023-02-03T16:06:49.217Z] Node Version:  v16.16.0
+[debug] [2023-02-03T16:06:49.222Z] Time:          Fri Feb 03 2023 17:06:49 GMT+0100 (West Africa Standard Time)
+[debug] [2023-02-03T16:06:49.223Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-02-03T16:06:49.228Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2023-02-03T16:06:49.344Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-02-03T16:06:49.345Z] > authorizing via signed-in user (aite@paredol.com)
+[debug] [2023-02-03T16:06:49.345Z] [iam] checking project gear-4327 for permissions ["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]
+[debug] [2023-02-03T16:06:49.347Z] > refreshing access token with scopes: []
+[debug] [2023-02-03T16:06:49.348Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2023-02-03T16:06:49.348Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2023-02-03T16:06:49.930Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2023-02-03T16:06:49.933Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2023-02-03T16:06:49.950Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/gear-4327:testIamPermissions [none]
+[debug] [2023-02-03T16:06:49.952Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/gear-4327:testIamPermissions x-goog-quota-user=projects/gear-4327
+[debug] [2023-02-03T16:06:49.953Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/gear-4327:testIamPermissions {"permissions":["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]}
+[debug] [2023-02-03T16:06:50.638Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/gear-4327:testIamPermissions 200
+[debug] [2023-02-03T16:06:50.639Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/gear-4327:testIamPermissions {"permissions":["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]}
+[debug] [2023-02-03T16:06:50.641Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/gear-4327 [none]
+[debug] [2023-02-03T16:06:51.315Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/gear-4327 200
+[debug] [2023-02-03T16:06:51.317Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/gear-4327 {"projectId":"gear-4327","projectNumber":"726326453417","displayName":"gear-4327","name":"projects/gear-4327","resources":{"hostingSite":"gear-4327","storageBucket":"gear-4327.appspot.com","locationId":"us-central"},"state":"ACTIVE","etag":"1_ba8ddda6-7c8c-4266-a8b5-815d5a3b805d"}
+[debug] [2023-02-03T16:06:55.390Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/gear-4327/sites pageToken=&pageSize=10
+[debug] [2023-02-03T16:06:56.949Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/gear-4327/sites 200
+[debug] [2023-02-03T16:06:56.949Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/gear-4327/sites {"sites":[{"name":"projects/gear-4327/sites/gear-4327","defaultUrl":"https://gear-4327.web.app","appId":"1:726326453417:web:f3681cea77d4544fe775b8","type":"DEFAULT_SITE"}]}
+[debug] [2023-02-03T16:06:56.950Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:726326453417:web:f3681cea77d4544fe775b8/config [none]
+[debug] [2023-02-03T16:06:58.262Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:726326453417:web:f3681cea77d4544fe775b8/config 200
+[debug] [2023-02-03T16:06:58.265Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:726326453417:web:f3681cea77d4544fe775b8/config {"projectId":"gear-4327","appId":"1:726326453417:web:f3681cea77d4544fe775b8","storageBucket":"gear-4327.appspot.com","locationId":"us-central","apiKey":"AIzaSyAMaGvODrqXi1waqpvZkp4arEPD8FlUGks","authDomain":"gear-4327.firebaseapp.com","messagingSenderId":"726326453417","measurementId":"G-PXRPK2HKX4"}

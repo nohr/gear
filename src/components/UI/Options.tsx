@@ -1,20 +1,22 @@
 import { motion } from "framer-motion";
-import { toggleCamera, toggleFullscreen, toggleStart } from "utils";
+import { toggleCamera, toggleFullscreen, togglePlay, toggleStart } from "utils";
 import { state } from "state";
 import { useSnapshot } from "valtio";
 
 export default function Options() {
+  const { cameraStarted } = useSnapshot(state);
   return (
     <div className="flex select-none flex-row gap-x-4">
       <OptionsButton num={0} />
       <OptionsButton num={1} />
       <OptionsButton num={2} />
+      {cameraStarted ? <OptionsButton num={3} /> : null}
     </div>
   );
 }
 
 function OptionsButton({ num }: { num: number }) {
-  const { selfie, fullscreen, cameraStarted } = useSnapshot(state);
+  const { selfie, fullscreen, cameraStarted, playing } = useSnapshot(state);
   const optionsArray = [
     {
       label: <>External</>,
@@ -35,6 +37,13 @@ function OptionsButton({ num }: { num: number }) {
       label2: <>Stop</>,
       func: () => toggleStart(),
       toggle: cameraStarted,
+      key: "S",
+    },
+    {
+      label: <>Pause</>,
+      label2: <>Resume</>,
+      func: () => togglePlay(),
+      toggle: !playing,
       key: "Space",
     },
   ];

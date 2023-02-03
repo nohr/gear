@@ -8,9 +8,12 @@ export const state = proxy({
     status: "Press space to start",
     fullscreen: false,
     // game
+    playing: false,
     gameStarted: false,
     gameReady: false,
     stage: 0,
+    // canvas
+    vrmLoaded: false,
 });
 
 export const model = proxy<ModelProps>({

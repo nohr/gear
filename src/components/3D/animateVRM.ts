@@ -21,36 +21,6 @@ export const animateVRM = (currentVrm: VRM, results: any) => {
     const leftHandLandmarks = results.rightHandLandmarks;
     const rightHandLandmarks = results.leftHandLandmarks;
 
-    const gltf = currentVrm.scene.children;
-
-    const material = new MeshStandardMaterial();
-    material.color.setHSL(0.50, 1, 0.5);  // red
-    material.flatShading = true;
-    const material1 = new MeshStandardMaterial();
-    material1.color.setHSL(0, 0, 1);  // white
-    material1.flatShading = true;
-    const material2 = new MeshStandardMaterial();
-    material2.color.setHSL(1.92, 0.66, 0.35);  // white
-    material2.flatShading = true;
-
-    gltf.forEach((child: any) => {
-        if (child.material) {
-            if (state.status === 'closed') {
-                // Do something when the hand is closed
-                child.material = material;
-                return
-            } else if (state.status === 'open') {
-                // Do something when the hand is open
-                child.material = material1;
-                return
-            } else if (state.status === 'point') {
-                // Do something when the hand is pointed
-                child.material = material2;
-                return
-            }
-
-        }
-    })
 
     // Animate Rotation Helper function
     function rigRotation(name: string,
@@ -71,12 +41,12 @@ export const animateVRM = (currentVrm: VRM, results: any) => {
         Part.quaternion.slerp(quaternion, lerpAmount); // interpolate
     }
 
-    const videoElement = document.querySelector(".input_video") as HTMLVideoElement;
+    const hollisticInput = document.querySelector(".input_video") as HTMLVideoElement;
     // Animate Pose
     if (pose2DLandmarks && pose3DLandmarks) {
         riggedPose = Kalidokit.Pose.solve(pose3DLandmarks, pose2DLandmarks, {
             runtime: "mediapipe",
-            video: videoElement,
+            video: hollisticInput,
         }) as Kalidokit.TPose;
         // rigRotation("Hips", riggedPose.Hips.rotation, 0.7);
         // rigPosition(
