@@ -10,12 +10,12 @@ export default function Cameras() {
       {cameraStarted ? (
         <>
           {/* MediaPipe Camera */}
-          <Webcam width={640} height={480} className="input_video" />
+          <Webcam width={640} height={480} className="input_video hidden" />
           {/* Handtrack js Camera */}
           <Webcam
             width={640}
             height={480}
-            className="input_video2 "
+            className="input_video2 hidden"
             onLoadedData={() => {
               state.cameraLoaded = true;
             }}
