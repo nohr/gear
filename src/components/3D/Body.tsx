@@ -36,14 +36,13 @@ export default function Body() {
             url,
             async (gltf) => {
               VRMUtils.removeUnnecessaryJoints(gltf.scene);
-              const hostedVrm = await gltf.userData.vrm;
-
-              scene.add(hostedVrm.scene);
+              vrm.current = (await gltf.userData.vrm) as VRM;
+              scene.add(vrm.current.scene);
               // console.log("added", current);
-              hostedVrm.scene.rotation.y = Math.PI;
-              hostedVrm.scene.position.y = -1.35;
+              vrm.current.scene.rotation.y = Math.PI;
+              vrm.current.scene.position.y = -1.35;
               state.vrmLoaded = true;
-              vrm.current = hostedVrm;
+              // FIXME: reduce vrm size and cache it
               // convert to base64 and save to local storage
               // let reader = new FileReader();
               // reader.readAsDataURL(blobVrm);
