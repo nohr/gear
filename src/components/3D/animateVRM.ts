@@ -1,30 +1,31 @@
 
 import { Euler, Quaternion } from "three";
 // VRM Imports
-import { VRMSchema, VRM } from '@pixiv/three-vrm';
-import * as Kalidokit from 'kalidokit'
+import type { VRM, VRMHumanBoneName } from '@pixiv/three-vrm';
+import { Pose, Hand, TPose, THand, Side } from "kalidokit";
+
 
 export const animateVRM = (currentVrm: VRM, results: any, hollisticInput: HTMLVideoElement) => {
-    // console.log(results);
     // Take the results from `Holistic` and animate character based on its Face, Pose, and Hand Keypoints.
     let riggedPose, riggedLeftHand, riggedRightHand;
 
+    const { ea, poseLandmarks } = results
     // Pose 3D Landmarks are with respect to Hip distance in meters
-    const pose3DLandmarks = results.ea;
+    const pose3DLandmarks = ea;
     // Pose 2D landmarks are with respect to videoWidth and videoHeight
-    const pose2DLandmarks = results.poseLandmarks;
+    const pose2DLandmarks = poseLandmarks;
     // Be careful, hand landmarks may be reversed
     const leftHandLandmarks = results.rightHandLandmarks;
     const rightHandLandmarks = results.leftHandLandmarks;
 
 
     // Animate Rotation Helper function
-    function rigRotation(name: string,
+    function rigRotation(name: VRMHumanBoneName,
         rotation = { x: 0, y: 0, z: 0 },
         dampener = 1,
         lerpAmount = 0.3) {
         if (!currentVrm) { return; }
-        const Part = currentVrm.humanoid.getRawBoneNode(VRMSchema.HumanoidBoneName[name]);
+        const Part = currentVrm.humanoid.getRawBoneNode(name);
 
         if (!Part) { return; }
 
@@ -39,10 +40,10 @@ export const animateVRM = (currentVrm: VRM, results: any, hollisticInput: HTMLVi
 
     // Animate Pose
     if (pose2DLandmarks && pose3DLandmarks) {
-        riggedPose = Kalidokit.Pose.solve(pose3DLandmarks, pose2DLandmarks, {
+        riggedPose = Pose.solve(pose3DLandmarks, pose2DLandmarks, {
             runtime: "mediapipe",
             video: hollisticInput,
-        }) as Kalidokit.TPose;
+        }) as TPose;
         // rigRotation("Hips", riggedPose.Hips.rotation, 0.7);
         // rigPosition(
         //   "Hips",
@@ -55,13 +56,13 @@ export const animateVRM = (currentVrm: VRM, results: any, hollisticInput: HTMLVi
         //   0.07
         // );
 
-        rigRotation("Chest", riggedPose.Spine, 0.25, .3);
-        rigRotation("Spine", riggedPose.Spine, 0.45, .3);
+        rigRotation("chest", riggedPose.Spine, 0.25, .3);
+        rigRotation("spine", riggedPose.Spine, 0.45, .3);
 
-        rigRotation("RightUpperArm", riggedPose.RightUpperArm, 1, .3);
-        rigRotation("RightLowerArm", riggedPose.RightLowerArm, 1, .3);
-        rigRotation("LeftUpperArm", riggedPose.LeftUpperArm, 1, .3);
-        rigRotation("LeftLowerArm", riggedPose.LeftLowerArm, 1, .3);
+        rigRotation("rightUpperArm", riggedPose.RightUpperArm, 1, .3);
+        rigRotation("rightLowerArm", riggedPose.RightLowerArm, 1, .3);
+        rigRotation("leftUpperArm", riggedPose.LeftUpperArm, 1, .3);
+        rigRotation("leftLowerArm", riggedPose.LeftLowerArm, 1, .3);
 
         // rigRotation("LeftUpperLeg", riggedPose.LeftUpperLeg, 1, .3);
         // rigRotation("LeftLowerLeg", riggedPose.LeftLowerLeg, 1, .3);
@@ -70,51 +71,51 @@ export const animateVRM = (currentVrm: VRM, results: any, hollisticInput: HTMLVi
     }
     // Animate Hands
     if (leftHandLandmarks) {
-        riggedLeftHand = Kalidokit.Hand.solve(leftHandLandmarks, "Left") as Kalidokit.THand<Kalidokit.Side>;
-        rigRotation("LeftHand", {
+        riggedLeftHand = Hand.solve(leftHandLandmarks, "Left") as THand<Side>;
+        rigRotation("leftHand", {
             // Combine pose rotation Z and hand rotation X Y
             z: riggedPose?.LeftHand.z as number,
             y: riggedLeftHand.LeftWrist.y,
             x: riggedLeftHand.LeftWrist.x
         });
-        rigRotation("LeftRingProximal", riggedLeftHand.LeftRingProximal);
-        rigRotation("LeftRingIntermediate", riggedLeftHand.LeftRingIntermediate);
-        rigRotation("LeftRingDistal", riggedLeftHand.LeftRingDistal);
-        rigRotation("LeftIndexProximal", riggedLeftHand.LeftIndexProximal);
-        rigRotation("LeftIndexIntermediate", riggedLeftHand.LeftIndexIntermediate);
-        rigRotation("LeftIndexDistal", riggedLeftHand.LeftIndexDistal);
-        rigRotation("LeftMiddleProximal", riggedLeftHand.LeftMiddleProximal);
-        rigRotation("LeftMiddleIntermediate", riggedLeftHand.LeftMiddleIntermediate);
-        rigRotation("LeftMiddleDistal", riggedLeftHand.LeftMiddleDistal);
-        rigRotation("LeftThumbProximal", riggedLeftHand.LeftThumbProximal);
-        rigRotation("LeftThumbIntermediate", riggedLeftHand.LeftThumbIntermediate);
-        rigRotation("LeftThumbDistal", riggedLeftHand.LeftThumbDistal);
-        rigRotation("LeftLittleProximal", riggedLeftHand.LeftLittleProximal);
-        rigRotation("LeftLittleIntermediate", riggedLeftHand.LeftLittleIntermediate);
-        rigRotation("LeftLittleDistal", riggedLeftHand.LeftLittleDistal);
+        rigRotation("leftRingProximal", riggedLeftHand.LeftRingProximal);
+        rigRotation("leftRingIntermediate", riggedLeftHand.LeftRingIntermediate);
+        rigRotation("leftRingDistal", riggedLeftHand.LeftRingDistal);
+        rigRotation("leftIndexProximal", riggedLeftHand.LeftIndexProximal);
+        rigRotation("leftIndexIntermediate", riggedLeftHand.LeftIndexIntermediate);
+        rigRotation("leftIndexDistal", riggedLeftHand.LeftIndexDistal);
+        rigRotation("leftMiddleProximal", riggedLeftHand.LeftMiddleProximal);
+        rigRotation("leftMiddleIntermediate", riggedLeftHand.LeftMiddleIntermediate);
+        rigRotation("leftMiddleDistal", riggedLeftHand.LeftMiddleDistal);
+        rigRotation("leftThumbProximal", riggedLeftHand.LeftThumbProximal);
+        rigRotation("leftThumbMetacarpal", riggedLeftHand.LeftThumbIntermediate);
+        rigRotation("leftThumbDistal", riggedLeftHand.LeftThumbDistal);
+        rigRotation("leftLittleProximal", riggedLeftHand.LeftLittleProximal);
+        rigRotation("leftLittleIntermediate", riggedLeftHand.LeftLittleIntermediate);
+        rigRotation("leftLittleDistal", riggedLeftHand.LeftLittleDistal);
     }
     if (rightHandLandmarks) {
-        riggedRightHand = Kalidokit.Hand.solve(rightHandLandmarks, "Right") as Kalidokit.THand<Kalidokit.Side>;
-        rigRotation("RightHand", {
+        riggedRightHand = Hand.solve(rightHandLandmarks, "Right") as THand<Side>;
+        rigRotation("rightHand", {
             // Combine Z axis from pose hand and X/Y axis from hand wrist rotation
             z: riggedPose?.RightHand.z as number,
             y: riggedRightHand.RightWrist.y,
             x: riggedRightHand.RightWrist.x
         });
-        rigRotation("RightRingProximal", riggedRightHand.RightRingProximal);
-        rigRotation("RightRingIntermediate", riggedRightHand.RightRingIntermediate);
-        rigRotation("RightRingDistal", riggedRightHand.RightRingDistal);
-        rigRotation("RightIndexProximal", riggedRightHand.RightIndexProximal);
-        rigRotation("RightIndexIntermediate", riggedRightHand.RightIndexIntermediate);
-        rigRotation("RightIndexDistal", riggedRightHand.RightIndexDistal);
-        rigRotation("RightMiddleProximal", riggedRightHand.RightMiddleProximal);
-        rigRotation("RightMiddleIntermediate", riggedRightHand.RightMiddleIntermediate);
-        rigRotation("RightMiddleDistal", riggedRightHand.RightMiddleDistal);
-        rigRotation("RightThumbProximal", riggedRightHand.RightThumbProximal);
-        rigRotation("RightThumbIntermediate", riggedRightHand.RightThumbIntermediate);
-        rigRotation("RightThumbDistal", riggedRightHand.RightThumbDistal);
-        rigRotation("RightLittleProximal", riggedRightHand.RightLittleProximal);
-        rigRotation("RightLittleIntermediate", riggedRightHand.RightLittleIntermediate);
-        rigRotation("RightLittleDistal", riggedRightHand.RightLittleDistal);
+        rigRotation("rightRingProximal", riggedRightHand.RightRingProximal);
+        rigRotation("rightRingIntermediate", riggedRightHand.RightRingIntermediate);
+        rigRotation("rightRingDistal", riggedRightHand.RightRingDistal);
+        rigRotation("rightIndexProximal", riggedRightHand.RightIndexProximal);
+        rigRotation("rightIndexIntermediate", riggedRightHand.RightIndexIntermediate);
+        rigRotation("rightIndexDistal", riggedRightHand.RightIndexDistal);
+        rigRotation("rightMiddleProximal", riggedRightHand.RightMiddleProximal);
+        rigRotation("rightMiddleIntermediate", riggedRightHand.RightMiddleIntermediate);
+        rigRotation("rightMiddleDistal", riggedRightHand.RightMiddleDistal);
+        rigRotation("rightThumbProximal", riggedRightHand.RightThumbProximal);
+        rigRotation("rightThumbMetacarpal", riggedRightHand.RightThumbIntermediate);
+        rigRotation("rightThumbDistal", riggedRightHand.RightThumbDistal);
+        rigRotation("rightLittleProximal", riggedRightHand.RightLittleProximal);
+        rigRotation("rightLittleIntermediate", riggedRightHand.RightLittleIntermediate);
+        rigRotation("rightLittleDistal", riggedRightHand.RightLittleDistal);
     }
 };

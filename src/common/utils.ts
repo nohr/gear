@@ -125,7 +125,7 @@ export const loadVRM = async (vrm: { current: VRM | null }) => {
             });
             // load VRM
             loader.load(
-                "/models/fullbody.vrm",
+                "/models/fullbody_20230204.vrm",
                 async (gltf) => {
                     VRMUtils.removeUnnecessaryJoints(gltf.scene);
                     vrm.current = (await gltf.userData.vrm) as VRM;
