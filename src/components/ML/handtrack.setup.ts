@@ -1,74 +1,8 @@
-import { model, state } from "state";
-import {
-    Holistic,
-    VERSION
-} from '@mediapipe/holistic'
-import { Camera } from '@mediapipe/camera_utils'
+import { state } from "state";
 // @ts-ignore
 import * as handTrack from 'handtrackjs';
-import { animateVRM } from "3D/animateVRM";
-import type { VRM } from "@pixiv/three-vrm";
 
-/* WORLD SETUP */
-let currentVrm: VRM;
-let hollisticInput: HTMLVideoElement | null;
-let handtrackInput: HTMLVideoElement | null;
-
-
-
-const onResults = (results: any) => {
-    // Animate model if there is video
-    if (currentVrm) {
-        if (model.model && !model.location[0] && !model.location[1] && state.status !== 'Ready') {
-            state.status = 'Ready';
-            state.gameReady = true;
-        };
-        animateVRM(currentVrm, results);
-    };
-};
-
-
-export const activateDraw = (ref: HTMLCanvasElement) => {
-    const hollisticInput = document.querySelector(".input_video");
-    const handtrackInput = document.querySelector(".input_video2");
-    /* SETUP MEDIAPIPE HOLISTIC */
-    const holistic = new Holistic({
-        locateFile: (file: string) => {
-            return `https://cdn.jsdelivr.net/npm/@mediapipe/holistic@${VERSION}/${file}`;
-        },
-    });
-
-    if (holistic) {
-        state.status = "Holistic loaded";
-    }
-
-    holistic.setOptions({
-        selfieMode: state.selfie,
-        modelComplexity: 1,
-        // upperBodyOnly: false,
-        smoothLandmarks: true,
-        minDetectionConfidence: 0.7,
-        minTrackingConfidence: 0.7,
-        refineFaceLandmarks: true,
-        enableSegmentation: true,
-        smoothSegmentation: true,
-    });
-
-    // Pass holistic a callback function
-    holistic.onResults(onResults);
-
-    // camera.start()
-    if (state.cameraStarted) {
-        // Use `Mediapipe` utils to get camera - lower resolution = higher fps
-        const camera = new Camera(hollisticInput as HTMLVideoElement, {
-            onFrame: async () => {
-                await holistic.send({ image: hollisticInput as HTMLVideoElement });
-            },
-            width: 640,
-            height: 480,
-        });
-        camera.start();
-    }
+export function handleHandtrack(handtrackInput: HTMLVideoElement) {
     /* SETUP HANDTRACK.JS */
     let model: { dispose: () => void; model: boolean; };
     let startBtn = document.querySelector(".start");
@@ -113,7 +47,7 @@ export const activateDraw = (ref: HTMLCanvasElement) => {
                             if (handtrackInput) {
                                 // handtrackInput.addEventListener("loadeddata", () => {
                                 // console.log('videodata loaded!');
-                                model.detect(handtrackInput as HTMLVideoElement).then((predictions) => {
+                                model.detect(handtrackInput).then((predictions) => {
                                     predictions.forEach((one) => {
                                         // Only Detect right half of screen
                                         // let xCord = parseInt(one.bbox[0]);
@@ -157,4 +91,4 @@ export const activateDraw = (ref: HTMLCanvasElement) => {
             }
         });
     }
-};
+}

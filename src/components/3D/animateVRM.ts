@@ -4,7 +4,7 @@ import { Euler, Quaternion } from "three";
 import { VRMSchema, VRM } from '@pixiv/three-vrm';
 import * as Kalidokit from 'kalidokit'
 
-export const animateVRM = (currentVrm: VRM, results: any) => {
+export const animateVRM = (currentVrm: VRM, results: any, hollisticInput: HTMLVideoElement) => {
     // console.log(results);
     // Take the results from `Holistic` and animate character based on its Face, Pose, and Hand Keypoints.
     let riggedPose, riggedLeftHand, riggedRightHand;
@@ -37,7 +37,6 @@ export const animateVRM = (currentVrm: VRM, results: any) => {
         Part.quaternion.slerp(quaternion, lerpAmount); // interpolate
     }
 
-    const hollisticInput = document.querySelector(".input_video") as HTMLVideoElement;
     // Animate Pose
     if (pose2DLandmarks && pose3DLandmarks) {
         riggedPose = Kalidokit.Pose.solve(pose3DLandmarks, pose2DLandmarks, {
