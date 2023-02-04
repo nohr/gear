@@ -28,11 +28,12 @@
       "context": ["common/context/index.tsx"],
       "hooks":["common/hooks/index.tsx"],
       "state":[ "common/state.ts"],
+      "layouts/*":["layouts/*"],
+      "styles/*":[ "styles/*"],
       "3D/*":["components/3D/*"],
       "ML/*":["components/ML/*"],
       "UI/*":["components/UI/*"],
-      "utils": ["common/utils.ts"],
-      "styles":[ "styles/*"]
+      "utils": ["common/utils.ts"]
     }
   }
 }
