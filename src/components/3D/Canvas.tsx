@@ -15,19 +15,20 @@ export default function Composition() {
 
   return (
     <Canvas
-      onCompositionUpdate={(e) => console.log(e)}
       linear
-      className="absolute z-20"
+      className={`absolute z-20 ${cameraStarted ? "block" : "hidden"}`}
       frameloop={cameraStarted ? (playing ? "always" : "demand") : "always"}
     >
-      <PerspectiveCamera makeDefault fov={60} position={[0, 0, 1.25]} />
-      <Suspense fallback={<p>Loading...</p>}>
-        {/* <Game /> */}
-        <Body />
-        {playing ? (
-          <>
-            <spotLight intensity={0.7} position={[0, 2.8, 7]} />
-            {/* {snap.effects && (
+      {cameraStarted ? (
+        <>
+          <PerspectiveCamera makeDefault fov={60} position={[0, 0.22, 1.2]} />
+          <Suspense fallback={<p>Loading...</p>}>
+            {/* <Game /> */}
+            <Body />
+            {playing ? (
+              <>
+                <spotLight intensity={2} position={[0, 2.8, 7]} />
+                {/* {snap.effects && (
               <EffectComposer multisampling={2}>
                 <Bloom
                   kernelSize={1}
@@ -43,15 +44,17 @@ export default function Composition() {
                 />
               </EffectComposer>
             )} */}
-          </>
-        ) : null}
-      </Suspense>
-      <OrbitControls target={[0, 0, 0]} />
-      <Environment
-        path="/"
-        files={"images/studio_small_04_1k.hdr"}
-        resolution={256}
-      />
+              </>
+            ) : null}
+          </Suspense>
+          <OrbitControls target={[0, 0.22, 0]} />
+          <Environment
+            path="/"
+            files={"images/studio_small_04_1k.hdr"}
+            resolution={256}
+          />
+        </>
+      ) : null}
     </Canvas>
   );
 }
