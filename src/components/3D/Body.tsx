@@ -1,5 +1,5 @@
 import { useFrame } from "@react-three/fiber";
-import { useContext, useEffect } from "react";
+import { Suspense, useContext, useEffect } from "react";
 import { state } from "state";
 import { useSnapshot } from "valtio";
 import { VRMContext } from "context";
@@ -22,5 +22,9 @@ export default function Body() {
     gl.render(scene, camera);
   }, 1);
 
-  return <>{vrmLoaded ? <primitive object={vrm.current.scene} /> : null}</>;
+  return (
+    <Suspense fallback={<p>Loading</p>}>
+      {vrmLoaded ? <primitive object={vrm.current.scene} /> : null}
+    </Suspense>
+  );
 }
