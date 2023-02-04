@@ -1,13 +1,13 @@
 import type { VRM } from "@pixiv/three-vrm";
 import { VRMContext } from "context";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import Webcam from "react-webcam";
 import { state } from "state";
 import { useSnapshot } from "valtio";
 import { handleHandtrack } from "./handtrack.setup";
 import { handleHolistic } from "./holistic.setup";
 
-const activateDraw = (ref: HTMLCanvasElement, vrm: { current: VRM }) => {
+const activateDraw = (vrm: { current: VRM }) => {
   const hollisticInput = document.querySelector(".input_video");
   const handtrackInput = document.querySelector(".input_video2");
 
@@ -18,6 +18,13 @@ const activateDraw = (ref: HTMLCanvasElement, vrm: { current: VRM }) => {
 export default function Cameras() {
   const { cameraStarted } = useSnapshot(state);
   const { vrm } = useContext(VRMContext);
+
+  useEffect(() => {
+    if (cameraStarted) {
+      activateDraw(vrm);
+    }
+  }, [cameraStarted]);
+
   return (
     <>
       {cameraStarted ? (
@@ -33,10 +40,9 @@ export default function Cameras() {
               state.cameraLoaded = true;
             }}
           />
-          <canvas
+          {/* <canvas
             className="guides"
-            ref={(e: any) => activateDraw(e, vrm)}
-          ></canvas>
+          ></canvas> */}
         </>
       ) : null}
     </>

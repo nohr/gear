@@ -1,7 +1,8 @@
 import { model, state } from "state";
 import {
     Holistic,
-    VERSION
+    VERSION,
+    Results,
 } from '@mediapipe/holistic'
 import { Camera } from '@mediapipe/camera_utils'
 // import { animateVRM } from "3D/animateVRM";
@@ -32,7 +33,7 @@ export function handleHolistic(vrm: { current: VRM }, hollisticInput: HTMLVideoE
     });
 
     // Pass holistic a callback function
-    const onResults = (results: any) => {
+    const onResults = (results: Results) => {
         // Animate model if there is video
         if (vrm.current) {
             if (model.model && !model.location[0] && !model.location[1] && state.status !== 'Ready') {
