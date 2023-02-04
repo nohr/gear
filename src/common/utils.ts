@@ -1,4 +1,5 @@
-import type { VRM } from "@pixiv/three-vrm";
+import { VRM, VRMLoaderPlugin, VRMUtils } from "@pixiv/three-vrm";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { model, state } from "./state";
 
 export function start() {
@@ -109,3 +110,54 @@ export async function loadVRMFromHosting(current: VRM, url: string) {
     })()
 
 }
+
+export const loadVRM = async (vrm: { current: VRM | null }) => {
+    try {
+        // Check Local Storage for a VRM
+        const localVrm: VRM | null = await loadVRMFromLocalStorage();
+        if (localVrm !== null) {
+            vrm.current = localVrm;
+        } else {
+            // Load a VRM from hosting
+            const loader = new GLTFLoader();
+            loader.register((parser) => {
+                return new VRMLoaderPlugin(parser);
+            });
+            // load VRM
+            loader.load(
+                "/models/fullbody.vrm",
+                async (gltf) => {
+                    VRMUtils.removeUnnecessaryJoints(gltf.scene);
+                    vrm.current = (await gltf.userData.vrm) as VRM;
+                    vrm.current.scene.rotation.y = Math.PI;
+                    vrm.current.scene.position.y = -1.35;
+                    state.vrmLoaded = true;
+                    // FIXME: reduce vrm size and cache it
+                    // TODO: Allow vrm changes based on level and/or user input to caache
+                    // convert to base64 and save to local storage
+                    // let reader = new FileReader();
+                    // reader.readAsDataURL(blobVrm);
+                    // reader.onload = function () {
+                    //     localStorage.setItem("vrm", JSON.stringify(reader.result));
+                    // };
+                    // reader.onerror = function (error) {
+                    //     console.log('Error: ', error);
+                    // };
+                },
+                (progress) => {
+                    state.status =
+                        100.0 * (progress.loaded / progress.total) === 100.0
+                            ? "100% armed"
+                            : progress.loaded / progress.total <= 1.0
+                                ? `${Math.floor(
+                                    100.0 * (progress.loaded / progress.total)
+                                )}% armed...`
+                                : "Overloaded! Now resolving...";
+                },
+                (error) => console.error(error)
+            );
+        }
+    } catch (e) {
+        console.error(e);
+    }
+};

@@ -1,9 +1,11 @@
 import {
   Environment,
+  Html,
   OrbitControls,
   PerspectiveCamera,
 } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
+import { VRMProvider } from "context";
 import { Suspense } from "react";
 import { state } from "state";
 import { useSnapshot } from "valtio";
@@ -16,19 +18,20 @@ export default function Composition() {
   return (
     <Canvas
       linear
-      className={`absolute z-20 ${cameraStarted ? "block" : "hidden"}`}
-      frameloop={cameraStarted ? (playing ? "always" : "demand") : "always"}
+      className={`absolute z-20`}
+      frameloop={cameraStarted ? (playing ? "always" : "demand") : "demand"}
     >
-      {cameraStarted ? (
-        <>
-          <PerspectiveCamera makeDefault fov={60} position={[0, 0.22, 1.2]} />
-          <Suspense fallback={<p>Loading...</p>}>
-            {/* <Game /> */}
-            <Body />
-            {playing ? (
-              <>
-                <spotLight intensity={2} position={[0, 2.8, 7]} />
-                {/* {snap.effects && (
+      <VRMProvider>
+        {cameraStarted ? (
+          <>
+            <PerspectiveCamera makeDefault fov={60} position={[0, 0.22, 1.2]} />
+            <Suspense fallback={<p>Loading...</p>}>
+              {/* <Game /> */}
+              <Body />
+              {playing ? (
+                <>
+                  <spotLight intensity={1} position={[0, 2.8, 7]} />
+                  {/* {snap.effects && (
               <EffectComposer multisampling={2}>
                 <Bloom
                   kernelSize={1}
@@ -44,17 +47,27 @@ export default function Composition() {
                 />
               </EffectComposer>
             )} */}
-              </>
-            ) : null}
-          </Suspense>
-          <OrbitControls target={[0, 0.22, 0]} />
-          <Environment
-            path="/"
-            files={"images/studio_small_04_1k.hdr"}
-            resolution={256}
-          />
-        </>
-      ) : null}
+                </>
+              ) : null}
+            </Suspense>
+            <OrbitControls target={[0, 0.22, 0]} />
+            <Environment
+              path="/"
+              files={"images/studio_small_04_1k.hdr"}
+              resolution={256}
+            />
+          </>
+        ) : (
+          // Fallback
+          <Html
+            as="div"
+            className="absolute top-1/2 left-1/2 z-0 w-max"
+            style={{ transform: "translate(-50%, -50%)" }}
+          >
+            <p className="w-max">Press Space</p>
+          </Html>
+        )}
+      </VRMProvider>
     </Canvas>
   );
 }

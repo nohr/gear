@@ -1,5 +1,8 @@
 /// <reference types="astro/client" />
 
+interface VRMProps {
+    vrm: VRM | null;
+}
 interface MenuProps {
     menu: boolean;
     setMenu: Dispatch<SetStateAction<boolean>>;

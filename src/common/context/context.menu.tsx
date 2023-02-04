@@ -10,7 +10,7 @@ export const MenuContext = createContext<MenuProps>({
   setFeedback: () => {},
 });
 
-function MenuProvider({ children }: { children: ReactNode }) {
+export function MenuProvider({ children }: { children: ReactNode }) {
   const [menu, setMenu] = useState<boolean>(true);
   const [readme, setReadMe] = useState<boolean>(false);
   const [feedback, setFeedback] = useState<boolean>(false);
@@ -32,5 +32,3 @@ function MenuProvider({ children }: { children: ReactNode }) {
     </MenuContext.Provider>
   );
 }
-
-export default MenuProvider;
