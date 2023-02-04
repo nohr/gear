@@ -1,19 +1,15 @@
 // load the VRM and save it to local storage. retrieve it from local storage and load it into the scene
 
 import { VRM, VRMLoaderPlugin, VRMUtils } from "@pixiv/three-vrm";
-import { useThree } from "@react-three/fiber";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { state } from "state";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-
 import { loadVRMFromLocalStorage, loadVRMFromHosting } from "utils";
 import { useSnapshot } from "valtio";
 
-export default function useVRM(vrm: { current: VRM | null }) {
-    // const vrm = useRef<VRM | null>(null);
+export default function useVRM(vrm: { current: VRM }) {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<unknown>();
-    const { scene, camera, gl } = useThree()
     const { vrmLoaded } = useSnapshot(state)
 
     useEffect(() => {
@@ -36,7 +32,7 @@ export default function useVRM(vrm: { current: VRM | null }) {
                         VRMUtils.removeUnnecessaryJoints(gltf.scene);
                         const hostedVrm = await gltf.userData.vrm;
                         vrm.current = hostedVrm;
-                        // convert to base64 and save to local storage
+                        // TODO: convert to base64 and save to local storage
                         // let reader = new FileReader();
                         // reader.readAsDataURL(blobVrm);
                         // reader.onload = function () {

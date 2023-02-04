@@ -1,14 +1,10 @@
 
-import { state } from "state";
-import { Euler, MeshStandardMaterial, Quaternion } from "three";
+import { Euler, Quaternion } from "three";
 // VRM Imports
-import { VRMUtils, VRMSchema, VRM } from '@pixiv/three-vrm';
+import { VRMSchema, VRM } from '@pixiv/three-vrm';
 import * as Kalidokit from 'kalidokit'
 
 export const animateVRM = (currentVrm: VRM, results: any) => {
-    if (!currentVrm) {
-        return;
-    }
     // console.log(results);
     // Take the results from `Holistic` and animate character based on its Face, Pose, and Hand Keypoints.
     let riggedPose, riggedLeftHand, riggedRightHand;

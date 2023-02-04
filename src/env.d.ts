@@ -1,6 +1,6 @@
 /// <reference types="astro/client" />
 
-type MenuProps = {
+interface MenuProps {
     menu: boolean;
     setMenu: Dispatch<SetStateAction<boolean>>;
     menuRef: RefObject<HTMLDivElement>;
@@ -10,7 +10,7 @@ type MenuProps = {
     setFeedback: Dispatch<SetStateAction<boolean>>;
 };
 
-type ModelProps = {
+interface ModelProps {
     selfie: boolean;
     loadedCamera: boolean;
     location: [x: string | null, y: string | null, w: string | null, h: string | null]

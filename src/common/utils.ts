@@ -82,9 +82,9 @@ export function toggleStart() {
     // select();
 }
 
+// FIXME: Decode the base64 string and load from cache
 export async function loadVRMFromLocalStorage() {
-    let vrm: VRM | null = null;
-    // FIXME: Begin the process of decoding the base64 string
+    let vrm: VRM;
     // let localVrm: string | null = localStorage.getItem('vrm');
     // if (vrm) {
     //     vrm = JSON.parse(vrm);
@@ -95,14 +95,13 @@ export async function loadVRMFromLocalStorage() {
     //     const buffer = await response.arrayBuffer();
     //     const vrmBuffer = new Uint8Array(buffer);
     //     return vrmBuffer;
-    // } 
-    // return vrm as VRM | null;
-    return vrm;
+    // }
+    // return vrm as VRMResult;
+    return null;
 }
 
-export async function loadVRMFromHosting(current: VRM | null, url: string) {
-
-    // FIXME: VRM is too large to set to local storage
+// FIXME: VRM is too large to set to local storage
+export async function loadVRMFromHosting(current: VRM, url: string) {
     // const res = await fetch(url);
     // const blobVrm = await res.blob();
     (async () => {
