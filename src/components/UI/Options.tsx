@@ -1,7 +1,6 @@
-import { motion } from "framer-motion";
-import { toggleCamera, toggleFullscreen, togglePlay, toggleStart } from "utils";
 import { state } from "state";
 import { useSnapshot } from "valtio";
+import { OptionsButton } from "./OptionsButton";
 
 export default function Options() {
   const { cameraStarted } = useSnapshot(state);
@@ -11,56 +10,6 @@ export default function Options() {
       <OptionsButton num={1} />
       <OptionsButton num={2} />
       {cameraStarted ? <OptionsButton num={3} /> : null}
-    </div>
-  );
-}
-
-function OptionsButton({ num }: { num: number }) {
-  const { selfie, fullscreen, cameraStarted, playing } = useSnapshot(state);
-  const optionsArray = [
-    {
-      label: <>External</>,
-      label2: <>Laptop</>,
-      func: () => toggleCamera(),
-      toggle: selfie,
-      key: "L",
-    },
-    {
-      label: <>Fullscreen</>,
-      label2: <>Windowed</>,
-      func: () => toggleFullscreen(),
-      toggle: fullscreen,
-      key: "F",
-    },
-    {
-      label: <>Start</>,
-      label2: <>Stop</>,
-      func: () => toggleStart(),
-      toggle: cameraStarted,
-      key: "S",
-    },
-    {
-      label: <>Pause</>,
-      label2: <>Resume</>,
-      func: () => togglePlay(),
-      toggle: !playing,
-      key: "Space",
-    },
-  ];
-
-  const { label, label2, func, toggle, key } = optionsArray[num];
-
-  return (
-    <div className="flex flex-col items-center">
-      <motion.div
-        className="optionsButton"
-        onClick={() => func()}
-        whileHover={{ scale: 1.1 }}
-        transition={{ duration: 0.2 }}
-      >
-        {!toggle ? label : label2}
-      </motion.div>
-      <p className="text-xs">{`( ${key} )`}</p>
     </div>
   );
 }

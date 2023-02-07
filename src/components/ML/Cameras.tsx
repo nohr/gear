@@ -1,50 +1,31 @@
-import type { VRM } from "@pixiv/three-vrm";
-import { VRMContext } from "context";
+import { HolisticContext } from "context";
 import { useContext, useEffect } from "react";
-import Webcam from "react-webcam";
 import { state } from "state";
 import { useSnapshot } from "valtio";
-import { handleHandtrack } from "./handtrack.setup";
-import { handleHolistic } from "./holistic.setup";
-
-const activateDraw = (vrm: { current: VRM }) => {
-  const hollisticInput = document.querySelector(".input_video");
-  const handtrackInput = document.querySelector(".input_video2");
-
-  handleHolistic(vrm, hollisticInput as HTMLVideoElement);
-  handleHandtrack(handtrackInput as HTMLVideoElement);
-};
+// import { handleHandtrack } from "./handtrack.setup";
 
 export default function Cameras() {
-  const { cameraStarted } = useSnapshot(state);
-  const { vrm } = useContext(VRMContext);
+  const { playing, cameraStarted } = useSnapshot(state);
+  const { input, init, run, destroy, holistic } = useContext(HolisticContext);
 
   useEffect(() => {
-    if (cameraStarted) {
-      activateDraw(vrm);
-    }
+    if (cameraStarted && !holistic.current) init();
+    if (playing) run();
+  }, [cameraStarted, holistic.current, playing]);
+
+  useEffect(() => {
+    return () => {
+      if (holistic.current) destroy();
+    };
   }, [cameraStarted]);
 
   return (
-    <>
-      {cameraStarted ? (
-        <>
-          {/* MediaPipe Camera */}
-          <Webcam width={640} height={480} className="input_video hidden" />
-          {/* Handtrack js Camera */}
-          <Webcam
-            width={640}
-            height={480}
-            className="input_video2 hidden"
-            onLoadedData={() => {
-              state.cameraLoaded = true;
-            }}
-          />
-          {/* <canvas
-            className="guides"
-          ></canvas> */}
-        </>
-      ) : null}
-    </>
+    <video
+      autoPlay
+      width="640"
+      height="480"
+      ref={input}
+      className="input_video hidden"
+    ></video>
   );
 }

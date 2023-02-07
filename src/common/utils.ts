@@ -40,8 +40,8 @@ export function togglePlay() {
 export function toggleCamera() {
 
     state.selfie = !state.selfie;
-    state.cameraStarted ? stop() : null;
-    console.log(state.cameraStarted);
+    // state.cameraStarted ? stop() : null;
+    // console.log(state.cameraStarted);
     // select();
 }
 

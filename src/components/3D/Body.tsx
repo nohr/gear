@@ -2,13 +2,13 @@ import { useFrame } from "@react-three/fiber";
 import { Suspense, useContext, useEffect } from "react";
 import { state } from "state";
 import { useSnapshot } from "valtio";
-import { VRMContext } from "context";
+import { HolisticContext, VRMContext } from "context";
 import { loadVRM } from "utils";
-
 // VRM
 export default function Body() {
   const { playing, vrmLoaded } = useSnapshot(state);
-  const { vrm } = useContext(VRMContext);
+  const { animate, vrm } = useContext(VRMContext);
+  const { input } = useContext(HolisticContext);
 
   useEffect(() => {
     !vrmLoaded ? loadVRM(vrm) : null;
@@ -16,7 +16,8 @@ export default function Body() {
 
   // Update model to render physics using the frame loop hook
   useFrame(({ gl, scene, camera }, delta) => {
-    if (vrm.current && playing) {
+    if (vrm.current && input.current && playing) {
+      animate();
       vrm.current.update(delta);
     }
     gl.render(scene, camera);

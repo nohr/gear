@@ -1,13 +1,10 @@
 ---
 import Menu from "UI/.";
-import Cameras from "ML/Cameras";
 import Layout from "layouts/Layout.astro";
-import Composition from "3D/Canvas";
+import Bind from "components/Bind";
 ---
 
 <Layout>
   <Menu client:only="react" />
-  <Cameras client:only="react" />
-  <Composition client:only="react" />
+  <Bind client:only="react" />
 </Layout>
-<script></script>

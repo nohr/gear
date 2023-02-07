@@ -1,8 +1,10 @@
 import { state } from "state";
 // @ts-ignore
-import * as handTrack from 'handtrackjs';
+// import { stopVideo } from 'handtrackjs';
 
-export function handleHandtrack(handtrackInput: HTMLVideoElement) {
+export function handleHandtrack(e: SyntheticEvent<HTMLVideoElement, Event>) {
+    const { target: handtrackInput } = e;
+
     /* SETUP HANDTRACK.JS */
     let model: { dispose: () => void; model: boolean; };
     let startBtn = document.querySelector(".start");
@@ -12,7 +14,7 @@ export function handleHandtrack(handtrackInput: HTMLVideoElement) {
         startBtn.addEventListener("click", () => {
             console.log("stop");
             if (state.cameraStarted === true) {
-                handTrack.stopVideo(handtrackInput);
+                // stopVideo(handtrackInput);
                 model.dispose();
                 state.status = "Model disposed, press Start to reload it";
             }

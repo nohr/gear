@@ -1,7 +1,17 @@
 /// <reference types="astro/client" />
 
+interface HolisticProps {
+    input: MutableRefObject<HTMLVideoElement>,
+    init: () => void;
+    run: () => void;
+    destroy: () => void;
+    holistic: MutableRefObject<Holistic | null>;
+    results: MutableRefObject<any>;
+}
 interface VRMProps {
-    vrm: VRM | null;
+    animate: () => void;
+    affect: (status: string) => void;
+    vrm: { current: VRM | null };
 }
 interface MenuProps {
     menu: boolean;
