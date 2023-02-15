@@ -1,10 +1,12 @@
 ---
-import Menu from "UI/.";
+import Menu from "UI/Menu/.";
 import Layout from "layouts/Layout.astro";
 import Bind from "components/Bind";
+import Description from "UI/Description";
 ---
 
 <Layout>
   <Menu client:only="react" />
   <Bind client:only="react" />
+  <Description />
 </Layout>

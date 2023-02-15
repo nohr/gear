@@ -1,7 +1,3 @@
-.menuToggle {
-  @apply absolute top-1 left-1/2 z-50 aspect-square h-8 w-auto cursor-pointer select-none overflow-visible drop-shadow-md transition-[0.2s] hover:drop-shadow-mdHover dark:drop-shadow-mdDark hover:dark:drop-shadow-mdDarkHover;
-}
-
 .modalButton:hover,
 .active,
 .hover:hover {

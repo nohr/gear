@@ -1,14 +1,16 @@
-import { MenuContext } from "context";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { Backdrop, Gear } from ".";
+import { useUIStore } from "state/ui";
+import { Popup } from "..";
 
 export function ReadMe() {
   const [readMeText, setReadMeText] = useState<string>("");
-  const { setFeedback, feedback, readme } = useContext(MenuContext);
+  const feedback = useUIStore((state) => state.feedback);
+  const hideFeedback = useUIStore((state) => state.hideFeedback);
+  const readme = useUIStore((state) => state.readme);
 
   useEffect(() => {
-    readme ? setFeedback(false) : null;
+    readme ? hideFeedback() : null;
   }, [feedback]);
 
   async function getReadMe() {
@@ -27,19 +29,11 @@ export function ReadMe() {
   getReadMe().then((text) => setReadMeText(text));
 
   return (
-    <>
-      {readme ? (
-        <>
-          <div className="panel">
-            <div className="markdown">
-              <ReactMarkdown>{readMeText}</ReactMarkdown>
-              <br />
-            </div>
-            <Gear />
-          </div>
-          <Backdrop />
-        </>
-      ) : null}
-    </>
+    <Popup bool={readme}>
+      <div className="markdown">
+        <ReactMarkdown>{readMeText}</ReactMarkdown>
+        <br />
+      </div>
+    </Popup>
   );
 }

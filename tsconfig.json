@@ -28,6 +28,7 @@
       "context": ["common/context/index.tsx"],
       "hooks":["common/hooks/index.tsx"],
       "state":[ "common/state.ts"],
+      "state/*":[ "common/state/*"],
       "layouts/*":["layouts/*"],
       "styles/*":[ "styles/*"],
       "3D/*":["components/3D/*"],

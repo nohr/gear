@@ -1,70 +1,47 @@
-import {
-  Environment,
-  Html,
-  OrbitControls,
-  PerspectiveCamera,
-} from "@react-three/drei";
+import { Grid, OrbitControls, Stats } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { Suspense } from "react";
-import { state } from "state";
-import { useSnapshot } from "valtio";
+import { useGameStore } from "state/game";
+import { useUIStore } from "state/ui";
 import Body from "./Body";
 
-// React Three Fiber Canvas
 export default function Composition() {
-  const { cameraStarted, playing } = useSnapshot(state);
+  const playing = useGameStore((state) => state.playing);
+  const theme = useUIStore((state) => state.theme);
+  const started = useGameStore((state) => state.started);
 
   return (
     <Canvas
       linear
-      className={`absolute z-20`}
-      frameloop={cameraStarted ? (playing ? "always" : "demand") : "demand"}
+      dpr={[1, 2]}
+      className={`absolute z-20 touch-none`}
+      frameloop={started ? (playing ? "always" : "demand") : "demand"}
+      camera={{
+        fov: 80,
+        position: [0, 1.5, 1.2],
+        near: 0.1,
+        far: 100,
+      }}
     >
-      {cameraStarted ? (
+      {started ? (
         <>
-          <PerspectiveCamera makeDefault fov={60} position={[0, 0.22, 1.2]} />
-          <Suspense fallback={<p>Loading...</p>}>
-            {/* <Game /> */}
-            <Body />
-            {playing ? (
-              <>
-                <spotLight intensity={1} position={[0, 2.8, 7]} />
-                {/* {snap.effects && (
-              <EffectComposer multisampling={2}>
-                <Bloom
-                  kernelSize={1}
-                  luminanceThreshold={0}
-                  luminanceSmoothing={0.3}
-                  intensity={0.8}
-                />
-                <Bloom
-                  kernelSize={KernelSize.HUGE}
-                  luminanceThreshold={0}
-                  luminanceSmoothing={1}
-                  intensity={1}
-                />
-              </EffectComposer>
-            )} */}
-              </>
-            ) : null}
-          </Suspense>
-          <OrbitControls target={[0, 0.22, 0]} />
-          <Environment
-            path="/"
-            files={"images/studio_small_04_1k.hdr"}
-            resolution={256}
-          />
+          <Body />
+          <spotLight intensity={playing ? 1 : 0.3} position={[0, 2.8, 7]} />
+          <spotLight intensity={playing ? 1 : 0.3} position={[0, 4, -1]} />
         </>
-      ) : (
-        // Fallback
-        <Html
-          as="div"
-          className="absolute top-1/2 left-1/2 z-0 w-max"
-          style={{ transform: "translate(-50%, -50%)" }}
-        >
-          <p className="w-max">Press Space</p>
-        </Html>
-      )}
+      ) : null}
+      <Grid
+        position={[0, -0.01, 0]}
+        infiniteGrid
+        fadeDistance={7.75}
+        fadeStrength={3}
+        sectionThickness={1.5}
+        sectionColor={theme === "light" ? "#fe3632" : "#ccff66"}
+        cellThickness={1}
+        cellSize={0.5}
+        cellColor={theme === "light" ? "#006ebc" : "#bebebe"}
+      />
+      <Stats showPanel={0} className="stats" />
+      <OrbitControls makeDefault target={[0, 1.57, 0]} />
     </Canvas>
   );
 }

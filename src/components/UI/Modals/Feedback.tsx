@@ -1,13 +1,15 @@
-import { MenuContext } from "context";
-import { useContext, useEffect } from "react";
-import { Backdrop, Gear } from ".";
+import { useEffect } from "react";
+import { useUIStore } from "state/ui";
+import { Popup } from "..";
 
 export function Feedback() {
-  const { setReadMe, readme, feedback } = useContext(MenuContext);
-  const email = "hi@paredol.com";
+  const feedback = useUIStore((state) => state.feedback);
+  const readme = useUIStore((state) => state.readme);
+  const hideReadme = useUIStore((state) => state.hideReadme);
+  const email = useUIStore((state) => state.email);
 
   useEffect(() => {
-    feedback ? setReadMe(false) : null;
+    feedback ? hideReadme() : null;
     // commentBox('5724094653792256-proj');
 
     // return () => {
@@ -16,18 +18,13 @@ export function Feedback() {
   }, [readme]);
 
   return (
-    <>
-      {feedback ? (
-        <>
-          <div className="panel">
-            <div className="commentbox">
-              <span style={{ userSelect: "none" }}> email: </span> {email}
-            </div>
-            <Gear />
-          </div>
-          <Backdrop />
-        </>
-      ) : null}
-    </>
+    <Popup bool={feedback}>
+      <a
+        href={`mailto:${email}`}
+        className="commentbox underline hover:opacity-50"
+      >
+        {email}
+      </a>
+    </Popup>
   );
 }
