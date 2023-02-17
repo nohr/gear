@@ -22,7 +22,7 @@ export const Disk = ({
           exit={{ opacity: 0, rotateZ: 180 }}
           transition={{
             duration: 0.9,
-            ease: "easeInOut",
+            ease: "circOut",
           }}
           className={className}
         >

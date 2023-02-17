@@ -6,15 +6,15 @@ import { Feedback, ReadMe } from "../Modals";
 
 export default function Menu() {
   const error = useModelStore((state) => state.error);
+  console.log(error);
+
   return (
     <>
       <MenuToggle />
       <MenuModal />
       <ReadMe />
       <Feedback />
-      <Popup bool={error}>
-        <>{error}</>
-      </Popup>
+      {/* <Popup bool={error}></Popup> */}
     </>
   );
 }

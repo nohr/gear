@@ -9,11 +9,17 @@ export const useModelStore = create<ModelProps>()((set, get) => ({
     set(() => ({ holistic: null, camera: null, results: null }));
   },
   results: null,
-  setResults: (results) => set({ results }),
+  setResults(results) {
+    set({ results });
+  },
   selfie: false,
-  setSelfie: () => set((state) => ({ selfie: !state.selfie })),
+  setSelfie() {
+    set((state) => ({ selfie: !state.selfie }));
+  },
   input: null,
-  get_input: (input) => set({ input }),
+  get_input(input) {
+    set({ input });
+  },
   start_input() {
     if (get().input?.srcObject)
       (<MediaStream>get().input?.srcObject).getVideoTracks()[0].enabled = true;
@@ -64,14 +70,16 @@ export const useModelStore = create<ModelProps>()((set, get) => ({
         }));
         get()
           .camera?.start()
-          .catch((err: Error) => get().setError(err));
+          .catch((err: Error) => console.log(err));
       })
-      .catch((err) => get().setError(err));
+      .catch((err) => console.log(err));
   },
   stop_input() {
     (<MediaStream>get().input?.srcObject)?.getVideoTracks()[0].stop();
     get().camera?.stop();
   },
   error: null,
-  setError: (error: Error) => set({ error }),
+  setError(error: Error) {
+    set({ error });
+  },
 }));

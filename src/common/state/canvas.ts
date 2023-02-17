@@ -67,7 +67,7 @@ export const useSceneStore = create<SceneProps>()((set) => ({
     console.log(results);
 
     // if we have landmarks, solve the pose
-    if (lm2d && results?.za) {
+    if (lm2d && results.za) {
       const {
         Spine,
         RightUpperArm,
