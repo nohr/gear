@@ -4,7 +4,15 @@ import {
   VRMLoaderPlugin,
   VRMUtils,
 } from "@pixiv/three-vrm";
-import { Pose, type TPose, Hand, type THand, Side } from "kalidokit";
+import {
+  Pose,
+  type TPose,
+  Hand,
+  type THand,
+  Side,
+  Face,
+  TFace,
+} from "kalidokit";
 import {
   Euler,
   Event,
@@ -29,14 +37,10 @@ interface SceneProps {
 export const useSceneStore = create<SceneProps>()((set) => ({
   vrm: null,
   animate: (delta, vrm, input, results) => {
-    // helper function for rigging rotation of bones
+    // ? helper functions for rigging face & rotation of bones
     function rigRotation({
       name,
-      rotation = {
-        x: 0,
-        y: 0,
-        z: 0,
-      },
+      rotation,
       dampener = 1,
       lerpAmount = 0.3,
     }: {
@@ -57,16 +61,25 @@ export const useSceneStore = create<SceneProps>()((set) => ({
       Part.quaternion.slerp(quaternion, lerpAmount);
       vrm.update(delta);
     }
-    // get the landmarks from the results
+    // * get the landmarks from the results
     const {
       // za: lm3d,
       poseLandmarks: lm2d,
+      faceLandmarks,
       rightHandLandmarks: leftHandLandmarks,
       leftHandLandmarks: rightHandLandmarks,
     } = results;
-    console.log(results);
 
-    // if we have landmarks, solve the pose
+    // console.log(results.rightHandLandmarks);
+
+    // * if we have landmarks, solve the neck and pose
+    if (faceLandmarks) {
+      const riggedFace = Face.solve(faceLandmarks, {
+        runtime: "mediapipe",
+        video: input as HTMLVideoElement,
+      }) as TFace;
+      rigRotation({ name: "neck", rotation: riggedFace.head, dampener: 0.7 });
+    }
     if (lm2d && results.za) {
       const {
         Spine,
@@ -207,7 +220,7 @@ export const useSceneStore = create<SceneProps>()((set) => ({
           RightLittleIntermediate,
           RightLittleDistal,
         } = Hand.solve(rightHandLandmarks, "Right") as THand<Side>;
-        // console.log(RightWrist.z);
+
         rigRotation({
           name: "rightHand",
           rotation: {
@@ -314,7 +327,7 @@ export const useSceneStore = create<SceneProps>()((set) => ({
     });
     // load VRM
     loader.load(
-      "/models/fullbody_20230213.vrm",
+      "/models/fullbody.vrm",
       (gltf) => {
         VRMUtils.removeUnnecessaryJoints(gltf.scene);
         const localvrm = gltf.userData.vrm as VRM;

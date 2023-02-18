@@ -1,5 +1,5 @@
 import { useModelStore } from "state/model";
-import { Popup } from "..";
+// import { Popup } from "..";
 import MenuModal from "./MenuModal";
 import MenuToggle from "./MenuToggle";
 import { Feedback, ReadMe } from "../Modals";

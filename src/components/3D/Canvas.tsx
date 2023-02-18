@@ -17,7 +17,7 @@ export default function Composition() {
       frameloop={started ? (playing ? "always" : "demand") : "demand"}
       camera={{
         fov: 80,
-        position: [0, 1.5, 1.2],
+        position: [0, 1.5, -1.2],
         near: 0.1,
         far: 100,
       }}
@@ -25,8 +25,8 @@ export default function Composition() {
       {started ? (
         <>
           <Body />
-          <spotLight intensity={playing ? 1 : 0.3} position={[0, 2.8, 7]} />
-          <spotLight intensity={playing ? 1 : 0.3} position={[0, 4, -1]} />
+          <spotLight intensity={playing ? 1 : 0.3} position={[0, 2.8, -7]} />
+          <spotLight intensity={playing ? 1 : 0.3} position={[0, 4, 1]} />
         </>
       ) : null}
       <Grid
