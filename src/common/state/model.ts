@@ -78,8 +78,4 @@ export const useModelStore = create<ModelProps>()((set, get) => ({
     (<MediaStream>get().input?.srcObject)?.getVideoTracks()[0].stop();
     get().camera?.stop();
   },
-  error: null,
-  setError(error: Error) {
-    set({ error });
-  },
 }));

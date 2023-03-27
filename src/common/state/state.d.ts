@@ -48,8 +48,6 @@ interface ModelProps {
   start_input: () => void;
   stop_input: () => void;
   stage?: number;
-  error: Error | null;
-  setError: (error: Error) => void;
 }
 
 interface InfoProps {
