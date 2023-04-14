@@ -1,8 +1,8 @@
 import { useGameStore } from "state/game";
 import { useModelStore } from "state/model";
 import { useInfoStore, useUIStore } from "state/ui";
-
 import { motion } from "framer-motion";
+import { shallow } from "zustand/shallow";
 
 function OptionsButton({
   label,
@@ -32,18 +32,29 @@ function OptionsButton({
   );
 }
 export default function Options() {
-  const setSelfie = useModelStore((state) => state.setSelfie);
-  const selfie = useModelStore((state) => state.selfie);
-  const fullscreen = useInfoStore((state) => state.fullscreen);
-  const setFullscreen = useInfoStore((state) => state.setFullscreen);
-  const kill_holistic = useModelStore((state) => state.kill_holistic);
-  const stop_input = useModelStore((state) => state.stop_input);
-  // const camera = useModelStore((state) => state.camera);
-  const playing = useGameStore((state) => state.playing);
-  const started = useGameStore((state) => state.started);
-  const start = useGameStore((state) => state.start);
-  const stop = useGameStore((state) => state.stop);
-  const setPlay = useGameStore((state) => state.setPlay);
+  const [playing, started, start, stop, setPlay] = useGameStore(
+    (state) => [
+      state.playing,
+      state.started,
+      state.start,
+      state.stop,
+      state.setPlay,
+    ],
+    shallow
+  );
+  const [setSelfie, selfie, kill_holistic, stop_input] = useModelStore(
+    (state) => [
+      state.setSelfie,
+      state.selfie,
+      state.kill_holistic,
+      state.stop_input,
+    ],
+    shallow
+  );
+  const [fullscreen, setFullscreen] = useInfoStore(
+    (state) => [state.fullscreen, state.setFullscreen],
+    shallow
+  );
   const setStatus = useUIStore((state) => state.setStatus);
 
   const optionsArray = [

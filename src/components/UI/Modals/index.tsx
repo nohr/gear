@@ -6,14 +6,14 @@ export { ReadMe } from "./ReadMe";
 export { Feedback } from "./Feedback";
 
 export function Backdrop() {
-  const hideReadme = useUIStore((state) => state.hideReadme);
-  const hideFeedback = useUIStore((state) => state.hideFeedback);
+  const setReadme = useUIStore((state) => state.setReadme);
+  const setFeedback = useUIStore((state) => state.setFeedback);
 
   const handleClick = (e: MouseEvent) => {
     const elem = e.target as HTMLDivElement;
     if (elem.classList.contains("backdrop")) {
-      hideReadme();
-      hideFeedback();
+      setReadme(false);
+      setFeedback(false);
     }
   };
   return (

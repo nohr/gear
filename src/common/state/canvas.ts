@@ -22,6 +22,7 @@ import {
 } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { create } from "zustand";
+import type { UIProps } from "./ui";
 
 interface SceneProps {
   vrm: VRM | null;

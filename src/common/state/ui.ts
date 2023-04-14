@@ -1,5 +1,17 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
+interface InfoProps {
+  name: string;
+  version: string;
+  description: string;
+  github: string;
+  twitter: string;
+  linkedin: string;
+  email: string;
+  website: string;
+  fullscreen: boolean;
+  setFullscreen: () => void;
+}
 
 const InfoStore = (set: any, get: any): InfoProps => ({
   name: "Paredol",
@@ -22,20 +34,43 @@ const InfoStore = (set: any, get: any): InfoProps => ({
 
 export const useInfoStore = create(InfoStore);
 
+export interface UIProps {
+  feedback: boolean;
+  setFeedback: (bool?: boolean) => void;
+  menu: boolean;
+  setMenu: () => void;
+  readme: boolean;
+  setReadme: (bool?: boolean) => void;
+  status: string | JSX.Element;
+  /**
+   * Sets the status message in the menu.
+   *
+   * @param status The status message which may be a string or JSX.Element.
+   */
+  setStatus: (status: string | JSX.Element) => void;
+  theme: "light" | "dark";
+  setTheme: (theme: "light" | "dark") => void;
+  webcamAccess: boolean;
+  setWebcamAccess: (bool: boolean) => void;
+}
 let time: NodeJS.Timeout | undefined;
 const UIStore = (set: any, get: any): UIProps => ({
   feedback: false,
-  hideFeedback: () => set({ feedback: false }),
-  setFeedback: () =>
-    set((state: UIProps) => ({ feedback: !state.feedback, readme: false })),
+  setFeedback: (bool = !get().feedback) =>
+    set(() => ({
+      feedback: bool,
+      readme: false,
+    })),
   menu: true,
   setMenu: () => set((state: UIProps) => ({ menu: !state.menu })),
   readme: false,
-  hideReadme: () => set({ readme: false }),
-  setReadme: () =>
-    set((state: UIProps) => ({ readme: !state.readme, feedback: false })),
+  setReadme: (bool = !get().readme) =>
+    set(() => ({
+      readme: bool,
+      feedback: false,
+    })),
   status: "Press space to start",
-  setStatus(status: UIProps["status"]): void {
+  setStatus: (status: UIProps["status"]): void => {
     clearTimeout(time);
     set(() => ({ status }));
     if (status !== "Press space to start")
@@ -46,11 +81,12 @@ const UIStore = (set: any, get: any): UIProps => ({
     window.matchMedia("(prefers-color-scheme: dark)").matches
       ? "dark"
       : "light",
-  setTheme(theme: UIProps["theme"]) {
+  setTheme: (theme: UIProps["theme"]) =>
     set(() => ({
-      theme: theme,
-    }));
-  },
+      theme,
+    })),
+  webcamAccess: false,
+  setWebcamAccess: (bool: boolean) => set(() => ({ webcamAccess: bool })),
 });
 
 export const useUIStore = create(

@@ -1,62 +1,76 @@
 import { FeedbackPath, ReadMePath } from "./ModalButtonPaths";
 import { useUIStore } from "state/ui";
+import { GrClose } from "react-icons/gr";
+import type { ReactNode } from "react";
+import { shallow } from "zustand/shallow";
 
 export default function ModalButtons() {
+  const [readme, feedback, setReadme, setFeedback] = useUIStore(
+    (state) => [
+      state.readme,
+      state.feedback,
+      state.setReadme,
+      state.setFeedback,
+    ],
+    shallow
+  );
   return (
     <div className="flex w-36 flex-row justify-between gap-x-8">
-      <ReadMeButton />
-      <FeedbackButton />
+      <IconButton
+        bool={readme}
+        altBool={feedback}
+        setBool={setReadme}
+        svgPath={ReadMePath}
+      >
+        README
+      </IconButton>
+      <IconButton
+        bool={feedback}
+        altBool={readme}
+        setBool={setFeedback}
+        svgPath={FeedbackPath}
+      >
+        Feedback
+      </IconButton>
     </div>
   );
 }
-
-function ReadMeButton() {
-  const readme = useUIStore((state) => state.readme);
-  const feedback = useUIStore((state) => state.feedback);
-  const setReadme = useUIStore((state) => state.setReadme);
+function IconButton({
+  bool,
+  altBool,
+  setBool,
+  svgPath,
+  children,
+}: {
+  bool: boolean;
+  altBool: boolean;
+  setBool: (bool?: boolean) => void;
+  svgPath: JSX.Element;
+  children: ReactNode;
+}) {
   return (
     <div
-      onClick={() => (!feedback ? setReadme() : null)}
-      className={`flex h-fit w-20 cursor-pointer select-none flex-col items-center overflow-visible fill-blue-500 drop-shadow-md transition-[0.2s] hover:fill-red-500 hover:text-red-500 hover:drop-shadow-mdHover dark:fill-gray-500 dark:drop-shadow-mdDark dark:hover:fill-lime-500 dark:hover:text-lime-500 hover:dark:drop-shadow-mdDarkHover [&>svg]:h-6 [&>svg]:w-fit ${
-        readme ? "active" : ""
-      } ${feedback ? "pointer-events-none opacity-25" : ""}`}
+      onClick={() => (!altBool ? setBool() : null)}
+      className={`flex h-fit w-20 cursor-pointer select-none flex-col items-center fill-blue-500 drop-shadow-md transition-[0.2s] hover:fill-red-500 hover:text-red-500 hover:drop-shadow-mdHover dark:fill-gray-500 dark:drop-shadow-mdDark dark:hover:fill-lime-500 dark:hover:text-lime-500 hover:dark:drop-shadow-mdDarkHover  ${
+        bool ? "active" : ""
+      } ${altBool ? "pointer-events-none opacity-25" : ""}`}
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="553"
-        height="539.024"
-        data-name="Layer 1"
-        viewBox="0 0 553 539.024"
-      >
-        {ReadMePath}
-      </svg>
-      <p>{`${!readme ? "README" : "Close"}`}</p>
-    </div>
-  );
-}
+      {!bool ? (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="514.322"
+          height="539"
+          data-name="Layer 1"
+          viewBox="0 0 514.322 539"
+          className="h-6 w-auto overflow-visible"
+        >
+          {svgPath}
+        </svg>
+      ) : (
+        <GrClose />
+      )}
 
-function FeedbackButton() {
-  const readme = useUIStore((state) => state.readme);
-  const feedback = useUIStore((state) => state.feedback);
-  const setFeedback = useUIStore((state) => state.setFeedback);
-  return (
-    <div
-      onClick={() => (!readme ? setFeedback() : null)}
-      className={`flex h-fit w-20 cursor-pointer select-none flex-col items-center overflow-visible fill-blue-500 drop-shadow-md transition-[0.2s] hover:fill-red-500 hover:text-red-500 hover:drop-shadow-mdHover dark:fill-gray-500 dark:drop-shadow-mdDark dark:hover:fill-lime-500 dark:hover:text-lime-500 hover:dark:drop-shadow-mdDarkHover [&>svg]:h-6 [&>svg]:w-fit ${
-        feedback ? "active" : ""
-      } ${readme ? "pointer-events-none opacity-25" : ""}`}
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="514.322"
-        height="539"
-        data-name="Layer 1"
-        viewBox="0 0 514.322 539"
-      >
-        {FeedbackPath}
-      </svg>
-
-      <p>{`${!feedback ? "Feedback" : "Close"}`}</p>
+      <p>{`${!bool ? children : "Close"}`}</p>
     </div>
   );
 }

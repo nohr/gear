@@ -2,14 +2,18 @@ import { Grid, OrbitControls, Stats } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { useGameStore } from "state/game";
 import { useUIStore } from "state/ui";
+import { shallow } from "zustand/shallow";
 import Body from "./Body";
 import { EffectComposer, DepthOfField } from "@react-three/postprocessing";
+import { useRef } from "react";
 
 export default function Composition() {
-  const playing = useGameStore((state) => state.playing);
+  const [playing, started] = useGameStore(
+    (state) => [state.playing, state.started],
+    shallow
+  );
   const theme = useUIStore((state) => state.theme);
-  const started = useGameStore((state) => state.started);
-  const panel = useGameStore((state) => state.panel);
+  const depthBokeh = useRef(null);
 
   return (
     <Canvas
@@ -24,13 +28,9 @@ export default function Composition() {
         far: 100,
       }}
     >
-      {started ? (
-        <>
-          <Body />
-          <spotLight intensity={playing ? 1 : 0.3} position={[0, 2.8, -7]} />
-          <spotLight intensity={playing ? 1 : 0.3} position={[0, 4, 1]} />
-        </>
-      ) : null}
+      <Body depthBokeh={depthBokeh} />
+      <spotLight intensity={playing ? 1 : 0.3} position={[0, 2.8, -7]} />
+      <spotLight intensity={playing ? 1 : 0.3} position={[0, 4, 1]} />
       <Grid
         position={[0, -0.01, 0]}
         infiniteGrid
@@ -44,12 +44,13 @@ export default function Composition() {
       />
       <EffectComposer>
         <DepthOfField
+          ref={depthBokeh}
           focusDistance={0}
           focalLength={0.15}
-          bokehScale={panel ? 20 : 0}
+          bokehScale={0}
         />
       </EffectComposer>
-      {/* <Stats showPanel={0} className="stats" /> */}
+      <Stats showPanel={0} className="stats" />
       <OrbitControls makeDefault target={[0, 1.57, 0]} />
     </Canvas>
   );

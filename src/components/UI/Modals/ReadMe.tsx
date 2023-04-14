@@ -2,15 +2,17 @@ import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { useUIStore } from "state/ui";
 import { Popup } from "..";
+import { shallow } from "zustand/shallow";
 
 export function ReadMe() {
   const [readMeText, setReadMeText] = useState<string>("");
-  const feedback = useUIStore((state) => state.feedback);
-  const hideFeedback = useUIStore((state) => state.hideFeedback);
-  const readme = useUIStore((state) => state.readme);
+  const [feedback, readme, setFeedback] = useUIStore(
+    (state) => [state.feedback, state.readme, state.setFeedback],
+    shallow
+  );
 
   useEffect(() => {
-    readme ? hideFeedback() : null;
+    readme ? setFeedback(false) : null;
   }, [feedback]);
 
   async function getReadMe() {

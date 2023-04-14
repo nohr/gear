@@ -26,7 +26,7 @@ export const Disk = ({
           }}
           className={className}
         >
-          <Tilt className=" h-full w-full">{children}</Tilt>
+          {children}
         </motion.div>
       ) : null}
     </AnimatePresence>
