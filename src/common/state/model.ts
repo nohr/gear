@@ -46,10 +46,10 @@ export const useModelStore = create<ModelProps>()((set, get) => ({
         // Set holistic options
         get().holistic?.setOptions({
           selfieMode: get().selfie,
-          modelComplexity: 1,
+          modelComplexity: 2,
           smoothLandmarks: true,
-          minDetectionConfidence: 0.8,
-          minTrackingConfidence: 0.8,
+          minDetectionConfidence: 0.9,
+          minTrackingConfidence: 0.9,
           enableFaceGeometry: false,
           refineFaceLandmarks: false,
           enableSegmentation: false,

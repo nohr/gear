@@ -1,10 +1,12 @@
+import { Environment } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
+import { useControls } from "leva";
 import { useEffect } from "react";
 import { useSceneStore } from "state/canvas";
 import { useGameStore } from "state/game";
 import { useModelStore } from "state/model";
 import { useUIStore } from "state/ui";
-import { Object3D, Vector3 } from "three";
+import { Mesh, MeshPhysicalMaterial, Object3D, Vector3 } from "three";
 
 // VRM
 export default function Body(): JSX.Element {
@@ -28,6 +30,17 @@ export default function Body(): JSX.Element {
   useEffect(() => {
     if (!vrm) load(setStatus, helperRoot);
   }, []);
+  const materialProps = useControls({
+    thickness: { value: 20, min: 0, max: 20 },
+    roughness: { value: 0, min: 0, max: 1, step: 0.1 },
+    clearcoat: { value: 1, min: 0, max: 1, step: 0.1 },
+    clearcoatRoughness: { value: 0.5, min: 0, max: 1, step: 0.1 },
+    transmission: { value: 1, min: 0.9, max: 1, step: 0.01 },
+    ior: { value: 1.45, min: 1, max: 2.3, step: 0.05 },
+    color: "#ffffff",
+    side: 2,
+  });
+  const material = new MeshPhysicalMaterial({ ...materialProps });
 
   const cameraOrigin = new Vector3(0, 1.5, -1.2);
   // Update model to render physics using the frame loop hook
@@ -37,6 +50,9 @@ export default function Body(): JSX.Element {
         camera.position.lerp(cameraOrigin, 10 * delta);
       }
     }, 1000);
+    const body = vrm?.scene.children[1].children[0];
+    if (body) (body as Mesh).material = material;
+    // console.log(body);
 
     if (vrm)
       if (vrm && playing && input && results) {
@@ -59,7 +75,12 @@ export default function Body(): JSX.Element {
         }
       }
   });
-
   if (!vrm) return <></>;
-  else return <primitive object={vrm.scene} />;
+  else
+    return (
+      <group>
+        <primitive object={vrm.scene} />
+        <Environment files="https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/modern_buildings_2_1k.hdr" />
+      </group>
+    );
 }

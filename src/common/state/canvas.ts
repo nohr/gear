@@ -321,7 +321,7 @@ export const useSceneStore = create<SceneProps>()((set) => ({
     const loader = new GLTFLoader();
     loader.register((parser) => {
       return new VRMLoaderPlugin(parser, {
-        helperRoot,
+        // helperRoot,
         autoUpdateHumanBones: false,
       });
     });
