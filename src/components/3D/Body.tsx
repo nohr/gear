@@ -4,7 +4,7 @@ import { useSceneStore } from "state/canvas";
 import { useGameStore } from "state/game";
 import { useModelStore } from "state/model";
 import { useUIStore } from "state/ui";
-import { Object3D } from "three";
+import { Object3D, Vector3 } from "three";
 
 // VRM
 export default function Body(): JSX.Element {
@@ -29,13 +29,35 @@ export default function Body(): JSX.Element {
     if (!vrm) load(setStatus, helperRoot);
   }, []);
 
+  const cameraOrigin = new Vector3(0, 1.5, -1.2);
   // Update model to render physics using the frame loop hook
   useFrame(({ gl, scene, camera }, delta) => {
+    const timeout = setTimeout(() => {
+      if (camera.position !== cameraOrigin) {
+        camera.position.lerp(cameraOrigin, 10 * delta);
+      }
+    }, 500);
     if (vrm)
-      if (vrm && playing && input && results)
+      if (vrm && playing && input && results) {
         animate(delta, vrm, input, results);
-
-    // gl.render(scene, camera);
+        // follow arm with camera if hand is detected
+        if (results.rightHandLandmarks) {
+          console.log(delta);
+          clearTimeout(timeout);
+          const armBone = vrm.scene.getObjectByProperty(
+            "name",
+            "mixamorigLeftHand"
+          );
+          const target = armBone?.getWorldPosition(
+            new Vector3(0, 0, 0)
+          ) as Vector3;
+          // camera.lookAt(target.x, target.y + 0.1, target.z);
+          camera.position.lerp(
+            new Vector3(target.x - 0.25, target.y, target.z - 0.25),
+            0.5
+          );
+        }
+      }
   });
 
   if (!vrm) return <></>;
