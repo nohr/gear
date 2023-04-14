@@ -81,15 +81,3 @@ interface UIProps {
   theme: "light" | "dark";
   setTheme: (theme: "light" | "dark") => void;
 }
-
-interface GameProps {
-  stage: number;
-  started: boolean;
-  playing: boolean;
-  ready: boolean;
-  start: () => void;
-  stop: () => void;
-  play: () => void;
-  pause: () => void;
-  setPlay: (bool?: boolean) => void;
-}

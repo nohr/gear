@@ -1,6 +1,22 @@
 import { create } from "zustand";
 
-export const useGameStore = create<GameProps>()((set) => ({
+interface GameProps {
+  panel: boolean;
+  setPanel: (bool?: boolean) => void;
+  stage: number;
+  started: boolean;
+  playing: boolean;
+  ready: boolean;
+  start: () => void;
+  stop: () => void;
+  play: () => void;
+  pause: () => void;
+  setPlay: (bool?: boolean) => void;
+}
+
+export const useGameStore = create<GameProps>()((set, get) => ({
+  panel: false,
+  setPanel: (bool = !get().panel) => set({ panel: bool }),
   stage: 0,
   started: false,
   playing: false,

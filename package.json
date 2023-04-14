@@ -20,6 +20,7 @@
     "@pixiv/types-vrmc-vrm-1.0": "^1.0.0",
     "@react-three/drei": "^9.56.12",
     "@react-three/fiber": "^8.10.1",
+    "@react-three/postprocessing": "^2.7.1",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@types/three": "^0.148.1",
