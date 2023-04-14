@@ -32,18 +32,18 @@ export default function Body(): JSX.Element {
   const cameraOrigin = new Vector3(0, 1.5, -1.2);
   // Update model to render physics using the frame loop hook
   useFrame(({ gl, scene, camera }, delta) => {
-    const timeout = setTimeout(() => {
+    const returnCamera = setTimeout(() => {
       if (camera.position !== cameraOrigin) {
         camera.position.lerp(cameraOrigin, 10 * delta);
       }
-    }, 500);
+    }, 1000);
+
     if (vrm)
       if (vrm && playing && input && results) {
         animate(delta, vrm, input, results);
         // follow arm with camera if hand is detected
         if (results.rightHandLandmarks) {
-          console.log(delta);
-          clearTimeout(timeout);
+          clearTimeout(returnCamera);
           const armBone = vrm.scene.getObjectByProperty(
             "name",
             "mixamorigLeftHand"
@@ -51,9 +51,9 @@ export default function Body(): JSX.Element {
           const target = armBone?.getWorldPosition(
             new Vector3(0, 0, 0)
           ) as Vector3;
-          // camera.lookAt(target.x, target.y + 0.1, target.z);
+          camera.lookAt(target.x, target.y, target.z);
           camera.position.lerp(
-            new Vector3(target.x - 0.25, target.y, target.z - 0.25),
+            new Vector3(target.x, target.y + 0.1, target.z - 0.5),
             0.5
           );
         }
