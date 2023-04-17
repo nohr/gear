@@ -3,6 +3,7 @@ import { useUIStore } from "state/ui";
 import { GrClose } from "react-icons/gr";
 import type { ReactNode } from "react";
 import { shallow } from "zustand/shallow";
+import { useGameStore } from "state/game";
 
 export default function ModalButtons() {
   const [readme, feedback, setReadme, setFeedback] = useUIStore(
@@ -48,12 +49,14 @@ function IconButton({
   svgPath: JSX.Element;
   children: ReactNode;
 }) {
+  const playing = useGameStore((state) => state.playing);
+
   return (
     <div
       onClick={() => (!altBool ? setBool() : null)}
       className={`flex h-fit w-20 cursor-pointer select-none flex-col items-center fill-blue-500 drop-shadow-md transition-[0.2s] hover:fill-red-500 hover:text-red-500 hover:drop-shadow-mdHover dark:fill-gray-500 dark:drop-shadow-mdDark dark:hover:fill-lime-500 dark:hover:text-lime-500 hover:dark:drop-shadow-mdDarkHover  ${
         bool ? "active" : ""
-      } ${altBool ? "pointer-events-none opacity-25" : ""}`}
+      } ${altBool || playing ? "pointer-events-none opacity-25" : ""}`}
     >
       {!bool ? (
         <svg

@@ -1,13 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import { useUIStore } from "state/ui";
 import { Popup } from "..";
 import { shallow } from "zustand/shallow";
 
 export function ReadMe() {
-  const [readMeText, setReadMeText] = useState<string>("");
-  const [feedback, readme, setFeedback] = useUIStore(
-    (state) => [state.feedback, state.readme, state.setFeedback],
+  // const [ setReadMeText] = useState<string>("");
+  const [feedback, readme, setFeedback, readMeText, getReadMe] = useUIStore(
+    (state) => [
+      state.feedback,
+      state.readme,
+      state.setFeedback,
+      state.readMeText,
+      state.getReadMe,
+    ],
     shallow
   );
 
@@ -15,20 +21,9 @@ export function ReadMe() {
     readme ? setFeedback(false) : null;
   }, [feedback]);
 
-  async function getReadMe() {
-    const URL = "https://raw.githubusercontent.com/nohr/gear/main/README.md";
-    const res = await fetch(URL, {
-      method: "GET",
-      mode: "cors",
-      headers: {
-        "Content-Type": "text/plain",
-      },
-    });
-    const text = await res.text();
-    return text;
-  }
-
-  getReadMe().then((text) => setReadMeText(text));
+  useEffect(() => {
+    getReadMe("https://raw.githubusercontent.com/nohr/gear/main/README.md");
+  }, []);
 
   return (
     <Popup bool={readme}>

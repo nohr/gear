@@ -34,6 +34,8 @@ export interface UIProps {
   setMenu: () => void;
   readme: boolean;
   setReadme: (bool?: boolean) => void;
+  readMeText: string;
+  getReadMe: (md: string) => Promise<void>;
   status: string | JSX.Element;
   /**
    * Sets the status message in the menu.
@@ -72,6 +74,18 @@ const UIStore = (set: any, get: any): UIProps => ({
       readme: bool,
       feedback: false,
     })),
+  readMeText: "",
+  getReadMe: async (md) => {
+    const readMeText = await fetch(md, {
+      method: "GET",
+      mode: "cors",
+      cache: "default",
+      headers: {
+        "Content-Type": "text/plain",
+      },
+    }).then((text) => text.text());
+    set({ readMeText });
+  },
   status: "Press space to start",
   setStatus: (status: UIProps["status"]): void => {
     clearTimeout(time);

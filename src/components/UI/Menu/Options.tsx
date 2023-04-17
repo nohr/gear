@@ -1,6 +1,6 @@
 import { useGameStore } from "state/game";
 import { useModelStore } from "state/model";
-import { useInfoStore, useUIStore } from "state/ui";
+import { useUIStore } from "state/ui";
 import { motion } from "framer-motion";
 import { shallow } from "zustand/shallow";
 

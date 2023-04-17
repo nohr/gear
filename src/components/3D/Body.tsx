@@ -1,5 +1,5 @@
 import { Environment } from "@react-three/drei";
-import { Camera, useFrame, useThree } from "@react-three/fiber";
+import { Camera, useFrame } from "@react-three/fiber";
 // import { useControls } from "leva";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useSceneStore } from "state/canvas";
