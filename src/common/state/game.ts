@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import type { UIProps } from "./ui";
 
 interface GameProps {
   panel: boolean;
@@ -7,8 +8,8 @@ interface GameProps {
   started: boolean;
   playing: boolean;
   ready: boolean;
-  start: () => void;
-  stop: () => void;
+  start: (setStatus: UIProps["setStatus"]) => void;
+  stop: (setStatus: UIProps["setStatus"]) => void;
   play: () => void;
   pause: () => void;
   setPlay: (bool?: boolean) => void;
@@ -21,10 +22,15 @@ export const useGameStore = create<GameProps>()((set, get) => ({
   started: false,
   playing: false,
   ready: false,
-  start: () => set({ playing: true, stage: 1, started: true }),
-  stop: () => set({ playing: false, stage: 0, started: false }),
+  start: (setStatus) => {
+    setStatus("starting holistic");
+    set({ playing: true, stage: 1, started: true });
+  },
+  stop: (setStatus) => {
+    setStatus("stopping holistic");
+    set({ playing: false, stage: 0, started: false });
+  },
   play: () => set({ playing: true }),
   pause: () => set({ playing: false }),
-  setPlay: (bool) =>
-    set((state) => ({ playing: bool ? bool : !state.playing })),
+  setPlay: (bool = !get().playing) => set({ playing: bool }),
 }));

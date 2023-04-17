@@ -46,7 +46,11 @@ export const useModelStore = create<ModelProps>()((set, get) => ({
   results: null,
   setResults: (results) => set({ results }),
   selfie: false,
-  setSelfie: () => set((state) => ({ selfie: !state.selfie })),
+  setSelfie: () => {
+    get().stop_input();
+    get().kill_holistic();
+    set((state) => ({ selfie: !state.selfie }));
+  },
   input: null,
   get_input: (input) => set({ input }),
   start_input: () => {

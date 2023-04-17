@@ -4,14 +4,24 @@ import { useModelStore } from "state/model";
 import { useUIStore } from "state/ui";
 
 export default function Camera() {
-  const get_input = useModelStore((state) => state.get_input);
-  const start_input = useModelStore((state) => state.start_input);
-  const stop_input = useModelStore((state) => state.stop_input);
-  const setResults = useModelStore((state) => state.setResults);
+  const [
+    get_input,
+    start_input,
+    stop_input,
+    setResults,
+    selfie,
+    input,
+    holistic,
+  ] = useModelStore((state) => [
+    state.get_input,
+    state.start_input,
+    state.stop_input,
+    state.setResults,
+    state.selfie,
+    state.input,
+    state.holistic,
+  ]);
   const setStatus = useUIStore((state) => state.setStatus);
-  const selfie = useModelStore((state) => state.selfie);
-  const input = useModelStore((state) => state.input);
-  const holistic = useModelStore((state) => state.holistic);
   const playing = useGameStore((state) => state.playing);
 
   useEffect(() => {

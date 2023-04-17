@@ -9,8 +9,6 @@ interface InfoProps {
   linkedin: string;
   email: string;
   website: string;
-  fullscreen: boolean;
-  setFullscreen: () => void;
 }
 
 const InfoStore = (set: any, get: any): InfoProps => ({
@@ -23,18 +21,13 @@ const InfoStore = (set: any, get: any): InfoProps => ({
   linkedin: "   ",
   email: "aite@paredol.com",
   website: "paredol.com",
-  fullscreen: false,
-  setFullscreen: () => {
-    get().fullscreen
-      ? document.exitFullscreen()
-      : document.documentElement.requestFullscreen({ navigationUI: "hide" });
-    set((state: InfoProps) => ({ fullscreen: !state.fullscreen }));
-  },
 });
 
 export const useInfoStore = create(InfoStore);
 
 export interface UIProps {
+  fullscreen: boolean;
+  setFullscreen: () => void;
   feedback: boolean;
   setFeedback: (bool?: boolean) => void;
   menu: boolean;
@@ -55,6 +48,16 @@ export interface UIProps {
 }
 let time: NodeJS.Timeout | undefined;
 const UIStore = (set: any, get: any): UIProps => ({
+  fullscreen: false,
+  setFullscreen: () => {
+    !get().fullscreen
+      ? get().setStatus("entering fullscreen")
+      : get().setStatus("exiting fullscreen");
+    get().fullscreen
+      ? document.exitFullscreen()
+      : document.documentElement.requestFullscreen({ navigationUI: "hide" });
+    set((state: UIProps) => ({ fullscreen: !state.fullscreen }));
+  },
   feedback: false,
   setFeedback: (bool = !get().feedback) =>
     set(() => ({

@@ -42,7 +42,7 @@ export default function Options() {
     ],
     shallow
   );
-  const [setSelfie, selfie, kill_holistic, stop_input] = useModelStore(
+  const [setSelfie, selfie] = useModelStore(
     (state) => [
       state.setSelfie,
       state.selfie,
@@ -51,20 +51,17 @@ export default function Options() {
     ],
     shallow
   );
-  const [fullscreen, setFullscreen] = useInfoStore(
-    (state) => [state.fullscreen, state.setFullscreen],
+  const [fullscreen, setFullscreen, setStatus] = useUIStore(
+    (state) => [state.fullscreen, state.setFullscreen, state.setStatus],
     shallow
   );
-  const setStatus = useUIStore((state) => state.setStatus);
 
   const optionsArray = [
     {
       label: <>Laptop</>,
       label2: <>External</>,
       func: () => {
-        if (started) stop();
-        stop_input();
-        kill_holistic();
+        if (started) stop(setStatus);
         setSelfie();
         setStatus(
           <span>
@@ -78,12 +75,7 @@ export default function Options() {
     {
       label: <>Fullscreen</>,
       label2: <>Windowed</>,
-      func: () => {
-        !fullscreen
-          ? setStatus("entering fullscreen")
-          : setStatus("exiting fullscreen");
-        setFullscreen();
-      },
+      func: () => setFullscreen(),
       toggle: fullscreen,
       command: "F",
     },
@@ -91,10 +83,7 @@ export default function Options() {
       label: <>Start</>,
       label2: <>Stop</>,
       func: () => {
-        started
-          ? setStatus("stopping holistic")
-          : setStatus("starting holistic");
-        started ? stop() : start();
+        started ? stop(setStatus) : start(setStatus);
       },
       toggle: started,
       command: "S",
