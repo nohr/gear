@@ -1,0 +1,30 @@
+.modalButton:hover,
+.active,
+.hover:hover {
+  text-shadow: 1px 0px 1.75px #ccff66 !important;
+}
+
+@media (prefers-color-scheme: light) {
+  .modalButton:hover,
+  .active,
+  .hover:hover {
+    text-shadow: 1px 0px 1.75px #fe3632 !important;
+  }
+}
+
+.active,
+.active * {
+  @apply fill-red-500 !stroke-current text-red-500 drop-shadow-mdHover dark:fill-lime-500 dark:text-lime-500 dark:drop-shadow-mdDarkHover;
+}
+
+.closed {
+  @apply bg-[#acddff] text-[#009698];
+}
+
+.point {
+  @apply bg-[#3cf5aa] text-[#08afff];
+}
+
+.open {
+  @apply bg-[#08afff] text-[#3cf5aa];
+}

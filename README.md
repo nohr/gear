@@ -1,5 +1,8 @@
 # 🦾 Gear & Loading
 
+## dev link
+
+[gear-4327.web.app](https://gear-4327.web.app/)
 It's a motion-based, role-playing game that emphasizes slowness in completing a menial task.
 
 ## How does it work?
