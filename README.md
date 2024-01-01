@@ -1,8 +1,5 @@
 # 🦾 Gear & Loading
 
-## dev link
-
-[gear-4327.web.app](https://gear-4327.web.app/)
 It's a motion-based, role-playing game that emphasizes slowness in completing a menial task.
 
 ## How does it work?
@@ -12,8 +9,6 @@ It's a motion-based, role-playing game that emphasizes slowness in completing a 
 - [MediaPipe Holistic](https://google.github.io/mediapipe/solutions/holistic.html) tracks the body and hands and returns coordinates to be solved by Kalidokit.
 
 - [Kalidokit](https://github.com/yeemachine/kalidokit) solves kinematics which lets us virtually embody the prosthetic.
-
-- [Handtrack.js](https://github.com/victordibia/handtrack.js) also tracks hands but guesses hand signs to trigger prosthetic animations as well.
 
 ### Virtual Reality
 
