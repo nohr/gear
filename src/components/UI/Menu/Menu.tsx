@@ -1,7 +1,7 @@
 // import { Popup } from "..";
 import MenuModal from "./MenuModal";
 import MenuToggle from "./MenuToggle";
-import { Feedback, ReadMe } from "../Modals";
+// import { Feedback } from "../Modals";
 import { useCommands } from "common/hooks/useCommands";
 
 export default function Menu() {
@@ -10,8 +10,7 @@ export default function Menu() {
     <>
       <MenuToggle />
       <MenuModal />
-      <ReadMe />
-      <Feedback />
+      {/* <Feedback /> */}
       {/* <Popup bool={error}></Popup> */}
     </>
   );

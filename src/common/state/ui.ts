@@ -5,25 +5,18 @@ interface InfoProps {
   version: string;
   description: string;
   github: string;
-  twitter: string;
-  linkedin: string;
   email: string;
   website: string;
 }
 
-const InfoStore = (set: any, get: any): InfoProps => ({
-  name: "Paredol",
+export const useInfoStore = create<InfoProps>(() => ({
+  name: "Aite Aigbe",
   version: "0.0.1",
-  description:
-    "A simple, lightweight, and fast web app for 3D pose estimation.",
-  github: "   ",
-  twitter: "   ",
-  linkedin: "   ",
-  email: "aite@paredol.com",
-  website: "paredol.com",
-});
-
-export const useInfoStore = create(InfoStore);
+  description: "A simple, lightweight, and fast game using 3D pose estimation.",
+  github: "https://github.com/nohr/gear",
+  email: "aiteaigbe@gmail.com",
+  website: "https://aite.fyi",
+}));
 
 export interface UIProps {
   fullscreen: boolean;
@@ -49,67 +42,71 @@ export interface UIProps {
   setWebcamAccess: (bool: boolean) => void;
 }
 let time: NodeJS.Timeout | undefined;
-const UIStore = (set: any, get: any): UIProps => ({
-  fullscreen: false,
-  setFullscreen: () => {
-    !get().fullscreen
-      ? get().setStatus("entering fullscreen")
-      : get().setStatus("exiting fullscreen");
-    get().fullscreen
-      ? document.exitFullscreen()
-      : document.documentElement.requestFullscreen({ navigationUI: "hide" });
-    set((state: UIProps) => ({ fullscreen: !state.fullscreen }));
-  },
-  feedback: false,
-  setFeedback: (bool = !get().feedback) =>
-    set(() => ({
-      feedback: bool,
-      readme: false,
-    })),
-  menu: true,
-  setMenu: () => set((state: UIProps) => ({ menu: !state.menu })),
-  readme: false,
-  setReadme: (bool = !get().readme) =>
-    set(() => ({
-      readme: bool,
-      feedback: false,
-    })),
-  readMeText: "",
-  getReadMe: async (md) => {
-    const readMeText = await fetch(md, {
-      method: "GET",
-      mode: "cors",
-      cache: "default",
-      headers: {
-        "Content-Type": "text/plain",
-      },
-    }).then((text) => text.text());
-    set({ readMeText });
-  },
-  status: "Press space to start",
-  setStatus: (status: UIProps["status"]): void => {
-    clearTimeout(time);
-    set(() => ({ status }));
-    if (status !== "Press space to start")
-      time = setTimeout(() => get().setStatus(" "), 3000);
-  },
-  theme:
-    window.matchMedia &&
-    window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light",
-  setTheme: (theme: UIProps["theme"]) =>
-    set(() => ({
-      theme,
-    })),
-  webcamAccess: false,
-  setWebcamAccess: (bool: boolean) => set(() => ({ webcamAccess: bool })),
-});
 
-export const useUIStore = create(
+export const useUIStore = create<UIProps>()(
   devtools(
-    persist(UIStore, {
-      name: "ui",
-    })
-  )
+    persist(
+      (set, get) => ({
+        fullscreen: false,
+        setFullscreen: () => {
+          !get().fullscreen
+            ? get().setStatus("entering fullscreen")
+            : get().setStatus("exiting fullscreen");
+          get().fullscreen
+            ? document.exitFullscreen()
+            : document.documentElement.requestFullscreen({
+                navigationUI: "hide",
+              });
+          set((state: UIProps) => ({ fullscreen: !state.fullscreen }));
+        },
+        feedback: false,
+        setFeedback: (bool = !get().feedback) =>
+          set(() => ({
+            feedback: bool,
+            readme: false,
+          })),
+        menu: true,
+        setMenu: () => set((state: UIProps) => ({ menu: !state.menu })),
+        readme: false,
+        setReadme: (bool = !get().readme) =>
+          set(() => ({
+            readme: bool,
+            feedback: false,
+          })),
+        readMeText: "",
+        getReadMe: async (md) => {
+          const readMeText = await fetch(md, {
+            method: "GET",
+            mode: "cors",
+            cache: "default",
+            headers: {
+              "Content-Type": "text/plain",
+            },
+          }).then((text) => text.text());
+          set({ readMeText });
+        },
+        status: "Press space to start",
+        setStatus: (status: UIProps["status"]): void => {
+          clearTimeout(time);
+          set(() => ({ status }));
+          if (status !== "Press space to start")
+            time = setTimeout(() => get().setStatus(" "), 3000);
+        },
+        theme:
+          window.matchMedia &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light",
+        setTheme: (theme: UIProps["theme"]) =>
+          set(() => ({
+            theme,
+          })),
+        webcamAccess: false,
+        setWebcamAccess: (bool: boolean) => set(() => ({ webcamAccess: bool })),
+      }),
+      {
+        name: "ui",
+      },
+    ),
+  ),
 );

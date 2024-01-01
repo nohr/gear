@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import { useInfoStore, useUIStore } from "state/ui";
 import { Popup } from "..";
-import { shallow } from "zustand/shallow";
 
 export function Feedback() {
-  const [feedback, readme, setReadme] = useUIStore(
-    (state) => [state.feedback, state.readme, state.setReadme],
-    shallow
-  );
+  const [feedback, readme, setReadme] = useUIStore((state) => [
+    state.feedback,
+    state.readme,
+    state.setReadme,
+  ]);
   const email = useInfoStore((state) => state.email);
 
   useEffect(() => {

@@ -1,25 +1,27 @@
-import { Grid, OrbitControls, Stats } from "@react-three/drei";
+import { Grid, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { useGameStore } from "state/game";
 import { useUIStore } from "state/ui";
-import { shallow } from "zustand/shallow";
 import Body from "./Body";
 import { EffectComposer, DepthOfField } from "@react-three/postprocessing";
 import { useRef } from "react";
+// import GameBoard from "./GameBoard";
+import { DepthOfFieldEffect } from "postprocessing";
 
 export default function Composition() {
-  const [playing, started] = useGameStore(
-    (state) => [state.playing, state.started],
-    shallow
-  );
+  const [playing, started] = useGameStore((state) => [
+    state.playing,
+    state.started,
+  ]);
   const theme = useUIStore((state) => state.theme);
-  const depthBokeh = useRef(null);
+  const depthBokeh = useRef<DepthOfFieldEffect>(null!);
 
   return (
     <Canvas
       linear
       dpr={[1, 2]}
       className={`absolute z-20 touch-none`}
+      gl={{ antialias: true, alpha: true }}
       frameloop={started ? (playing ? "always" : "demand") : "demand"}
       camera={{
         fov: 80,
@@ -28,6 +30,7 @@ export default function Composition() {
         far: 100,
       }}
     >
+      {/* <GameBoard /> */}
       <Body depthBokeh={depthBokeh} />
       <spotLight intensity={playing ? 1 : 0.3} position={[0, 2.8, -7]} />
       <spotLight intensity={playing ? 1 : 0.3} position={[0, 4, 1]} />
@@ -50,7 +53,7 @@ export default function Composition() {
           bokehScale={0}
         />
       </EffectComposer>
-      <Stats showPanel={0} className="stats" />
+      {/* <Stats showPanel={0} className="stats" /> */}
       <OrbitControls makeDefault target={[0, 1.57, 0]} />
     </Canvas>
   );

@@ -4,22 +4,9 @@ import {
   VRMLoaderPlugin,
   VRMUtils,
 } from "@pixiv/three-vrm";
-import {
-  Pose,
-  type TPose,
-  Hand,
-  type THand,
-  Side,
-  Face,
-  TFace,
-} from "kalidokit";
-import {
-  Euler,
-  Event,
-  MeshStandardMaterial,
-  Object3D,
-  Quaternion,
-} from "three";
+import { Pose, type TPose, Hand, type THand, Face } from "kalidokit";
+import type { Side, TFace } from "kalidokit";
+import { Euler, MeshStandardMaterial, Object3D, Quaternion } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { create } from "zustand";
 import type { UIProps } from "./ui";
@@ -30,10 +17,13 @@ interface SceneProps {
     delta: number,
     vrm: VRM,
     input: HTMLVideoElement,
-    results: Results
+    results: Results,
   ) => void;
   affect: (ailment: string, vrm: VRM) => void;
-  load: (setStatus: UIProps["setStatus"], helperRoot?: Object3D<Event>) => void;
+  load: (
+    setStatus: UIProps["setStatus"],
+    helperRoot?: Object3D | undefined,
+  ) => void;
 }
 export const useSceneStore = create<SceneProps>()((set) => ({
   vrm: null,
@@ -56,7 +46,7 @@ export const useSceneStore = create<SceneProps>()((set) => ({
       const euler = new Euler(
         rotation.x * dampener,
         rotation.y * dampener,
-        rotation.z * dampener
+        rotation.z * dampener,
       );
       const quaternion = new Quaternion().setFromEuler(euler);
       Part.quaternion.slerp(quaternion, lerpAmount);
@@ -322,7 +312,7 @@ export const useSceneStore = create<SceneProps>()((set) => ({
     const loader = new GLTFLoader();
     loader.register((parser) => {
       return new VRMLoaderPlugin(parser, {
-        // helperRoot,
+        helperRoot,
         autoUpdateHumanBones: false,
       });
     });
@@ -340,13 +330,13 @@ export const useSceneStore = create<SceneProps>()((set) => ({
           100.0 * (progress.loaded / progress.total) === 100.0
             ? "100% armed"
             : progress.loaded / progress.total <= 1.0
-            ? `${Math.floor(
-                100.0 * (progress.loaded / progress.total)
-              )}% armed...`
-            : "Overloaded! Now resolving...";
+              ? `${Math.floor(
+                  100.0 * (progress.loaded / progress.total),
+                )}% armed...`
+              : "Overloaded! Now resolving...";
         setStatus(current);
       },
-      (error) => console.error(error)
+      (error) => console.error(error),
     );
   },
 }));

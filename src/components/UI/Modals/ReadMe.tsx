@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import { useUIStore } from "state/ui";
 import { Popup } from "..";
-import { shallow } from "zustand/shallow";
 
 export function ReadMe() {
   // const [ setReadMeText] = useState<string>("");
@@ -14,7 +13,6 @@ export function ReadMe() {
       state.readMeText,
       state.getReadMe,
     ],
-    shallow
   );
 
   useEffect(() => {

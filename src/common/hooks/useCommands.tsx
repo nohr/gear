@@ -1,35 +1,28 @@
 import { useCallback, useEffect } from "react";
 import { useGameStore } from "state/game";
-import { shallow } from "zustand/shallow";
 import { useUIStore } from "state/ui";
 import { useModelStore } from "state/model";
 
 //  handle keyboard commands
 export function useCommands() {
-  const [playing, started, start, stop, setPlay] = useGameStore(
-    (state) => [
-      state.playing,
-      state.started,
-      state.start,
-      state.stop,
-      state.setPlay,
-    ],
-    shallow
-  );
-  const [setFullscreen, setStatus] = useUIStore(
-    (state) => [state.setFullscreen, state.setStatus],
-    shallow
-  );
+  const [playing, started, start, stop, setPlay] = useGameStore((state) => [
+    state.playing,
+    state.started,
+    state.start,
+    state.stop,
+    state.setPlay,
+  ]);
+  const [setFullscreen, setStatus] = useUIStore((state) => [
+    state.setFullscreen,
+    state.setStatus,
+  ]);
 
-  const [selfie, setSelfie] = useModelStore(
-    (state) => [
-      state.selfie,
-      state.setSelfie,
-      state.stop_input,
-      state.kill_holistic,
-    ],
-    shallow
-  );
+  const [selfie, setSelfie] = useModelStore((state) => [
+    state.selfie,
+    state.setSelfie,
+    state.stop_input,
+    state.kill_holistic,
+  ]);
 
   const handleKeyPress = useCallback(
     (event: KeyboardEvent) => {
@@ -49,7 +42,7 @@ export function useCommands() {
         setStatus(
           <span>
             using <b>{selfie ? "Laptop" : "External"}</b> camera
-          </span>
+          </span>,
         );
       }
       // ! debug
@@ -57,7 +50,7 @@ export function useCommands() {
       //     `Key pressed: ${event.key}, playing: ${playing}, fullscreen: ${document.fullscreenElement}`
       //   );
     },
-    [playing, selfie]
+    [playing, selfie],
   );
 
   useEffect(() => {

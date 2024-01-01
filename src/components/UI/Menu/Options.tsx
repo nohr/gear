@@ -2,7 +2,7 @@ import { useGameStore } from "state/game";
 import { useModelStore } from "state/model";
 import { useUIStore } from "state/ui";
 import { motion } from "framer-motion";
-import { shallow } from "zustand/shallow";
+import ModalButtons from "./ModalButtons";
 
 function OptionsButton({
   label,
@@ -32,29 +32,24 @@ function OptionsButton({
   );
 }
 export default function Options() {
-  const [playing, started, start, stop, setPlay] = useGameStore(
-    (state) => [
-      state.playing,
-      state.started,
-      state.start,
-      state.stop,
-      state.setPlay,
-    ],
-    shallow
-  );
-  const [setSelfie, selfie] = useModelStore(
-    (state) => [
-      state.setSelfie,
-      state.selfie,
-      state.kill_holistic,
-      state.stop_input,
-    ],
-    shallow
-  );
-  const [fullscreen, setFullscreen, setStatus] = useUIStore(
-    (state) => [state.fullscreen, state.setFullscreen, state.setStatus],
-    shallow
-  );
+  const [playing, started, start, stop, setPlay] = useGameStore((state) => [
+    state.playing,
+    state.started,
+    state.start,
+    state.stop,
+    state.setPlay,
+  ]);
+  const [setSelfie, selfie] = useModelStore((state) => [
+    state.setSelfie,
+    state.selfie,
+    state.kill_holistic,
+    state.stop_input,
+  ]);
+  const [fullscreen, setFullscreen, setStatus] = useUIStore((state) => [
+    state.fullscreen,
+    state.setFullscreen,
+    state.setStatus,
+  ]);
 
   const optionsArray = [
     {
@@ -66,7 +61,7 @@ export default function Options() {
         setStatus(
           <span>
             using <b>{selfie ? "Laptop" : "External"}</b> camera
-          </span>
+          </span>,
         );
       },
       toggle: selfie,
@@ -99,6 +94,7 @@ export default function Options() {
 
   return (
     <div className="flex select-none flex-row gap-x-4">
+      <ModalButtons />
       <OptionsButton {...optionsArray[0]} />
       <OptionsButton {...optionsArray[1]} />
       <OptionsButton {...optionsArray[2]} />
